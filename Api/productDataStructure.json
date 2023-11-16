@@ -1,0 +1,29 @@
+{
+  "id": 0,
+  "machineNo": "",
+  "productName": "",
+  "productCode": "",
+  "productImage": "",
+  "customer": "",
+  "packageDetails": {
+    "bagType": "",
+    "isDoubleBag": true,
+    "bagSize": "",
+    "itemsPerPacket": 0
+  },
+  "labelDetails": {
+    "isRequired": true,
+    "labelName": "",
+    "labelCode": []
+  },
+  "materialDetails": {
+    "materialName": "",
+    "masterBatch": ""
+  },
+
+  "period": {
+    "startDate": "0000-00-00",
+    "endDate": "0000-00-00"
+  },
+  "isActive": true
+}
