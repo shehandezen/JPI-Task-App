@@ -1,0 +1,107 @@
+@import url("https://fonts.googleapis.com/css2?family=ADLaM+Display&family=Poppins:ital,wght@0,100;0,400;0,900;1,400&display=swap");
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: "Poppins", "ADLaM Display", sans-serif;
+  transition: 0.5s;
+}
+
+:root {
+  --primary-dark-color: #2cbdc0;
+  --primary-light-color: #12d39e;
+  --background-color: #10202b;
+  --background-shadow-color: #182d3c;
+  --red: #d9534f;
+}
+html {
+  overflow: hidden;
+}
+body {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background-color);
+}
+
+.App {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.message-box {
+  position: absolute;
+  z-index: 100000000;
+
+  top: 20px;
+  margin: 0px auto;
+  /* border: 1px solid #fff; */
+  background: var(--background-shadow-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border-bottom: 0.75px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.message-box .message {
+  font-size: 15px;
+  text-align: center;
+  color: inherit;
+  margin-right: 5px;
+  padding: 15px 5px;
+}
+
+/* .message-box button {
+  padding: 5px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+} */
+
+.message-box button:hover {
+  opacity: 0.5;
+}
+
+.success {
+  color: var(--primary-light-color);
+  border-left: 4px solid var(--primary-light-color);
+}
+
+.error {
+  color: var(--red);
+  border-left: 4px solid var(--red);
+}
+
+.contain {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--primary-dark-color);
+  outline: 1px solid slategrey;
+  border-radius: 20px;
+}

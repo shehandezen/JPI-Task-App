@@ -1,0 +1,9 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+            <defs>
+              <style bx:fonts="ADLaM Display">@import url(https://fonts.googleapis.com/css2?family=ADLaM+Display%3Aital%2Cwght%400%2C400&amp;display=swap);</style>
+            </defs>
+            <g transform="matrix(1.145428, 0, 0, 1.160898, -35.288303, -29.196175)" style="">
+              <ellipse class= "logo-line" style="stroke: #10202b; stroke-width: 8px; fill: none;" cx="249.067" cy="250.933" rx="207.4" ry="140.237"></ellipse>
+              <text  class= "logo-line" style="fill: none; font-family: &quot;ADLaM Display&quot;; font-size: 11px; stroke:  #10202b; stroke-width: 0.3px; white-space: pre;" transform="matrix(18.552525, 0, 0, 16.330118, -2426.726074, -3088.772949)" x="138.005" y="207.803">jpi</text>
+            </g>
+          </svg>

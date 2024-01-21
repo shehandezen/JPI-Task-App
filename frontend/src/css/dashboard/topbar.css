@@ -1,0 +1,191 @@
+.top-bar {
+  display: flex;
+  align-items: center;
+}
+
+.top-bar .profile {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+}
+
+.top-bar .top-logo {
+  position: relative;
+  width: 75px;
+  height: auto;
+  display: none;
+  visibility: hidden;
+  margin-left: 10px;
+}
+
+.top-bar .profile .username {
+  position: relative;
+  margin-right: 20px;
+  color: var(--primary-light-color);
+  cursor: pointer;
+}
+
+.top-bar .profile img {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin: 5px;
+  border: 3px solid var(--primary-light-color);
+  padding: 5px;
+  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.top-bar .controls {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.top-bar .controls button {
+  position: relative;
+  text-align: center;
+  font-size: 18px;
+  /* -webkit-text-stroke: 1.25px #15d1a1; */
+  color: var(--primary-light-color);
+  width: 40px;
+  height: 40px;
+  /* color: transparent; */
+  background: transparent;
+  border: 2px solid var(--primary-light-color);
+  margin: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.top-bar .controls button:hover {
+  color: #15d1a1;
+  opacity: 1;
+  filter: drop-shadow(0 0 10px #15d1a1) drop-shadow(0 0 30px #15d1a1);
+}
+
+.top-bar .notifications {
+  position: relative;
+  margin-right: 15px;
+}
+
+.top-bar .notifications a {
+  width: 50px;
+  font-size: 1.5em;
+  /* -webkit-text-stroke: 1.5px #15d1a1; */
+  color: var(--primary-light-color);
+  opacity: 0.75;
+  cursor: pointer;
+  transition: 0.5s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.top-bar .notifications a:hover {
+  color: #15d1a1;
+  opacity: 1;
+  filter: drop-shadow(0 0 10px #15d1a1) drop-shadow(0 0 30px #15d1a1);
+}
+
+.show {
+  display: block;
+  visibility: visible;
+}
+
+.hide {
+  display: none;
+  visibility: hidden;
+}
+
+.top-bar .hover-menu {
+  position: absolute;
+  top: 90px;
+  right: 10px;
+  z-index: 10000;
+  width: fit-content;
+  height: auto;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 15px;
+  background: var(--background-shadow-color);
+  color: var(--primary-light-color);
+  overflow: hidden;
+  font-size: 15px;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.top-bar .hover-menu ul li {
+  list-style-type: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.top-bar .hover-menu ul li a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.top-bar .hover-menu ul li:hover {
+  background: var(--primary-light-color);
+  color: var(--background-shadow-color);
+}
+
+.top-bar .hover-menu .name {
+  font-size: 16px;
+  color: var(--primary-dark-color);
+  padding: 10px;
+}
+
+.top-bar .profile img:hover + .top-bar .hover-menu {
+  display: block;
+  visibility: visible;
+}
+
+.menu-btn {
+  display: none;
+  visibility: hidden;
+}
+
+@media screen and (max-width: 700px) {
+  .top-bar .controls button {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+    margin: 5px;
+  }
+
+  .top-bar .profile img {
+    width: 50px;
+    height: 50px;
+  }
+  .top-bar .username,
+  .top-bar .notifications {
+    display: none;
+    visibility: hidden;
+  }
+  .top-bar .top-logo {
+    display: block;
+    visibility: visible;
+  }
+  .menu-btn {
+    display: block;
+    visibility: visible;
+  }
+}
+
+@media screen and (max-width: 325px) {
+  .top-bar .profile {
+    padding: 8px 5px;
+  }
+}
