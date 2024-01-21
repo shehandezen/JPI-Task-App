@@ -1,0 +1,318 @@
+.profile-container {
+  position: relative;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  /* display: flex; */
+  /* align-items: center; */
+  justify-content: center;
+  flex-direction: column;
+  /* border: 1px solid #fff; */
+
+  overflow-y: auto;
+}
+
+.profile-container .side-glass {
+  position: absolute;
+  width: 25%;
+  height: max-content;
+  max-width: 500px;
+  /* border: 1px solid red; */
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 10000;
+}
+
+.profile-container .banner {
+  position: relative;
+  /* top: -150px; */
+  z-index: 1000;
+  left: 0px;
+  width: 100%;
+  height: 150px;
+  background: url(../../img/banner.jpg);
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  display: flex;
+  justify-content: center;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 50px;
+}
+
+.profile-container .banner .remove-img {
+  position: absolute;
+  font-size: 16px;
+  top: 40px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--background-color);
+  cursor: pointer;
+  z-index: 100000;
+}
+.profile-container .banner .remove-img:hover {
+  opacity: 0.8;
+}
+
+.profile-container .banner .messages {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 80px;
+  /* border: 1px solid #fff; */
+}
+.profile-container .banner .messages .span-text {
+  font-size: 14px;
+  color: var(--red);
+  position: relative;
+  top: 200px;
+}
+
+.profile-container .banner .file-box {
+  position: absolute;
+  bottom: -25%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  z-index: 100;
+  cursor: pointer;
+  color: transparent;
+}
+.profile-container .banner .file-box::before {
+  content: "";
+  position: relative;
+  width: 100px;
+  display: flex;
+
+  height: 100px;
+  background: rgba(0, 0, 0, 0);
+}
+
+.profile-container .banner .file-box:hover::before {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.profile-container .banner .file-box::file-selector-button {
+  display: none;
+  visibility: hidden;
+  color: transparent;
+}
+
+.profile-container .banner .profile-img {
+  position: absolute;
+  bottom: -25%;
+  width: 100px;
+  height: 100px;
+  z-index: 10;
+  object-fit: cover;
+  /* background: red; */
+  border-radius: 50%;
+  border: 3px solid var(--primary-light-color);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.profile-container .profile-section {
+  position: relative;
+  width: 100%;
+  /* height: 100%; */
+  top: 50px;
+  z-index: 100000;
+  /* margin-bottom: 50px; */
+  /* margin-top: 200px; */
+  /* border: 1px solid red; */
+}
+
+.profile-container .profile-section .section-head {
+  position: relative;
+  font-size: 25px;
+  padding: 15px 25px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.profile-container .profile-section .section-head span {
+  position: relative;
+  /* border: 1px solid red; */
+  width: 100px;
+  height: 8px;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-light-color),
+    var(--primary-dark-color)
+  );
+}
+
+.profile-container .profile-section .details-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding-left: 15px;
+  /* border: 1px solid red; */
+  display: flex;
+  /* flex-direction: column; */
+  flex-wrap: wrap;
+}
+
+.profile-container .profile-section .details-container .detail-container {
+  position: relative;
+  width: 50%;
+  height: auto;
+  padding: 15px 25px;
+  /* border: 1px solid red; */
+  min-width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-container
+  .detail-text {
+  position: relative;
+  font-size: 15px;
+  color: var(--primary-dark-color);
+  font-weight: 500;
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-container
+  .detail {
+  position: relative;
+  width: 100%;
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: 2px solid var(--primary-light-color);
+  background: rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.profile-container .profile-section .details-container .detail-container input {
+  outline: none;
+  color: var(--primary-light-color);
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-container
+  input::placeholder {
+  color: #fff;
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-button-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 15px 25px;
+  /* border: 1px solid red; */
+  min-width: 50%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-button-container
+  button {
+  position: relative;
+  left: 5px;
+  width: 150px;
+  height: auto;
+  margin: 0px 10px;
+  padding: 8px 30px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  transition: 0.75s;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-button-container
+  button:hover {
+  background: linear-gradient(
+    270deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  opacity: 5;
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-button-container
+  button::before {
+  content: "";
+  position: absolute;
+  top: -35px;
+  transition: 1s;
+  transform: translateX(-350%) skewX(-45deg);
+  right: 100px;
+  width: 80px;
+  height: 120px;
+  background-color: #fff;
+  opacity: 0.5;
+  overflow: hidden;
+}
+
+.profile-container
+  .profile-section
+  .details-container
+  .detail-button-container
+  button:hover::before {
+  transform: translateX(350%) skewX(-45deg);
+}
+
+@media screen and (max-width: 600px) {
+  .profile-container .profile-section .details-container .detail-container {
+    width: 100%;
+  }
+  .profile-container .profile-section .details-container {
+    padding: 0px;
+  }
+}
+
+@media screen and (max-width: 410px) {
+  .profile-container
+    .profile-section
+    .details-container
+    .detail-button-container
+    button {
+    font-size: 14px;
+    width: 220px;
+    padding: 8px 15px;
+  }
+  .profile-container .banner .messages .span-text {
+    font-size: 12px;
+  }
+}
