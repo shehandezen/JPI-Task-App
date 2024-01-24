@@ -42,7 +42,7 @@ const EditProfile = () => {
       Role: response.data.data.Role,
       Email: response.data.data.Email,
       PhoneNumber: response.data.data.PhoneNumber,
-      Image: `${process.env.REACT_APP_API_URL}/profile/${response.data.data.Image}`,
+      Image: response.data.data.Image,
     });
     setIsLoading(false);
   };
@@ -202,10 +202,12 @@ const EditProfile = () => {
           <img
             className="profile-img"
             src={
-              data.Image == null
+              data.Image == null ||
+              data.Image == undefined ||
+              data.Image == "undefined"
                 ? "https://www.w3schools.com/howto/img_avatar.png"
                 : imgFile.current.files.length == 0
-                  ? data.Image
+                  ? `${process.env.REACT_APP_API_URL}/profile/${data.Image}`
                   : URL.createObjectURL(data.Image)
             }
             alt="profle image"
