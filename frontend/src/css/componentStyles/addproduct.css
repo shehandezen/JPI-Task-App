@@ -1,0 +1,187 @@
+.add-product-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  /* border: 1px solid #fff; */
+  overflow-y: auto;
+}
+
+.add-product-container .head {
+  position: relative;
+  font-size: 25px;
+  padding: 15px 25px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 10px;
+  margin-top: 50px;
+}
+
+.add-product-container .head .line {
+  position: relative;
+  /* border: 1px solid red; */
+  width: 100px;
+  height: 8px;
+  border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-light-color),
+    var(--primary-dark-color)
+  );
+}
+
+.add-product-container .section-head {
+  position: relative;
+  font-size: 20px;
+  width: 90%;
+  padding: 5px;
+  margin-top: 15px;
+  border-bottom: 1px solid var(--primary-light-color);
+}
+
+.add-product-container .inputs-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+
+  /* border: 1px solid #fff; */
+  margin-top: 25px;
+}
+
+.add-product-container .inputs-container .input-container {
+  position: relative;
+  width: 50%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  /* border: 1px solid #fff; */
+  flex-direction: column;
+  padding: 5px 20px;
+}
+
+.add-product-container .inputs-container .input-container .input-label {
+  position: relative;
+  font-size: 14px;
+  margin-bottom: 5px;
+  width: 75%;
+}
+
+.add-product-container .inputs-container .input-container input {
+  position: relative;
+  width: 80%;
+  height: auto;
+  padding: 3px 15px;
+  border-radius: 10px;
+  outline: none;
+  border: 2px solid var(--primary-dark-color);
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--primary-light-color);
+}
+
+.add-product-container .inputs-container .input-container input::placeholder {
+  color: #fff;
+}
+
+.add-product-container .inputs-container .input-container select {
+  position: relative;
+  width: 75%;
+  height: auto;
+  padding: 3px 15px;
+  border-radius: 10px;
+  outline: none;
+  border: 2px solid var(--primary-dark-color);
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--primary-light-color);
+}
+
+.add-product-container .inputs-container .input-container select option {
+  position: relative;
+  outline: none;
+  border-radius: 50px;
+  outline: none;
+  border: 2px solid var(--primary-dark-color);
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--background-color);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.add-product-container .inputs-container.buttons {
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 15px 25px;
+  /* border: 1px solid red; */
+  min-width: 50%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.add-product-container .inputs-container button {
+  position: relative;
+  left: 5px;
+  width: 150px;
+  height: auto;
+  margin: 0px 10px;
+  padding: 8px 30px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  transition: 0.75s;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.add-product-container .inputs-container button:hover {
+  background: linear-gradient(
+    270deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  opacity: 5;
+}
+
+.add-product-container .inputs-container button::before {
+  content: "";
+  position: absolute;
+  top: -35px;
+  transition: 1s;
+  transform: translateX(-350%) skewX(-45deg);
+  right: 100px;
+  width: 80px;
+  height: 120px;
+  background-color: #fff;
+  opacity: 0.5;
+  overflow: hidden;
+}
+
+.add-product-container .inputs-container button:hover::before {
+  transform: translateX(350%) skewX(-45deg);
+}
+
+@media screen and (max-width: 600px) {
+  .add-product-container .inputs-container .input-container {
+    width: 100%;
+  }
+}

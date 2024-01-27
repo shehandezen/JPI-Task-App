@@ -49,7 +49,9 @@ const Profile = () => {
           <img
             className="profile-img"
             src={
-              data.Image === undefined || data.Image === null
+              data.Image == undefined ||
+              data.Image == null ||
+              data.Image == "undefined"
                 ? "https://www.w3schools.com/howto/img_avatar.png"
                 : `${process.env.REACT_APP_API_URL}/profile/${data.Image}`
             }
@@ -64,27 +66,51 @@ const Profile = () => {
           <div className="details-container">
             <div className="detail-container">
               <div className="detail-text">Username</div>
-              <div className="detail">{data.UserName}</div>
+              <div className="detail">
+                {data.UserName == "" || data.UserName == undefined
+                  ? "Username"
+                  : data.UserName}
+              </div>
             </div>
             <div className="detail-container">
               <div className="detail-text">First Name</div>
-              <div className="detail">{data.FirstName}</div>
+              <div className="detail">
+                {data.FirstName == "" || data.FirstName == undefined
+                  ? "First Name"
+                  : data.FirstName}
+              </div>
             </div>
             <div className="detail-container">
               <div className="detail-text">Last Name</div>
-              <div className="detail">{data.LastName}</div>
+              <div className="detail">
+                {data.LastName == "" || data.LastName == undefined
+                  ? "Last Name"
+                  : data.LastName}
+              </div>
             </div>
             <div className="detail-container">
               <div className="detail-text">Job Role</div>
-              <div className="detail">{data.Role}</div>
+              <div className="detail">
+                {data.Role == "" || data.Role == undefined
+                  ? "Job Role"
+                  : data.Role}
+              </div>
             </div>
             <div className="detail-container">
               <div className="detail-text">Email Address</div>
-              <div className="detail">{data.Email}</div>
+              <div className="detail">
+                {data.Email == "" || data.Email == undefined
+                  ? "Email Address"
+                  : data.Email}
+              </div>
             </div>
             <div className="detail-container">
               <div className="detail-text">Phone Number</div>
-              <div className="detail">{data.PhoneNumber}</div>
+              <div className="detail">
+                {data.PhoneNumber == "" || data.PhoneNumber == undefined
+                  ? "Phone Number"
+                  : data.PhoneNumber}
+              </div>
             </div>
           </div>
         </div>
