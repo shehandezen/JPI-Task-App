@@ -1,0 +1,119 @@
+.loader-canvas {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: var(--background-color);
+  transition: 1s;
+}
+
+/* .loader-canvas::before {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  top: -50px;
+  left: -50px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  filter: blur(3px);
+  box-shadow: 0 0 20px var(--primary-light-color);
+  animation: rotate 2s infinite linear;
+}
+
+.loader-canvas::after {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  bottom: -50px;
+  right: -50px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  filter: blur(3px);
+  box-shadow: 0 0 20px var(--primary-light-color);
+  animation: rotate 2.5s infinite linear;
+} */
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-canvas .logo {
+  width: 150px;
+  height: 150px;
+  /* background: var(--primary-dark-color); */
+}
+
+.loader-canvas .logo .path {
+  stroke: #fff;
+  stroke-width: 2px;
+  fill: none;
+}
+
+.loader-canvas .loader {
+  width: 200px;
+  height: 5px;
+  background: var(--background-shadow-color);
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+.loader-canvas .loader .bar {
+  width: 40px;
+  height: 100%;
+  position: relative;
+  left: 0px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  border-radius: 4px;
+  transition: 0.5s;
+  animation: loader 1.5s infinite ease-in-out;
+}
+
+@keyframes loader {
+  0% {
+    left: 0%;
+  }
+  50% {
+    left: 80%;
+  }
+}
+
+.line {
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: draw 3s forwards;
+}
+
+.text-svg {
+  stroke-dasharray: 27;
+  stroke-dashoffset: 27;
+  animation: draw 3s forwards;
+}
+
+@keyframes draw {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}

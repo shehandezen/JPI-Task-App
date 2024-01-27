@@ -1,0 +1,20 @@
+.dev-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.dev-container .text {
+  font-size: 25px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.dev-container img {
+  width: 90%;
+  height: auto;
+}
