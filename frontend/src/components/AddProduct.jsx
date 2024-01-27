@@ -10,6 +10,26 @@ const AddProduct = () => {
   const circleX = <FontAwesomeIcon icon={faXmark} />;
   const navigate = useNavigate();
 
+  const [polySize, setPolySize] = useState(['18x30','20x32','24x54','16x37'])
+
+  const [isDoubleBag, setIsDoubleBag] = useState(false)
+  const [showSecondBag, setShowSecondBag] = useState(false)
+  const [showCardboard, setShowCardboard] = useState(false)
+  const [showLabel, setShowLabel] = useState(false)
+
+const handleCheck = (value, type)=>{
+  console.log(value, type)
+  if(type == 'doubleBag'){
+setIsDoubleBag(!isDoubleBag)
+  }else if(type == 'cardboard'){
+    setShowCardboard(!showCardboard)
+      }else if(type == 'secondBag'){
+        setShowSecondBag(!showSecondBag)
+          }else if(type == 'label'){
+            setShowLabel(!showLabel)
+              }
+}
+
   return (
     <React.Fragment>
       <div className="add-product-container">
@@ -106,10 +126,79 @@ const AddProduct = () => {
             <div className="input-label"> Planning Qty </div>
             <input type="number" placeholder=" Planning Qty" />
           </div>
+          
         </div>
         <div className="section-head">Package Details</div>
+         <div className="note">
+          <div className="note-line">
+          <div class="checkbox-wrapper-12">
+  <div class="cbx">
+    <input id="cbx-12" type="checkbox" onChange={(e)=> handleCheck(e.target.value,'doubleBag')}/>
+    <label for="cbx-12"></label>
+    <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
+      <path d="M2 8.36364L6.23077 12L13 2"></path>
+    </svg>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <defs>
+      <filter id="goo-12">
+        <fegaussianblur in="SourceGraphic" stddeviation="4" result="blur"></fegaussianblur>
+        <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" result="goo-12"></fecolormatrix>
+        <feblend in="SourceGraphic" in2="goo-12"></feblend>
+      </filter>
+    </defs>
+  </svg>
+</div>
+<div className="note-text">Is Double Bag?</div>
+          </div>
+          <div className="note-line">
+          <div class="checkbox-wrapper-12">
+  <div class="cbx">
+    <input id="cbx-12" type="checkbox" onChange={(e)=> handleCheck(e.target.value,'cardboard')}/>
+    <label for="cbx-12"></label>
+    <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
+      <path d="M2 8.36364L6.23077 12L13 2"></path>
+    </svg>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <defs>
+      <filter id="goo-12">
+        <fegaussianblur in="SourceGraphic" stddeviation="4" result="blur"></fegaussianblur>
+        <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" result="goo-12"></fecolormatrix>
+        <feblend in="SourceGraphic" in2="goo-12"></feblend>
+      </filter>
+    </defs>
+  </svg>
+</div>
+<div className="note-text">Is Cardboard required?</div>
+          </div>
+          <div className="note-line">
+          <div class="checkbox-wrapper-12">
+  <div class="cbx">
+    <input id="cbx-12" type="checkbox" onChange={(e)=> handleCheck(e.target.value,'secondBag')} />
+    <label for="cbx-12"></label>
+    <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
+      <path d="M2 8.36364L6.23077 12L13 2"></path>
+    </svg>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <defs>
+      <filter id="goo-12">
+        <fegaussianblur in="SourceGraphic" stddeviation="4" result="blur"></fegaussianblur>
+        <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" result="goo-12"></fecolormatrix>
+        <feblend in="SourceGraphic" in2="goo-12"></feblend>
+      </filter>
+    </defs>
+  </svg>
+</div>
+<div className="note-text">Is Second bag required?</div>
+          </div>
+          </div>
         <div className="inputs-container">
-          <div className="input-container">
+<div className="input-container">
             <div className="input-label"> Bag type </div>
             <select name="bag">
               <option value="">Bag type</option>
@@ -119,7 +208,12 @@ const AddProduct = () => {
           </div>
           <div className="input-container">
             <div className="input-label"> Bag Size </div>
-            <input type="number" placeholder="Bag Size " />
+            <select name="bagSize">
+              <option value="">Bag Size</option>
+              {polySize?.map((ele,index)=>{
+                return ( <option key={index} value={ele}>{ele}</option>)
+              })}
+              </select>
           </div>
           <div className="input-container">
             <div className="input-label"> Polythene Code </div>
@@ -128,35 +222,65 @@ const AddProduct = () => {
           <div className="input-container">
             <div className="input-label"> Items per Packet </div>
             <input type="number" placeholder="Items per Packet" />
-          </div>
-          <div className="input-container">
+          </div>{ showSecondBag ?
+         (<> <div className="input-container">
             <div className="input-label"> Second bag Size </div>
-            <input type="number" placeholder="Second bag Size" />
-          </div>
-          <div className="input-container">
+            <select name="secondBag">
+              <option value="">Second Bag Size</option>
+              <option value="">20x32</option>
+              </select>
+          </div> <div className="input-container">
             <div className="input-label"> Polythene Code (second) </div>
             <input type="number" placeholder=" Polythene Code (second)" />
-          </div>
-          <div className="input-container">
+          </div></>) : ''}
+         
+        { showCardboard ? ( <><div className="input-container">
             <div className="input-label"> Cardboard Size </div>
-            <input type="number" placeholder=" Cardboard Size" />
+            <select name="cardboard">
+              <option value="">Cardboard Size</option>
+              <option value="">40mmx35mmx20mm</option>
+              </select>
           </div>
           <div className="input-container">
             <div className="input-label">Cardboard Code </div>
             <input type="number" placeholder="Cardboard Code" />
-          </div>
+          </div> </>) : ''}
         </div>
         <div className="section-head">Material Details</div>
+        <div className="note">
+        <div className="note-line">
+          <div class="checkbox-wrapper-12">
+  <div class="cbx">
+    <input id="cbx-12" type="checkbox" onChange={(e)=> handleCheck(e.target.value,'label')} />
+    <label for="cbx-12"></label>
+    <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
+      <path d="M2 8.36364L6.23077 12L13 2"></path>
+    </svg>
+  </div>
+
+  <svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <defs>
+      <filter id="goo-12">
+        <fegaussianblur in="SourceGraphic" stddeviation="4" result="blur"></fegaussianblur>
+        <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -7" result="goo-12"></fecolormatrix>
+        <feblend in="SourceGraphic" in2="goo-12"></feblend>
+      </filter>
+    </defs>
+  </svg>
+</div>
+<div className="note-text">Is Label required?</div>
+          </div>
+        </div>
         <div className="inputs-container">
           <div className="input-container">
-            <div className="input-label">Material type </div>
-            <input type="number" placeholder="Material type" />
+            <div className="input-label">Material Name </div>
+            <input type="number" placeholder="Material Name" />
           </div>
           <div className="input-container">
-            <div className="input-label">Master batch </div>
-            <input type="number" placeholder="Master batch" />
+            <div className="input-label">Masterbatch </div>
+            <input type="number" placeholder="Masterbatch" />
           </div>
-          <div className="input-container">
+          {showLabel? (<><div className="input-container">
             <div className="input-label">Label Name</div>
             <input type="number" placeholder="Label Name" />
           </div>
@@ -164,8 +288,8 @@ const AddProduct = () => {
             <div className="input-label">Label Code </div>
             <input type="number" placeholder="Label Code" />
           </div>
-        </div>
-
+       </>): ''}
+  </div>
         <div className="inputs-container buttons">
           <button>Save {floppyDisk}</button>
 
