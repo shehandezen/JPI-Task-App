@@ -62,6 +62,8 @@
   padding: 10px;
   align-items: center;
   justify-content: center;
+  margin-bottom: 25px;
+
   flex-direction: column;
 }
 
@@ -151,10 +153,22 @@
   text-align: left;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .product-container .info-container .info-line {
     width: 100%;
   }
+  .product-container .info-container .info-line .info-key {
+    font-size: 14px;
+  }
+  .product-container .info-container .info-line .info-key .icon {
+    font-size: 14px;
+  }
+  .product-container .info-container .section-title {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
   .product-container .info-container .info-line .info-key {
     font-size: 14px;
   }
