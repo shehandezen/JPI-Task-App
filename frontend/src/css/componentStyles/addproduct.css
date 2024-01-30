@@ -124,7 +124,7 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
   height: auto;
   padding: 15px 25px;
-  border: 1px solid red;
+  /* border: 1px solid red; */
   min-width: 50%;
   display: flex;
   justify-content: center;
@@ -132,7 +132,7 @@ input[type="number"]::-webkit-outer-spin-button {
   margin-bottom: 20px;
 }
 
-.add-product-container .inputs-container button {
+.add-product-container .buttons button {
   position: relative;
   left: 5px;
   width: 150px;
@@ -153,7 +153,7 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow: hidden;
 }
 
-.add-product-container .inputs-container button:hover {
+.add-product-container .buttons button:hover {
   background: linear-gradient(
     270deg,
     var(--primary-dark-color),
@@ -162,7 +162,7 @@ input[type="number"]::-webkit-outer-spin-button {
   opacity: 5;
 }
 
-.add-product-container .inputs-container button::before {
+.add-product-container .buttons button::before {
   content: "";
   position: absolute;
   top: -35px;
@@ -176,7 +176,7 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow: hidden;
 }
 
-.add-product-container .inputs-container button:hover::before {
+.add-product-container .buttons button:hover::before {
   transform: translateX(350%) skewX(-45deg);
 }
 
@@ -365,5 +365,10 @@ input[type="number"]::-webkit-outer-spin-button {
 @media screen and (max-width: 600px) {
   .add-product-container .inputs-container .input-container {
     width: 100%;
+  }
+  .add-product-container .buttons button {
+    font-size: 14px;
+    padding: 8px 10px;
+    width: auto;
   }
 }

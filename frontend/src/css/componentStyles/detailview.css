@@ -63,7 +63,7 @@
   display: flex;
   /* align-items: center; */
   justify-content: center;
-  transition: 0.1s;
+  transition: 0.5s;
 }
 
 .details-container .wrapper .table-container table {
@@ -137,13 +137,11 @@
   transform: translateX(50%);
 }
 
-.details-container .wrapper .panel {
-  width: 0%;
-  visibility: hidden;
-  display: none;
+.panel {
+  width: 40%;
   border: 1px solid #fff;
   overflow: hidden;
-  transition: 10s;
+  transition: 0.5s;
 }
 
 @media screen and (max-width: 950px) {

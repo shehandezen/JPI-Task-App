@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import React, { useRef, useState, useEffect } from "react";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
@@ -23,12 +23,10 @@ const CurrentProducts = () => {
       table.current.style.width = "60%";
       panel.current.style.width = "40%";
       panel.current.style.visibility = "visible";
-      panel.current.style.display = "flex";
     } else {
-      table.current.style.width = "100%";
+      table.current.style.width = "99%";
       panel.current.style.width = "0%";
       panel.current.style.visibility = "hidden";
-      panel.current.style.display = "none";
     }
   };
 
@@ -77,17 +75,19 @@ const CurrentProducts = () => {
                 <td className="col-7">Sample </td>
                 <td className="col-8">
                   {" "}
-                  <Link className="arrow" onClick={(e) => togglePanel()}>
+                  <Link
+                    className="arrow"
+                    to={"/dashboard/view/12544f"}
+                    onClick={(e) => togglePanel()}
+                  >
                     {angles}
                   </Link>
                 </td>
               </tr>
             </table>
           </div>
-          <div className="panel" ref={panel}>
-            <Outlet />
-            <button onClick={(e) => togglePanel()}> {">"} </button>
-          </div>{" "}
+
+          <Outlet />
         </div>
       </div>
     </React.Fragment>

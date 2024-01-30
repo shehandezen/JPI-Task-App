@@ -132,34 +132,34 @@ const Dashboard = () => {
 
   return (
     <Fragment>
-      {isLoading ? (
+      {/* {isLoading ? (
         <Loader />
-      ) : (
-        <div className="container">
-          <div className="TopBar">
-            <TopBar
-              isMenuShow={isMenuShow}
-              setIsMenuShow={setIsMenuShow}
-              user={user}
-            />
-          </div>
-          <div className={isMenuShow ? "off-menu show" : "hide"}>
-            <OffCanvasSideBar
-              isMenuShow={isMenuShow}
-              setIsMenuShow={setIsMenuShow}
-              linkList={linkList}
-            />
-          </div>
-          <div className="SideBar">
-            <SideBar linkList={linkList} />
-          </div>
-          <div className="Workspace">
-            <Animate>
-              <Workspace />
-            </Animate>
-          </div>
+      ) : ( */}
+      <div className="container">
+        <div className="TopBar">
+          <TopBar
+            isMenuShow={isMenuShow}
+            setIsMenuShow={setIsMenuShow}
+            user={user}
+          />
         </div>
-      )}
+        <div className={isMenuShow ? "off-menu show" : "hide"}>
+          <OffCanvasSideBar
+            isMenuShow={isMenuShow}
+            setIsMenuShow={setIsMenuShow}
+            linkList={linkList}
+          />
+        </div>
+        <div className="SideBar">
+          <SideBar linkList={linkList} />
+        </div>
+        <div className="Workspace">
+          <Animate>
+            <Workspace />
+          </Animate>
+        </div>
+      </div>
+      {/* )} */}
     </Fragment>
   );
 };
