@@ -11,7 +11,7 @@ const PORT = process.env.PORT;
 const app = express();
 
 // connect to the database
-mongoose.connect("mongodb://localhost:27017/jpi");
+mongoose.connect(process.env.MONGOURI);
 
 //middlewares
 app.use(express.json());

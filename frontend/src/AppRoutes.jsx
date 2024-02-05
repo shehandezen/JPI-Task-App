@@ -38,12 +38,17 @@ const AppRoutes = () => {
             {
               path: "current",
               element: <CurrentProducts />,
-              children: [{ path: ":id", element: <Product /> }],
+              // children: [{ path: ":id", element: <Product /> }],
+            },
+            {
+              path: ":id",
+              element: <Product />,
+              // children: [{ path: ":id", element: <Product /> }],
             },
             {
               path: "history",
               element: <ProductHistory />,
-              children: [{ path: ":id", element: <Product /> }],
+              // children: [{ path: ":id", element: <Product /> }],
             },
             { path: "add", element: <AddProduct /> },
           ],
