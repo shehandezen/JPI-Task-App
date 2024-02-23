@@ -19,6 +19,12 @@ import Loader from "./Loader";
 import MessageBox from "./MessageBox";
 import MiniLoader from "./MiniLoader";
 import PasswordModal from "./PasswordModal";
+import AddDailyProduction from "./AddDailyProduction";
+import MachineReport from "./MachineReport";
+import ProductionReport from "./ProductionReport";
+import ProductionDetail from "./ProductionDetail";
+import ProductionView from './ProductionView';
+import Notifications from './Notifications'
 
 export {
   Summary,
@@ -42,4 +48,10 @@ export {
   MessageBox,
   MiniLoader,
   PasswordModal,
+  AddDailyProduction,
+  MachineReport,
+  ProductionReport,
+  ProductionDetail,
+  ProductionView,
+  Notifications
 };

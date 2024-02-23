@@ -18,6 +18,12 @@ import {
   RequestHistory,
   Profile,
   EditProfile,
+  AddDailyProduction,
+  MachineReport,
+  ProductionReport,
+  ProductionDetail,
+  ProductionView,
+  Notifications
 } from "./components";
 import { Home, SignIn, SignUp, Dashboard } from "./pages";
 
@@ -32,6 +38,36 @@ const AppRoutes = () => {
       children: [
         { path: "/dashboard/", element: <Summary /> },
         { path: "upload", element: <Upload /> },
+        { path: "notifications", element: <Notifications /> },
+        {
+          path: "production", children: [
+            {
+              path: "adddailyproduction",
+              element: <AddDailyProduction />,
+             
+            },
+            {
+              path: "machinereport/:id",
+              element: <MachineReport />,
+              // children: [{ path: ":id", element: <Product /> }],
+            },
+            {
+              path: "reports",
+              element: <ProductionReport />,
+              // children: [{ path: ":id", element: <Product /> }],
+            },
+            {
+              path: "view/:id",
+              element: <ProductionDetail />,
+              // children: [{ path: ":id", element: <Product /> }],
+            },
+            {
+              path: "view/:id/machine/:id",
+              element: <ProductionView />,
+              // children: [{ path: ":id", element: <Product /> }],
+            },
+          ]
+        },
         {
           path: "view",
           children: [

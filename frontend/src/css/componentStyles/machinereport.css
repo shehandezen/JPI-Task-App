@@ -1,0 +1,473 @@
+.report-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+.report-container .title {
+    position: relative;
+    width: 100%;
+    margin: 20px 0px;
+    text-align: center;
+    -webkit-text-stroke: 1px var(--primary-light-color);
+    font-size: 50px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: transparent;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.report-container .title:hover {
+    color: var(--primary-light-color);
+}
+
+.report-container .title span {
+    position: relative;
+
+    width: 100px;
+    height: 8px;
+    background: linear-gradient(45deg, var(--primary-light-color), var(--primary-dark-color));
+    border-radius: 15px;
+}
+
+.report-container .tags-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.report-container .tags-container .tag , .box{
+    position: relative;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: linear-gradient(45deg, var(--primary-light-color), var(--primary-dark-color));
+    color: var(--background-color);
+    margin: 5px 15px;
+    font-size: 14px;
+    width: min-content;
+}
+
+
+.done{
+    background: var(--red);
+}
+
+.report-container .detail-line {
+    position: relative;
+    width: 100%;
+    margin: 10px 0px;
+    text-align: center;
+    color: var(--primary-dark-color);
+
+}
+
+.report-container .detail-line .more-info {
+    position: relative;
+    margin-left: 15px;
+
+    color: var(--primary-light-color);
+    font-size: 18px;
+    cursor: pointer;
+    transform: translateX(0px);
+}
+
+.report-container .detail-line .more-info:hover {
+    color: var(--primary-dark-color);
+
+}
+
+.report-container .counter-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+
+.report-container .counter-container .start-end-times {
+    position: relative;
+    width: 60%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.report-container .input-container {
+    position: relative;
+    width: 50%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.report-container .input-container .input-label {
+    font-size: 14px;
+    text-align: left;
+
+}
+
+
+.report-container .input-container input {
+    position: relative;
+    width: 50%;
+    padding: 5px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid var(--primary-light-color);
+    color: #fff;
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.report-container .counter-container .start-end-times .input-container {
+    margin-bottom: 20px;
+}
+
+
+.report-container .counter-container .data-section {
+    position: relative;
+    width: 90%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    /* justify-content: center; */
+
+}
+
+.data-section table {
+    position: relative;
+    width: 90%;
+    height: auto;
+    margin-top: 15px;
+    /* border: 1px solid #fff; */
+}
+
+.data-section table tr {
+    position: relative;
+    display: flex;
+
+    width: 100%;
+    /* border: 1px solid #fff; */
+
+}
+
+.data-section table tr td {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    text-align: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    /* border: 1px solid #fff; */
+
+}
+
+/* .data-section table tr td:nth-child(3){
+    width: 100%;
+} */
+
+
+.data-section table tr td .input-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.data-section table tr td .inputs-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* transform: translateY(10px); */
+}
+
+.data-section table tr td .input-container input {
+    width: 80%;
+    /* border: 1px solid #d34141; */
+
+}
+
+
+
+.data-section table tr td:nth-child(3) {
+    width: 100%;
+}
+
+.data-section table tr td:nth-child(3) .inputs-container .input-container {
+    width: 33%;
+    display: flex;
+    font-size: 12px;
+}
+
+.data-section table tr td .inputs-container .input-container input {
+    width: 90%;
+}
+
+
+.plus-button {
+    position: relative;
+    margin: 30px 0px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .5s !important;
+
+}
+
+.plus-button .line {
+    position: absolute;
+    width: 60%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.plus-button button {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--primary-light-color);
+    background: linear-gradient(45deg, var(--primary-light-color), var(--primary-dark-color));
+    color: var(--background-color);
+    border-radius: 50%;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.5s;
+    overflow: hidden;
+
+}
+
+.plus-button button:hover {
+    border: 1px solid var(--primary-light-color);
+    background: linear-gradient(-45deg, var(--primary-light-color), var(--primary-dark-color));
+    transform: translateY(3px);
+    transition: .5s;
+}
+
+
+.section-line {
+    margin: 15px 0px;
+}
+
+.info-section {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-section .title {
+    font-size: 25px;
+}
+
+.info-section table {
+    /* border: 1px solid #fff; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info-section table tr {
+    width: 80%;
+}
+
+.info-section table tr td {
+    width: 60%;
+    margin-bottom: 10px;
+}
+
+.info-section.down-time table tr td:nth-child(3) .input-container input {
+    width: 100%;
+}
+
+.tiny-label {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.info-section.para table tr td {
+    width: 40%;
+}
+
+.report-container .input-container .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px solid #fff; */
+    width: 100%;
+}
+
+.report-container .input-container .buttons button {
+
+    position: relative;
+    left: 5px;
+    width: 150px;
+    height: auto;
+
+
+    padding: 8px 30px;
+    border-radius: 20px;
+    background: linear-gradient(90deg,
+            var(--primary-dark-color),
+            var(--primary-light-color));
+    transition: 0.75s;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 30px 20px;
+}
+
+.report-container .input-container .buttons button:hover {
+    background: linear-gradient(270deg,
+            var(--primary-dark-color),
+            var(--primary-light-color));
+    opacity: 5;
+}
+
+.report-container .input-container .buttons button::before {
+    content: "";
+    position: absolute;
+    top: -35px;
+    transition: 1s;
+    transform: translateX(-350%) skewX(-45deg);
+    right: 100px;
+    width: 80px;
+    height: 120px;
+    background-color: #fff;
+    opacity: 0.5;
+    overflow: hidden;
+
+}
+
+.report-container .input-container .buttons button:hover::before {
+    transform: translateX(350%) skewX(-45deg);
+}
+
+button::before {
+    content: "";
+    position: absolute;
+    top: -35px;
+    transition: 1s;
+    transform: translateX(-350%) skewX(-45deg);
+    right: 100px;
+    width: 80px;
+    height: 120px;
+    background-color: #fff;
+    opacity: 0.5;
+    overflow: hidden;
+
+}
+
+ button:hover::before {
+    transform: translateX(350%) skewX(-45deg);
+}
+
+.head-text-input {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-dark-color);
+}
+
+button.delete{
+    position: absolute;
+    right: -10px;
+    width: 25px;
+    padding:4px 8px;
+    height: 25px;
+    border-radius: 50%;
+    outline: none;
+    margin-left: 5px;
+    transform: translateY(-50%);
+    color: var(--background-color);
+    background:var(--red);
+    border: none;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 550px) {
+
+    .data-section table tr {
+        flex-direction: column;
+    }
+
+    .data-section table tr td {
+        font-size: 14px;
+        margin: 5px;
+        width: 100%;
+    }
+
+    .data-section table tr td .input-container input {
+        font-size: 14px;
+        width: 90%;
+    }
+
+    .info-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--primary-dark-color);
+    }
+
+    .report-container .counter-container .start-end-times {
+        width: 100%;
+    }
+
+    .report-container .input-container {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    .report-container .counter-container .start-end-times {
+        flex-direction: column;
+    }
+
+    .report-container .counter-container .start-end-times .input-container {
+        width: 100%;
+    }
+
+    .report-container .input-container .buttons {
+        flex-direction: column;
+    }
+    .report-container .input-container .buttons button{
+        margin: 10px 0px;
+        /* width: 80%; */
+    }
+    .report-container .tags-container{
+        flex-direction: column;
+    }
+    .report-container .detail-line{
+        font-size: 14px;
+    }
+    .report-container .detail-line .more-info {
+        font-size: 14px;
+        margin-left: 3px;
+    }
+}
