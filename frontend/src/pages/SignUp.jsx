@@ -58,8 +58,38 @@ const SignUp = () => {
     }
   };
 
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      );
+  };
+
+  const checkEmptyFeilds = async()=>{
+    console.log('checking')
+    for (const [key, value] of Object.entries(data)) {
+      if (key == "Email") {
+        if (!validateEmail(value)) {
+          setMessages([...messages, {status: 'error', message: 'Please give a valid Email.'}]);
+          return false;
+        }
+      }
+      if(value == '' || value == undefined || value == null){
+        await setMessages([...messages, {status: 'error', message: 'Please fill out all required feilds.'}])
+        return false
+      }else{
+       continue
+      }
+      
+    }
+    return true
+    
+  }
+
   const handleSubmit = async (e) => {
     setIsLoading(true);
+    if(await checkEmptyFeilds()){
     let response = await signUpFunc(data);
     console.log(response);
     setMessages([...messages, response]);
@@ -69,6 +99,8 @@ const SignUp = () => {
         navigate("/signin");
       }, 500);
     }
+  }
+  setIsLoading(false);
   };
 
   return (

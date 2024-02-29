@@ -48,18 +48,38 @@ const SignIn = () => {
     }
   };
 
+  const checkEmptyFeilds = async()=>{
+    console.log('checking')
+    for (const [key, value] of Object.entries(data)) {
+      if(value == '' || value == undefined || value == null){
+        await setMessages([...messages, {status: 'error', message: 'Please fill out all required feilds.'}])
+        return false
+      }else{
+       continue
+      }
+      return true
+    }
+    return true
+    
+  }
+
   const handleSubmit = async (e) => {
     setIsLoading(true);
-    let response = await signInFunc(data);
-    console.log(response);
-    setMessages([...messages, response]);
-    setIsLoading(false);
-    if (response?.status == "success") {
-      await localStorage.setItem("token", response.tokens.accessToken);
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
+ 
+    if(await checkEmptyFeilds()){
+
+      let response = await signInFunc(data);
+      console.log(response);
+      setMessages([...messages, response]);
+      setIsLoading(false);
+      if (response?.status == "success") {
+        await localStorage.setItem("token", response.tokens.accessToken);
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      }
     }
+    setIsLoading(false);
   };
 
   return (
