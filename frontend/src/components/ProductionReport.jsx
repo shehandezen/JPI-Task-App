@@ -7,6 +7,7 @@ import {
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
 import '../css/componentStyles/productionreport.css'
+import MiniLoader from "./MiniLoader";
 
 
 const ProductionReport = ()=>{
@@ -33,27 +34,32 @@ const ProductionReport = ()=>{
 
   const [data, setDate] = useState([
     {
-        Date: '2024.1.8',
-        Shift: 'Day',
-        Supervisor: 'Supervisor',
-        Status: 'active',
+        Date: 'dummyData',
+        Shift: 'dummyData',
+        Supervisor: 'dummyData',
+        Status: 'dummyData',
         _id: '54we4twg49rg4erh6esh'
     },
-    {
-        Date: '2024.1.5',
-        Shift: 'Day',
-        Supervisor: 'Supervisor',
-        Status: 'finished',
-        _id: '54we4twg49rg4erh6esh'
-    },
-    {
-        Date: '2024.9.8',
-        Shift: 'Day',
-        Supervisor: 'Supervisor',
-        Status: 'finished',
-        _id: '54we4twg49rg4erh6esh'
-    }
+   
   ])
+
+
+  
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    await setInterval(() => {
+      console.log('data fetching...')
+      setIsLoading(false)
+    }, 5000)
+
+
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   const [searchText, setSearchText] = useState('')
 
@@ -67,6 +73,7 @@ const ProductionReport = ()=>{
 
   return (
     <React.Fragment>
+       {isLoading ? <MiniLoader /> : ""}
       <div className="details-container">
         <div className="top">
           <div className="search">
@@ -94,10 +101,10 @@ const ProductionReport = ()=>{
                       <td className="col-2">{element.Date} </td>
                       <td className="col-3">{element.Shift} </td>
                       <td className="col-4">{element.Supervisor} </td>
-                      <td className="col-5">{element.Status == 'active'? ( <div className="box"> Active</div> ): (<div className="box done"> Finished</div> )} </td>
+                      <td className="col-5" style={{display:'table-cell'}}>{element.Status == 'active'? ( <div className="box"> Active</div> ): (<div className="box done"> Finished</div> )} </td>
                       
                       <td className="col-8">
-                        <Link to={`/dashboard/production/report/${element._id}`} className="arrow">{angles}</Link>
+                        <Link to={`/dashboard/production/view/${element._id}`} className="arrow">{angles}</Link>
                       </td>
                     </tr>
                   )

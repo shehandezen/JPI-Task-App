@@ -7,6 +7,7 @@ import {
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/detailview.css";
+import MiniLoader from "./MiniLoader";
 
 const CurrentProducts = () => {
   const search = <FontAwesomeIcon icon={faSearch} />;
@@ -30,60 +31,47 @@ const CurrentProducts = () => {
   //   }
   // };
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    await setInterval(() => {
+      console.log('data fetching...')
+      setIsLoading(false)
+    }, 5000)
+
+
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   const [data, setDate] = useState([{
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: '4L Lid',
-    StartDate: '2024.01.25',
-    PlannedQty: 12000,
-    CurrentQty: 8000,
-    Progress: 60,
-    Efficiency: 95
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: '250ml milk bottle',
-    StartDate: '2024.01.25',
-    PlannedQty: 12000,
-    CurrentQty: 8000,
-    Progress: 60,
-    Efficiency: 95
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: 'morison lid',
-    StartDate: '2024.01.25',
-    PlannedQty: 12000,
-    CurrentQty: 8000,
-    Progress: 60,
-    Efficiency: 95
-  }
-    , {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: 'measuring cup',
-    StartDate: '2024.01.25',
-    PlannedQty: 12000,
-    CurrentQty: 8000,
-    Progress: 60,
-    Efficiency: 95
-  }
-  ])
+    _id: '4erg62hdf6h5h2dfh',
+    MachineNo: 'dummyData',
+    ProductName: 'dummyData',
+    StartDate: 'dummyData',
+    PlannedQty: 'dummyData',
+    CurrentQty: 'dummyData',
+    Progress: 'dummyData',
+    Efficiency: 'dummyData'
+  }])
 
   const [searchText, setSearchText] = useState('')
 
   const searchHandle = (e) => {
     setSearchText(e.target.value)
     console.log(e.target.value)
-    console.log(data.filter(obj => obj.ProductName.includes(searchText) ))
+    console.log(data.filter(obj => obj.ProductName.includes(searchText)))
   }
 
 
 
   return (
     <React.Fragment>
+      {isLoading ? <MiniLoader /> : ""}
+
       <div className="details-container">
         <div className="top">
           <div className="search">
@@ -106,7 +94,7 @@ const CurrentProducts = () => {
               </tr>
 
               {
-                data?.filter(obj => obj?.ProductName?.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) )?.map((element, index) => {
+                data?.filter(obj => obj?.ProductName?.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))?.map((element, index) => {
                   return (
                     <tr>
                       <td className="col-1">{element.MachineNo} </td>

@@ -4,11 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/development.css";
 import "../css/componentStyles/addproduct.css";
+import MiniLoader from "./MiniLoader";
 
 const AddProduct = () => {
   const floppyDisk = <FontAwesomeIcon icon={faFloppyDisk} />;
   const circleX = <FontAwesomeIcon icon={faXmark} />;
   const navigate = useNavigate();
+
+
 
   const [data, setData] = useState({
     machineNo: "",
@@ -32,6 +35,7 @@ const AddProduct = () => {
     polytheneCodeSecond: "",
     cardboardSize: "",
     cardboardCode: "",
+    itemsPerPacket: 0,
     isLabelRequired: false,
     labelName: "",
     labelCode: "",
@@ -62,12 +66,6 @@ const AddProduct = () => {
       setData({ ...data, usingCavities: value });
     } else if (type == "planningQty") {
       setData({ ...data, planningQty: value });
-    } else if (type == "isDoubleBag") {
-      setData({ ...data, isDoubleBag: value });
-    } else if (type == "isCardboardRequired") {
-      setData({ ...data, isCardboardRequired: value });
-    } else if (type == "isSeconBagRequired") {
-      setData({ ...data, isSeconBagRequired: value });
     } else if (type == "bagType") {
       setData({ ...data, bagType: value });
     } else if (type == "bagSize") {
@@ -82,9 +80,10 @@ const AddProduct = () => {
       setData({ ...data, cardboardSize: value });
     } else if (type == "cardboardCode") {
       setData({ ...data, cardboardCode: value });
-    } else if (type == "isLabelRequired") {
-      setData({ ...data, isLabelRequired: value });
-    } else if (type == "labelName") {
+    }else if (type == "itemsPerPacket") {
+      setData({ ...data, itemsPerPacket: value });
+    } 
+     else if (type == "labelName") {
       setData({ ...data, labelName: value });
     } else if (type == "labelCode") {
       setData({ ...data, labelCode: value });
@@ -95,19 +94,37 @@ const AddProduct = () => {
     }
   };
 
-  const [polySize, setPolySize] = useState([
-    "18x30",
-    "20x32",
-    "24x54",
-    "16x37",
-  ]);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [cardboardSize, setCardboardSize] = useState([
-    "40mmx35mmx20mm",
-    "40mmx35mmx25mm",
-    "40mmx35mmx30mm",
-    "40mmx35mmx35mm",
-  ]);
+  const [polySize, setPolySize] = useState([]);
+  const [cardboardSize, setCardboardSize] = useState([]);
+
+  const fetchPackingMaterial = async () => {
+    setIsLoading(true)
+    await setInterval(() => {
+    
+      setPolySize(
+        [
+          "18x30",
+          "20x32",
+          "24x54",
+          "16x37",
+        ]
+      )
+      setCardboardSize([
+        "40mmx35mmx20mm",
+        "40mmx35mmx25mm",
+        "40mmx35mmx30mm",
+        "40mmx35mmx35mm",
+      ])
+      setIsLoading(false)
+    }, 3000)
+  }
+
+  useEffect(() => {
+    fetchPackingMaterial()
+  }, [])
+
 
   const handleSubmit = (e) => {
     console.log(data);
@@ -118,25 +135,34 @@ const AddProduct = () => {
   const [showCardboard, setShowCardboard] = useState(false);
   const [showLabel, setShowLabel] = useState(false);
 
-  const handleCheck = (value, type) => {
-    console.log(value, type);
+  const handleCheck = async (value, type) => {
+    console.log(value.target.checked, type);
     if (type == "doubleBag") {
+      await setData({ ...data, isDoubleBag: value.target.checked});
       setIsDoubleBag(!isDoubleBag);
-      setData({ ...data, isDoubleBag: value });
     } else if (type == "cardboard") {
+      await setData({ ...data, isCardboardRequired: value.target.checked });
       setShowCardboard(!showCardboard);
-      setData({ ...data, isCardboardRequired: value });
     } else if (type == "secondBag") {
+      await setData({ ...data, isSecondBagRequired: value.target.checked });
       setShowSecondBag(!showSecondBag);
-      setData({ ...data, isSeconBagRequired: value });
     } else if (type == "label") {
+      await setData({ ...data, isLabelRequired:value.target.checked });
       setShowLabel(!showLabel);
-      setData({ ...data, isLabelRequired: value });
     }
   };
 
+  useEffect(()=>{
+    setIsDoubleBag(data.isDoubleBag)
+    setShowSecondBag(data.isSecondBagRequired)
+    setShowCardboard(data.isCardboardRequired)
+    setShowLabel(data.isLabelRequired)
+  },[])
+
   return (
     <React.Fragment>
+       {isLoading ? <MiniLoader /> : ""}
+       
       <div className="add-product-container">
         <div className="head">
           Add New Production
@@ -148,6 +174,7 @@ const AddProduct = () => {
             <div className="input-label"> Machine No </div>
             <select
               name="machine"
+              value={data.machineNo}
               onChange={(e) => handleChange(e.target.value, "machineNo")}
             >
               <option value="">Machine No</option>
@@ -199,6 +226,7 @@ const AddProduct = () => {
             <input
               type="text"
               placeholder="Product Name"
+              value={data.productName}
               onChange={(e) => handleChange(e.target.value, "productName")}
             />
           </div>
@@ -207,6 +235,7 @@ const AddProduct = () => {
             <input
               type="text"
               placeholder="Product Code"
+              value={data.productCode}
               onChange={(e) => handleChange(e.target.value, "productCode")}
             />
           </div>
@@ -215,6 +244,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder="Job No"
+              value={data.jobNo}
               onChange={(e) => handleChange(e.target.value, "jobNo")}
             />
           </div>
@@ -223,6 +253,7 @@ const AddProduct = () => {
             <input
               type="text"
               placeholder="Customer"
+              value={data.customer}
               onChange={(e) => handleChange(e.target.value, "customer")}
             />
           </div>
@@ -231,6 +262,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder="Hourly Target"
+              value={data.hourlyTarget}
               onChange={(e) => handleChange(e.target.value, "hourlyTarget")}
             />
           </div>
@@ -239,6 +271,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder="Cycle Time"
+              value={data.cycleTime}
               onChange={(e) => handleChange(e.target.value, "cycleTime")}
             />
           </div>
@@ -247,6 +280,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder="Item Weight"
+              value={data.itemWeight}
               onChange={(e) => handleChange(e.target.value, "itemWeight")}
             />
           </div>
@@ -255,6 +289,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder="Standard No of cavities"
+              value={data.availableCavities}
               onChange={(e) =>
                 handleChange(e.target.value, "availableCavities")
               }
@@ -265,6 +300,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder="Using No of cavities"
+              value={data.usingCavities}
               onChange={(e) => handleChange(e.target.value, "usingCavities")}
             />
           </div>
@@ -273,6 +309,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder=" Planning Qty"
+              value={data.planningQty}
               onChange={(e) => handleChange(e.target.value, "planningQty")}
             />
           </div>
@@ -285,7 +322,9 @@ const AddProduct = () => {
                 <input
                   id="cbx-12"
                   type="checkbox"
-                  onChange={(e) => handleCheck(e.target.value, "doubleBag")}
+                  value={data.isDoubleBag}
+                  onChange={(e) => handleCheck(e, "doubleBag")}
+                  checked={data.isDoubleBag}
                 />
                 <label for="cbx-12"></label>
                 <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
@@ -320,7 +359,10 @@ const AddProduct = () => {
                 <input
                   id="cbx-12"
                   type="checkbox"
-                  onChange={(e) => handleCheck(e.target.value, "cardboard")}
+                  value={data.isCardboardRequired}
+                  onChange={(e) => handleCheck(e, "cardboard")}
+                  checked={data.isCardboardRequired}
+
                 />
                 <label for="cbx-12"></label>
                 <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
@@ -355,7 +397,10 @@ const AddProduct = () => {
                 <input
                   id="cbx-12"
                   type="checkbox"
-                  onChange={(e) => handleCheck(e.target.value, "secondBag")}
+                  value={data.isSecondBagRequired}
+                  onChange={(e) => handleCheck(e, "secondBag")}
+                  checked={data.isSecondBagRequired}
+
                 />
                 <label for="cbx-12"></label>
                 <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
@@ -390,6 +435,7 @@ const AddProduct = () => {
             <div className="input-label"> Bag type </div>
             <select
               name="bag"
+              value={data.bagType}
               onChange={(e) => handleChange(e.target.value, "bagType")}
             >
               <option value="">Bag type</option>
@@ -401,6 +447,7 @@ const AddProduct = () => {
             <div className="input-label"> Bag Size </div>
             <select
               name="bagSize"
+              value={data.bagSize}
               onChange={(e) => handleChange(e.target.value, "bagSize")}
             >
               <option value="">Bag Size</option>
@@ -418,6 +465,7 @@ const AddProduct = () => {
             <input
               type="text"
               placeholder=" Polythene Code"
+              value={data.polytheneCode}
               onChange={(e) => handleChange(e.target.value, "polytheneCode")}
             />
           </div>
@@ -426,6 +474,7 @@ const AddProduct = () => {
             <input
               type="number"
               placeholder="Items per Packet"
+              value={data.itemsPerPacket}
               onChange={(e) => handleChange(e.target.value, "itemsPerPacket")}
             />
           </div>
@@ -436,6 +485,7 @@ const AddProduct = () => {
                 <div className="input-label"> Second bag Size </div>
                 <select
                   name="secondBag"
+                  value={data.secondBagSize}
                   onChange={(e) =>
                     handleChange(e.target.value, "secondBagSize")
                   }
@@ -455,6 +505,7 @@ const AddProduct = () => {
                 <input
                   type="text"
                   placeholder=" Polythene Code (second)"
+                  value={data.polytheneCodeSecond}
                   onChange={(e) =>
                     handleChange(e.target.value, "polytheneCodeSecond")
                   }
@@ -471,6 +522,7 @@ const AddProduct = () => {
                 <div className="input-label"> Cardboard Size </div>
                 <select
                   name="cardboard"
+                  value={data.cardboardSize}
                   onChange={(e) =>
                     handleChange(e.target.value, "cardboardSize")
                   }
@@ -490,6 +542,7 @@ const AddProduct = () => {
                 <input
                   type="text"
                   placeholder="Cardboard Code"
+                  value={data.cardboardCode}
                   onChange={(e) =>
                     handleChange(e.target.value, "cardboardCode")
                   }
@@ -508,7 +561,10 @@ const AddProduct = () => {
                 <input
                   id="cbx-12"
                   type="checkbox"
-                  onChange={(e) => handleCheck(e.target.value, "label")}
+                  value={data.isLabelRequired}
+                  onChange={(e) => handleCheck(e, "label")}
+                  checked={data.isLabelRequired}
+
                 />
                 <label for="cbx-12"></label>
                 <svg width="15" height="14" viewbox="0 0 15 14" fill="none">
@@ -544,6 +600,7 @@ const AddProduct = () => {
             <input
               type="text"
               placeholder="Material Name"
+              value={data.materialName}
               onChange={(e) => handleChange(e.target.value, "materialName")}
             />
           </div>
@@ -552,6 +609,7 @@ const AddProduct = () => {
             <input
               type="text"
               placeholder="Masterbatch"
+              value={data.masterbatch}
               onChange={(e) => handleChange(e.target.value, "masterbatch")}
             />
           </div>
@@ -562,6 +620,7 @@ const AddProduct = () => {
                 <input
                   type="text"
                   placeholder="Label Name"
+                  value={data.labelName}
                   onChange={(e) => handleChange(e.target.value, "labelName")}
                 />
               </div>
@@ -570,6 +629,7 @@ const AddProduct = () => {
                 <input
                   type="text"
                   placeholder="Label Code"
+                  value={data.labelCode}
                   onChange={(e) => handleChange(e.target.value, "labelCode")}
                 />
               </div>

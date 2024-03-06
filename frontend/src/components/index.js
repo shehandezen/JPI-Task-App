@@ -25,6 +25,7 @@ import ProductionReport from "./ProductionReport";
 import ProductionDetail from "./ProductionDetail";
 import ProductionView from './ProductionView';
 import Notifications from './Notifications'
+import UpdateMouldChange from "./UpdateMouldChange";
 
 export {
   Summary,
@@ -53,5 +54,6 @@ export {
   ProductionReport,
   ProductionDetail,
   ProductionView,
-  Notifications
+  Notifications,
+  UpdateMouldChange
 };

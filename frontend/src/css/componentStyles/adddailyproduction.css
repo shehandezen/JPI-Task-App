@@ -98,6 +98,7 @@
     margin: 20px;
     width: 100%;
     text-align: center;
+    /* border: 1px solid #fff; */
     font-size: 14px;
 }
 
@@ -116,8 +117,9 @@
     width: 25%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     margin: 5px 0px;
+
 
 }
 

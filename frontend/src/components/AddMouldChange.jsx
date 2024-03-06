@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/development.css";
 import "../css/componentStyles/addproduct.css";
+import MiniLoader from "./MiniLoader";
 
 
 const AddMouldChange = () => {
@@ -11,10 +12,13 @@ const AddMouldChange = () => {
   const floppyDisk = <FontAwesomeIcon icon={faFloppyDisk} />;
   const circleX = <FontAwesomeIcon icon={faXmark} />;
   const navigate = useNavigate();
+  const date = new Date()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [data, setData] = useState({
     MachineNo: '',
-    Date: '',
+    Date:  `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
     PreviousProduct: '',
     NextProduct: '',
     PlannedTime: '',
@@ -62,17 +66,19 @@ const AddMouldChange = () => {
     }
   }
 
-  const handleSubmit = (e) => {
-    const date = new Date('YYYY-MM-DD')
-    setData({...data, Date: date})
+  const handleSubmit = async(e) => {
+    // const date = new Date()
+    // console.log(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`)
+    // await setData({...data, Date: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`})
     console.log(data);
   };
 
   return (
     <React.Fragment>
+       {isLoading ? <MiniLoader /> : ""}
     <div className="add-product-container">
       <div className="head">
-        Add New Production
+        Add New Mould Change
         <span className="line"></span>
       </div>
      
@@ -81,6 +87,7 @@ const AddMouldChange = () => {
           <div className="input-label"> Machine No </div>
           <select
             name="machine"
+            value={data.MachineNo}
             onChange={(e) => handleChange(e.target.value, "machineNo")}
           >
             <option value="">Machine No</option>
@@ -131,6 +138,7 @@ const AddMouldChange = () => {
           <div className="input-label">  Previous Product Name </div>
           <select
             name="previousproduct"
+            value={data.PreviousProduct}
             onChange={(e) => handleChange(e.target.value, "previousproduct")}
           >
              <option value="">Previous Product Name</option>
@@ -141,6 +149,7 @@ const AddMouldChange = () => {
           <div className="input-label"> Next Product Name </div>
           <select
             name="nextproduct"
+            value={data.NextProduct}
             onChange={(e) => handleChange(e.target.value, "nextproduct")}
           >
              <option value="">Next Product Name</option>
@@ -153,6 +162,7 @@ const AddMouldChange = () => {
           <input
             type="number"
             placeholder="Planning time "
+            value={data.PlannedTime}
             onChange={(e) => handleChange(e.target.value, "plannedtime")}
           />
         </div>
@@ -161,6 +171,7 @@ const AddMouldChange = () => {
           <input
             type="number"
             placeholder="Actual time "
+            value={data.ActualTime}
             onChange={(e) => handleChange(e.target.value, "actualtime")}
           />
         </div>
@@ -169,6 +180,7 @@ const AddMouldChange = () => {
           <input
             type="time"
             placeholder="Start time"
+            value={data.StartTime}
             onChange={(e) => handleChange(e.target.value, "starttime")}
           />
         </div>
@@ -177,6 +189,7 @@ const AddMouldChange = () => {
           <input
             type="time"
             placeholder="End Time"
+            value={data.EndTime}
             onChange={(e) => handleChange(e.target.value, "endtime")}
           />
         </div>
@@ -185,6 +198,7 @@ const AddMouldChange = () => {
           <input
             type="text"
             placeholder="Technician"
+            value={data.Technician1}
             onChange={(e) => handleChange(e.target.value, "technician1")}
           />
         </div>
@@ -193,6 +207,7 @@ const AddMouldChange = () => {
           <input
             type="text"
             placeholder="Technician"
+            value={data.Technician2}
             onChange={(e) =>
               handleChange(e.target.value, "technician2")
             }
@@ -203,6 +218,7 @@ const AddMouldChange = () => {
           <input
             type="text"
             placeholder="Note"
+            value={data.Note}
             onChange={(e) => handleChange(e.target.value, "note")}
           />
         </div>

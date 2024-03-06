@@ -23,7 +23,8 @@ import {
   ProductionReport,
   ProductionDetail,
   ProductionView,
-  Notifications
+  Notifications,
+  UpdateMouldChange
 } from "./components";
 import { Home, SignIn, SignUp, Dashboard } from "./pages";
 
@@ -44,7 +45,7 @@ const AppRoutes = () => {
             {
               path: "adddailyproduction",
               element: <AddDailyProduction />,
-             
+
             },
             {
               path: "machinereport/:id",
@@ -95,14 +96,16 @@ const AppRoutes = () => {
             {
               path: "current",
               element: <CurrentMouldChange />,
-              children: [{ path: ":id", element: <MouldChange /> }],
+
             },
             {
               path: "history",
               element: <MouldChangeHistory />,
-              children: [{ path: ":id", element: <MouldChange /> }],
+
             },
             { path: "add", element: <AddMouldChange /> },
+            { path: "view/:id", element: <MouldChange /> },
+            { path: "update/:id", element: <UpdateMouldChange /> },
           ],
         },
         {

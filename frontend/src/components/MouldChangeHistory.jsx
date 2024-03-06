@@ -7,6 +7,7 @@ import {
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/detailview.css";
+import MiniLoader from "./MiniLoader";
 
 const MouldChangeHistory = () => {
 
@@ -21,61 +22,43 @@ const MouldChangeHistory = () => {
     console.log(e.target.value)
     console.log(data.filter(obj => obj.Date.includes(searchText)))
   }
+
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    await setInterval(() => {
+      console.log('data fetching...')
+      setIsLoading(false)
+    }, 5000)
+
+
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+
+
+
   const [data, setDate] = useState([{
     _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    Date: '2021.12.05',
-    PreviousProduct: '4L lid',
-    NextProduct: '1L Can lid',
-    PlannedTime: '60 Min.',
-    Technicians: 'Technician 1, Technician 2'
+    Date: 'dummyData',
+    MachineNo: 'dummyData',
+    PreviousProduct: 'dummyData',
+    NextProduct: 'dummyData',
+    PlannedTime: 'dummyData',
+    Technicians: 'dummyData'
 
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    Date: '2021.12.05',
-    PreviousProduct: '4L lid',
-    NextProduct: '1L Can lid',
-    PlannedTime: '60 Min.',
-    Technicians: 'Technician 1, Technician 2'
-
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    Date: '2021.12.05',
-    PreviousProduct: '4L lid',
-    NextProduct: '1L Can lid',
-    PlannedTime: '60 Min.',
-    Technicians: 'Technician 1, Technician 2'
-
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    Date: '2021.12.05',
-    PreviousProduct: '4L lid',
-    NextProduct: '1L Can lid',
-    PlannedTime: '60 Min.',
-    Technicians: 'Technician 1, Technician 2'
-
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    Date: '2021.12.05',
-    PreviousProduct: '4L lid',
-    NextProduct: '1L Can lid',
-    PlannedTime: '60 Min.',
-    Technicians: 'Technician 1, Technician 2'
-
-  },
+  }
   ])
 
 
   return (
     <React.Fragment>
+      {isLoading ? <MiniLoader /> : ""}
       <div className="details-container">
         <div className="top">
           <div className="search">
@@ -108,7 +91,7 @@ const MouldChangeHistory = () => {
                       <td className="col-6">{element.PlannedTime} </td>
 
                       <td className="col-8">
-                        <Link to={`/dashboard/view/${element._id}`} className="arrow">{angles}</Link>
+                        <Link to={`/dashboard/mouldchange/view/${element._id}`} className="arrow">{angles}</Link>
                       </td>
                     </tr>
                   )

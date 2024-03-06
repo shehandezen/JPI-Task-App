@@ -7,6 +7,7 @@ import {
   faAnglesRight,
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/detailview.css";
+import MiniLoader from "./MiniLoader";
 
 const ProductHistory = () => {
   const search = <FontAwesomeIcon icon={faSearch} />;
@@ -30,45 +31,31 @@ const ProductHistory = () => {
   //   }
   // };
 
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    await setInterval(() => {
+      console.log('data fetching...')
+      setIsLoading(false)
+    }, 5000)
+
+
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+
   const [data, setDate] = useState([{
     _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: '4L Lid',
-    StartDate: '2024.01.25',
-    EndDate: '2024.01.25',
-
-    ProceedQty: 12000,
-    Efficiency: 95
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: '250ml milk bottle',
-    StartDate: '2024.01.25',
-    EndDate: '2024.01.25',
-
-    ProceedQty: 12000,
-    Efficiency: 95
-  },
-  {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: 'morison lid',
-    StartDate: '2024.01.25',
-    EndDate: '2024.01.25',
-
-    ProceedQty: 12000,
-    Efficiency: 95
-  }
-    , {
-    _id: '154gfew65g1ew6v4',
-    MachineNo: 'Im 01',
-    ProductName: 'measuring cup',
-    StartDate: '2024.01.25',
-    EndDate: '2024.01.25',
-
-    ProceedQty: 12000,
-    Efficiency: 95
+    MachineNo: 'dummyData',
+    ProductName: 'dummyData',
+    StartDate: 'dummyData',
+    EndDate: 'dummyData',
+    ProceedQty: 'dummyData',
+    Efficiency: 'dummyData'
   }
   ])
 
@@ -84,6 +71,7 @@ const ProductHistory = () => {
 
   return (
     <React.Fragment>
+       {isLoading ? <MiniLoader /> : ""}
       <div className="details-container">
         <div className="top">
           <div className="search">
