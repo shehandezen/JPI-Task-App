@@ -5,7 +5,7 @@ const Summary = () => {
   return (
     <React.Fragment>
       <div className="dev-container">
-        <img src="./development.webp" alt="developmet" />
+        <img src="./development.svg" alt="developmet" />
         <div className="text">This Feature is under development.</div>
       </div>
     </React.Fragment>

@@ -12,11 +12,25 @@ const UpdateMouldChange = () => {
 
   const floppyDisk = <FontAwesomeIcon icon={faFloppyDisk} />;
   const circleX = <FontAwesomeIcon icon={faXmark} />;
-
   const navigate = useNavigate();
   const date = new Date()
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    await setInterval(() => {
+      console.log('data fetching...')
+      setIsLoading(false)
+    }, 5000)
+
+
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
 
   const [data, setData] = useState({
     MachineNo: '',
@@ -33,6 +47,8 @@ const UpdateMouldChange = () => {
 
   })
 
+  const [previousProduct, setPreviousProduct] = useState([{_id: '', Name: 'dummyData'}])
+  const [nextProduct, setNextProduct] = useState([{_id: '', Name: 'dummyData'}])
 
   const handleChange = (value, type) => {
     if (type == "machineNo") {
@@ -80,7 +96,7 @@ const UpdateMouldChange = () => {
        {isLoading ? <MiniLoader /> : ""}
     <div className="add-product-container">
       <div className="head">
-        Update Mould Change
+       Update Mould Change
         <span className="line"></span>
       </div>
      
@@ -144,7 +160,7 @@ const UpdateMouldChange = () => {
             onChange={(e) => handleChange(e.target.value, "previousproduct")}
           >
              <option value="">Previous Product Name</option>
-             <option value="IBM 01">IBM 01</option>
+             {previousProduct.map((ele,index)=>(<option key={index} value={ele.Name}>{ele.Name}</option>))}
           </select>
         </div>
         <div className="input-container">
@@ -155,7 +171,7 @@ const UpdateMouldChange = () => {
             onChange={(e) => handleChange(e.target.value, "nextproduct")}
           >
              <option value="">Next Product Name</option>
-             <option value="IBM 01">IBM 01</option>
+             {nextProduct.map((ele,index)=>(<option key={index} value={ele.Name}>{ele.Name}</option>))}
           </select>
         </div>
        
@@ -239,7 +255,6 @@ const UpdateMouldChange = () => {
           {circleX} Discard
         </button>
       </div>
-      
     </div>
   </React.Fragment>
 

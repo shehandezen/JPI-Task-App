@@ -16,6 +16,21 @@ const AddMouldChange = () => {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const fetchData = async () => {
+    setIsLoading(true)
+    await setInterval(() => {
+      console.log('data fetching...')
+      setIsLoading(false)
+    }, 5000)
+
+
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+
   const [data, setData] = useState({
     MachineNo: '',
     Date:  `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
@@ -31,6 +46,8 @@ const AddMouldChange = () => {
 
   })
 
+  const [previousProduct, setPreviousProduct] = useState([{_id: '', Name: 'dummyData'}])
+  const [nextProduct, setNextProduct] = useState([{_id: '', Name: 'dummyData'}])
 
   const handleChange = (value, type) => {
     if (type == "machineNo") {
@@ -142,7 +159,7 @@ const AddMouldChange = () => {
             onChange={(e) => handleChange(e.target.value, "previousproduct")}
           >
              <option value="">Previous Product Name</option>
-             <option value="IBM 01">IBM 01</option>
+             {previousProduct.map((ele,index)=>(<option key={index} value={ele.Name}>{ele.Name}</option>))}
           </select>
         </div>
         <div className="input-container">
@@ -153,7 +170,7 @@ const AddMouldChange = () => {
             onChange={(e) => handleChange(e.target.value, "nextproduct")}
           >
              <option value="">Next Product Name</option>
-             <option value="IBM 01">IBM 01</option>
+             {nextProduct.map((ele,index)=>(<option key={index} value={ele.Name}>{ele.Name}</option>))}
           </select>
         </div>
        

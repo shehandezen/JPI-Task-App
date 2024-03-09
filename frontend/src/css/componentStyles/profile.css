@@ -12,17 +12,17 @@
   overflow-y: auto;
 }
 
-.profile-container .side-glass {
+/* .profile-container .side-glass {
   content: "";
   position: fixed;
   border-radius: 20px;
   width: 25%;
   height: 88%;
   max-width: 500px;
-  /* border: 1px solid red; */
+  border: 1px solid red;
   background: rgba(255, 255, 255, 0.1);
-  z-index: 100000;
-}
+  z-index: 100;
+} */
 
 .profile-container .banner {
   position: relative;
@@ -32,15 +32,18 @@
   width: 100%;
   height: 150px;
   background: url(../../img/banner.jpg);
+  background-size: cover;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
   display: flex;
   justify-content: center;
+
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.19);
   margin-bottom: 50px;
 }
+
 
 .profile-container .banner .remove-img {
   position: absolute;
@@ -56,6 +59,7 @@
   z-index: 100000;
   overflow: hidden;
 }
+
 .profile-container .banner .remove-img:hover {
   opacity: 0.8;
 }
@@ -70,6 +74,7 @@
   margin-bottom: 80px;
   /* border: 1px solid #fff; */
 }
+
 .profile-container .banner .messages .span-text {
   font-size: 14px;
   color: var(--red);
@@ -87,6 +92,7 @@
   cursor: pointer;
   color: transparent;
 }
+
 .profile-container .banner .file-box::before {
   content: "";
   position: relative;
@@ -142,17 +148,16 @@
   flex-direction: column;
   margin-bottom: 10px;
 }
+
 .profile-container .profile-section .section-head span {
   position: relative;
   /* border: 1px solid red; */
   width: 100px;
   height: 8px;
   border-radius: 5px;
-  background: linear-gradient(
-    90deg,
-    var(--primary-light-color),
-    var(--primary-dark-color)
-  );
+  background: linear-gradient(90deg,
+      var(--primary-light-color),
+      var(--primary-dark-color));
 }
 
 .profile-container .profile-section .details-container {
@@ -177,22 +182,14 @@
   flex-direction: column;
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-container
-  .detail-text {
+.profile-container .profile-section .details-container .detail-container .detail-text {
   position: relative;
   font-size: 15px;
   color: var(--primary-dark-color);
   font-weight: 500;
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-container
-  .detail {
+.profile-container .profile-section .details-container .detail-container .detail {
   position: relative;
   width: 100%;
   padding: 5px 8px;
@@ -209,18 +206,11 @@
   color: var(--primary-light-color);
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-container
-  input::placeholder {
+.profile-container .profile-section .details-container .detail-container input::placeholder {
   color: #fff;
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-button-container {
+.profile-container .profile-section .details-container .detail-button-container {
   position: relative;
   width: 100%;
   height: auto;
@@ -232,11 +222,7 @@
   margin-top: 20px;
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-button-container
-  button {
+.profile-container .profile-section .details-container .detail-button-container button {
   position: relative;
   left: 5px;
   width: 150px;
@@ -244,11 +230,9 @@
   margin: 0px 10px;
   padding: 8px 30px;
   border-radius: 20px;
-  background: linear-gradient(
-    90deg,
-    var(--primary-dark-color),
-    var(--primary-light-color)
-  );
+  background: linear-gradient(90deg,
+      var(--primary-dark-color),
+      var(--primary-light-color));
   transition: 0.75s;
   border: none;
   outline: none;
@@ -257,24 +241,14 @@
   overflow: hidden;
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-button-container
-  button:hover {
-  background: linear-gradient(
-    270deg,
-    var(--primary-dark-color),
-    var(--primary-light-color)
-  );
+.profile-container .profile-section .details-container .detail-button-container button:hover {
+  background: linear-gradient(270deg,
+      var(--primary-dark-color),
+      var(--primary-light-color));
   opacity: 5;
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-button-container
-  button::before {
+.profile-container .profile-section .details-container .detail-button-container button::before {
   content: "";
   position: absolute;
   top: -35px;
@@ -288,11 +262,7 @@
   overflow: hidden;
 }
 
-.profile-container
-  .profile-section
-  .details-container
-  .detail-button-container
-  button:hover::before {
+.profile-container .profile-section .details-container .detail-button-container button:hover::before {
   transform: translateX(350%) skewX(-45deg);
 }
 
@@ -300,21 +270,19 @@
   .profile-container .profile-section .details-container .detail-container {
     width: 100%;
   }
+
   .profile-container .profile-section .details-container {
     padding: 0px;
   }
 }
 
 @media screen and (max-width: 410px) {
-  .profile-container
-    .profile-section
-    .details-container
-    .detail-button-container
-    button {
+  .profile-container .profile-section .details-container .detail-button-container button {
     font-size: 14px;
     width: 220px;
     padding: 8px 15px;
   }
+
   .profile-container .banner .messages .span-text {
     font-size: 12px;
   }

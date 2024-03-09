@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTag, faPercent, faPencil } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/product.css";
+import { Link } from "react-router-dom";
 
 const MouldChange = () => {
   const tag = <FontAwesomeIcon icon={faTag} />;
@@ -18,8 +19,8 @@ const MouldChange = () => {
     ActualTime: '',
     StartTime: '',
     EndTime: '',
-    Note: ''
-
+    Note: '',
+    _id: 'd'
   })
 
   return (
@@ -103,7 +104,7 @@ const MouldChange = () => {
             </div>
           </div>
           </div>
-          <div className="edit-data">{pencil}</div>
+          <Link to={`/dashboard/mouldchange/update/${data._id}`} className="edit-data">{pencil}</Link>
       </div>
       </React.Fragment>
   );

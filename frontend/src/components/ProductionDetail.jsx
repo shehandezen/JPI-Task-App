@@ -50,6 +50,7 @@ const ProductionDetail = () => {
   ]
 
 
+
   const [isView, setIsView] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -148,9 +149,9 @@ const ProductionDetail = () => {
           <span className="line"></span>
         </div>
         <div className="tags-container">
-          <div className="tag">2024.02.06</div>
-          <div className="tag">Day</div>
-          <div className="tag">Supervisor</div>
+          <div className="tag">{data.Date}</div>
+          <div className="tag">{data.Shift}</div>
+          <div className="tag">{data.Supervisor}</div>
           {data.Live ? (<div className="tag" style={{ background: 'var(--red)' }}>Live</div>) : ''}
         </div>
         <div className="machine-cards">

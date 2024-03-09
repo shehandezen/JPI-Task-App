@@ -12,6 +12,8 @@
   font-size: 25px;
   color: #fff;
   font-weight: 500;
+  position: relative;
+  bottom: 10%;
 }
 
 .dev-container img {
