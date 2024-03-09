@@ -159,7 +159,7 @@ const AddMouldChange = () => {
             onChange={(e) => handleChange(e.target.value, "previousproduct")}
           >
              <option value="">Previous Product Name</option>
-             {previousProduct.map((ele,index)=>(<option key={index} value={ele.Name}>{ele.Name}</option>))}
+             {previousProduct.map((ele,index)=>(<option key={index} value={ele._id}>{ele.Name}</option>))}
           </select>
         </div>
         <div className="input-container">
@@ -170,7 +170,7 @@ const AddMouldChange = () => {
             onChange={(e) => handleChange(e.target.value, "nextproduct")}
           >
              <option value="">Next Product Name</option>
-             {nextProduct.map((ele,index)=>(<option key={index} value={ele.Name}>{ele.Name}</option>))}
+             {nextProduct.map((ele,index)=>(<option key={index} value={ele._id}>{ele.Name}</option>))}
           </select>
         </div>
        

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+ const mongoose = require("mongoose");
 const Product = require("../db/Schemas/Product");
 const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
