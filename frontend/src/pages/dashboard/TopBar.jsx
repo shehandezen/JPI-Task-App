@@ -123,7 +123,7 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user }) => {
         </div>
         <div className="profile">
           <div className="notifications">
-            <a href="#">{bell}</a>
+            <Link to={'/dashboard/notifications'}>{bell}</Link>
           </div>
           <div
             className="username"
@@ -141,7 +141,7 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user }) => {
               src={
                 user?.Image === undefined || user?.Image === null
                   ? "https://www.w3schools.com/howto/img_avatar.png"
-                  : `${process.env.REACT_APP_API_URL}/profile/${user?.Image}`
+                  : `${process.env.REACT_APP_API_URL}profile/${user?.Image}`
               }
               alt=""
             />

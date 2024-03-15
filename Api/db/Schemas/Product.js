@@ -1,52 +1,35 @@
 const mongoose = require("mongoose")
 
 const Product = new mongoose.Schema({
-        machineNo: {
-            required: true,
-            type: String
-        },
-        productName:  {
-            required: true,
-            type: String
-        },
-        productCode: String,
-        productImage: String,
-        customer: String,
-        packageDetails: {
-          bagType: String,
-          isDoubleBag:  {
-            required: true,
-            type: Boolean 
-        },
-          bagSize:  {
-            required: true,
-            type: String
-        },
-        otherBagSize : String, 
-          itemsPerPacket: Number
-        },
-        boxes:{
-          isRequired:  {
-            required: true,
-            type: Boolean
-        },
-          boxSize:  String
-        },
-        labelDetails: {
-          isRequired: Boolean,
-          labelName: String,
-          labelCode: [String]
-        },
-        materialDetails: {
-          materialName: String,
-          masterBatch: String
-        },
-      
-        period: {
-          startDate: Date,
-          endDate: Date
-        },
-        isActive: Boolean
+  machineNo: String,
+  productName: String,
+  productCode: String,
+  jobNo: Number,
+  customer: String,
+  hourlyTarget: Number,
+  cycleTime: Number,
+  itemWeight: Number,
+  availableCavities:Number,
+  usingCavities: Number,
+  planningQty: Number,
+  proceedQty: Number,
+  isDoubleBag: Boolean,
+  isCardboardRequired: Boolean,
+  isSeconBagRequired: Boolean,
+  bagType: String,
+  bagSize: String,
+  polytheneCode: String,
+  secondBagSize: String,
+  polytheneCodeSecond: String,
+  cardboardSize: String,
+  cardboardCode: String,
+  isLabelRequired: String,
+  labelName: String,
+  labelCode: String,
+  materialName: String,
+  masterbatch: String,
+  totalhours: Number,
+  status: String,
 })
 
 module.exports = mongoose.model("Product", Product)

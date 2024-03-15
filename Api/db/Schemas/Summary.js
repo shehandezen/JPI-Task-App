@@ -16,18 +16,13 @@ const Summary = new mongoose.Schema({
   Data: [
     {
       MachineNo: String,
-      ProductName: String,
-      CycleTime: String,
-      HourlyTarget: String,
+      Product: {type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
       PlannedQty: String,
       AcceptedQty: String,
       DownTime: String,
       MaterialDamages: String,
       MachineDamages: String,
-      Operator: String,
-      Weight: String,
-      NoOfCavitiesStandard: String,
-      NoOfCavitiesUsed: String,
+      Operator: String
     },
   ],
 });

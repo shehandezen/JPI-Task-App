@@ -95,6 +95,19 @@ const Dashboard = () => {
           link: "/dashboard/profile/edit",
         },
       ]);
+    }
+    else if (path.includes("production")) {
+      setLinkList([
+        {
+          text: "New Report",
+          link: "/dashboard/production/adddailyproduction",
+        },
+        {
+          text: "Production Reports",
+          link: "/dashboard/production/reports",
+        },
+        
+      ]);
     } else {
       setLinkList([
         {
@@ -104,6 +117,10 @@ const Dashboard = () => {
         {
           text: "Production",
           link: "/dashboard/view/current",
+        },
+        {
+          text: "Production Report",
+          link: "/dashboard/production/reports",
         },
         {
           text: "Mould Changes",

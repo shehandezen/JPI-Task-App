@@ -53,7 +53,7 @@ const Profile = () => {
               data.Image == null ||
               data.Image == "undefined"
                 ? "https://www.w3schools.com/howto/img_avatar.png"
-                : `${process.env.REACT_APP_API_URL}/profile/${data.Image}`
+                : `${process.env.REACT_APP_API_URL}profile/${data.Image}`
             }
             alt="profle image"
           />
