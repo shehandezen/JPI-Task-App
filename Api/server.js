@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const Product = require("./Routes/Product");
 const Summary = require("./Routes/Summary");
+const MouldChange = require("./Routes/MouldChange")
+const Production = require("./Routes/Production")
+const Material = require("./Routes/Material")
 const authRoute = require("./Routes/auth");
 const User = require("./Routes/User");
 require("dotenv").config();
@@ -26,6 +29,9 @@ app.get("/", (req, res) => {
 
 //routes
 app.use("/product", Product);
+app.use("/production", Production);
+app.use("/material", Material);
+app.use("/mouldchange", MouldChange);
 app.use("/summary", Summary);
 app.use("/auth", authRoute);
 app.use("/user", User);

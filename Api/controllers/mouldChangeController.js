@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-const Product = require("../db/Schemas/Product");
+const MouldChange = require("../db/Schemas/MouldChange");
 const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
-const getProducts = async (req, res) => {
+const getMouldChanges = async (req, res) => {
   try {
-    const product = await getData(Product, {});
+    const mouldChange = await getData(MouldChange, {}, {path: 'PreviousProduct'}, {path: 'NextProduct'}, );
     res.status(200).json({
       status: 'success',
       message: 'The data has sucessfully fetched',
-      data: product
+      data: mouldChange
     });
   } catch (e) {
     console.log(e.message);
@@ -16,14 +16,14 @@ const getProducts = async (req, res) => {
   }
 };
 
-const getProduct = async (req, res) => {
+const getMouldChange = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const product = await getData(Product, { _id: req.params.id });
+      const mouldChange = await getData(MouldChange, { _id: req.params.id }, {path: 'PreviousProduct'}, {path: 'NextProduct'});
       res.status(200).json({
         status: 'success',
         message: 'The data has sucessfully fetched',
-        data: product[0]
+        data: mouldChange[0]
       });
     } else {
       res.status(400).json({ status: "error", message: "Provide a valid key" });
@@ -34,13 +34,13 @@ const getProduct = async (req, res) => {
   }
 };
 
-const createProduct = async (req, res) => {
+const createMouldChange = async (req, res) => {
   try {
-    const product = await addData(Product, req.body);
+    const mouldChange = await addData(MouldChange, req.body);
     res.status(201).json({
       status: "success",
       message: "New product added sucessfully",
-      data: product,
+      data: mouldChange,
     });
   } catch (e) {
     console.log(e);
@@ -48,15 +48,15 @@ const createProduct = async (req, res) => {
   }
 };
 
-const updateProduct = async (req, res) => {
+const updateMouldChange = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const updatedProduct = await updateData(Product, req.params.id, req.body);
-      if (updatedProduct) {
+      const updatedMouldChange = await updateData(MouldChange, req.params.id, req.body, {path: 'PreviousProduct'}, {path: 'NextProduct'});
+      if (updatedMouldChange) {
         res.status(200).json({
           status: "sucess",
           message: 'The data is sucessfully updated',
-          data: updatedProduct,
+          data: updatedMouldChange,
         });
       } else {
         res.status(400).json({
@@ -73,14 +73,14 @@ const updateProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req, res) => {
+const deleteMouldChange = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const deletedProduct = await deleteData(Product, req.params.id);
-      if (deletedProduct.deletedCount !== 0) {
+      const deletedMouldChange = await deleteData(MouldChange, req.params.id);
+      if (deletedMouldChange.deletedCount !== 0) {
         res
           .status(204)
-          .json({ status: "sucess", message: 'The data record is successfully deleted', data: deletedProduct });
+          .json({ status: "sucess", message: 'The data record is successfully deleted', data: deletedMouldChange });
       } else {
         res.status(400).json({
           status: "error",
@@ -97,9 +97,9 @@ const deleteProduct = async (req, res) => {
 };
 
 module.exports = {
-  getProduct,
-  getProducts,
-  createProduct,
-  updateProduct,
-  deleteProduct,
+  getMouldChange,
+  getMouldChanges,
+  createMouldChange,
+  updateMouldChange,
+  deleteMouldChange,
 };
