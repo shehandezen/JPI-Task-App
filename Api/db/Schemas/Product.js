@@ -34,7 +34,7 @@ const Product = new mongoose.Schema({
   cardboardCode: String,
   isLabelRequired: String,
   labelName:  {
-    Size: String,
+    LabelName: String,
     Code: String
   },
   labelCode: String,
