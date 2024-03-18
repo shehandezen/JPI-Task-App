@@ -27,7 +27,10 @@ const Product = new mongoose.Schema({
     Code: String
   },
   polytheneCodeSecond: String,
-  cardboardSize: String,
+  cardboardSize:  {
+    Size: String,
+    Code: String
+  },
   cardboardCode: String,
   isLabelRequired: String,
   labelName:  {
