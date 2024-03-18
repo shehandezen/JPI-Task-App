@@ -17,14 +17,23 @@ const Product = new mongoose.Schema({
   isCardboardRequired: Boolean,
   isSeconBagRequired: Boolean,
   bagType: String,
-  bagSize: String,
+  bagSize: {
+    Size: String,
+    Code: String
+  },
   polytheneCode: String,
-  secondBagSize: String,
+  secondBagSize:  {
+    Size: String,
+    Code: String
+  },
   polytheneCodeSecond: String,
   cardboardSize: String,
   cardboardCode: String,
   isLabelRequired: String,
-  labelName: String,
+  labelName:  {
+    Size: String,
+    Code: String
+  },
   labelCode: String,
   materialName: String,
   masterbatch: String,
