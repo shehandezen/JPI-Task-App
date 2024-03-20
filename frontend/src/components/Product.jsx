@@ -3,52 +3,54 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTag, faPercent } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/product.css";
 import MiniLoader from "./MiniLoader";
+import { getProductData } from "../app.service";
+import { useLocation, useParams } from "react-router-dom";
 
 const Product = () => {
   const tag = <FontAwesomeIcon icon={faTag} />;
   const percent = <FontAwesomeIcon icon={faPercent} />;
-
-  const data = {
-    machineNo: "",
-    productName: "",
-    productCode: "",
-    jobNo: "",
-    customer: "",
-    hourlyTarget: "",
-    cycleTime: "",
-    itemWeight: "",
-    availableCavities: "",
-    usingCavities: "",
-    planningQty: "",
-    proceedQty: '',
-    isDoubleBag: true,
-    isCardboardRequired: true,
-    isSeconBagRequired: true,
-    bagType: "",
-    bagSize: "",
-    polytheneCode: "",
-    secondBagSize: "",
-    polytheneCodeSecond: "",
-    cardboardSize: "",
-    cardboardCode: "",
-    isLabelRequired: true,
-    labelName: "",
-    labelCode: "",
-    materialName: "",
-    masterbatch: "",
-    totalhours: ''
-  };
+  const location = useLocation()
+  const { id } = useParams()
+  const [data, setData] = useState({})
+  // const data = {
+  //   machineNo: "",
+  //   productName: "",
+  //   productCode: "",
+  //   jobNo: "",
+  //   customer: "",
+  //   hourlyTarget: "",
+  //   cycleTime: "",
+  //   itemWeight: "",
+  //   availableCavities: "",
+  //   usingCavities: "",
+  //   planningQty: "",
+  //   proceedQty: '',
+  //   isDoubleBag: true,
+  //   isCardboardRequired: true,
+  //   isSeconBagRequired: true,
+  //   bagType: "",
+  //   bagSize: "",
+  //   polytheneCode: "",
+  //   secondBagSize: "",
+  //   polytheneCodeSecond: "",
+  //   cardboardSize: "",
+  //   cardboardCode: "",
+  //   isLabelRequired: true,
+  //   labelName: "",
+  //   labelCode: "",
+  //   materialName: "",
+  //   masterbatch: "",
+  //   totalhours: ''
+  // };
 
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchData = async () => {
     setIsLoading(true)
-    await setInterval(() => {
-      console.log('data fetching...')
-      setIsLoading(false)
-    }, 5000)
-
-
+    const response = await getProductData(id)
+    await setData(response.data.data)
+    // console.log(response.data.data)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -56,7 +58,7 @@ const Product = () => {
   }, [])
 
   const percentageProgress = (data.proceedQty / data.planningQty) * 100
-  const percentageEfficiency = ((data.proceedQty/data.hourlyTarget*data.usingCavities) / data.totalhours) * 100
+  const percentageEfficiency = (((data.proceedQty / data.hourlyTarget * data.usingCavities) / data.totalhours) * 100) == 'NaN' ? 100 : (((data.proceedQty / data.hourlyTarget * data.usingCavities) / data.totalhours) * 100)
 
   // const value1 = (percentage * ((250 - 20) / 2) * 3.14 * 2) / 100;
   // const value2 =
@@ -68,28 +70,29 @@ const Product = () => {
     const value2 =
       ((250 - 20) / 2) * 3.14 * 2 -
       (percentage * ((250 - 20) / 2) * 3.14 * 2) / 100;
+      
     return (
       <div className="progress">
         <svg width="250" height="250" viewBox="0 0 250 250">
           <circle
-            class="bg"
+            className="bg"
             cx="125"
             cy="125"
             r="115"
             fill="none"
             stroke="#10202b"
-            stroke-width="20"
+            strokeWidth="20"
           ></circle>
           <circle
-            class="fg"
+            className="fg"
             cx="125"
             cy="125"
             r="115"
-            stroke-dasharray={`${value1} ${value2}`}
+            strokeDasharray={`${value1} ${value2}`}
             fill="none"
             stroke="#12d39e"
-            stroke-width="20"
-            stroke-linecap="round"
+            strokeWidth="20"
+            strokeLinecap="round"
           ></circle>
         </svg>
         <div className="percentage">
@@ -225,8 +228,8 @@ const Product = () => {
               <div className="icon">{tag}</div> Bag Size :{" "}
             </div>
             <div className="info-value">
-              {data.bagSize != "" ? data.bagSize : "N/A"}
-             {data.isDoubleBag?( <span className="box">Double Bag</span>):''}
+              {( data.bagSize?.Size != undefined ) ? data.bagSize?.Size : "N/A"}
+              {data.isDoubleBag ? (<span className="box">Double Bag</span>) : ''}
             </div>
           </div>
           {data.isSeconBagRequired ? (
@@ -237,21 +240,10 @@ const Product = () => {
                   <div className="icon">{tag}</div> Second Bag Size :{" "}
                 </div>
                 <div className="info-value">
-                  {data.secondBagSize != "" ? data.secondBagSize : "N/A"}
+                  {data.secondBagSize != {} ? data.secondBagSize?.Size : "N/A"}
                 </div>
               </div>
-              <div className="info-line">
-                <div className="info-key">
-                  {" "}
-                  <div className="icon">{tag}</div>
-                  {" Polythene Code (second) : "}
-                </div>
-                <div className="info-value">
-                  {data.polytheneCodeSecond != ""
-                    ? data.polytheneCodeSecond
-                    : "N/A"}
-                </div>
-              </div>
+
             </>
           ) : null}
           {data.isCardboardRequired ? (
@@ -262,21 +254,13 @@ const Product = () => {
                   <div className="icon">{tag}</div> Cardboard Size :{" "}
                 </div>
                 <div className="info-value">
-                  {data.cardboardSize != "" ? data.cardboardSize : "N/A"}
+                  {data.cardboardSize != {} ? data.cardboardSize?.Size : "N/A"}
                 </div>
               </div>
-              <div className="info-line">
-                <div className="info-key">
-                  {" "}
-                  <div className="icon">{tag}</div> Cardboard Code :{" "}
-                </div>
-                <div className="info-value">
-                  {data.cardboardCode != "" ? data.cardboardCode : "N/A"}
-                </div>
-              </div>
+
             </>
           ) : null}
-          <div className="section-title"> Packaging Details</div>
+          <div className="section-title"> Material Details</div>
 
           <div className="info-line">
             <div className="info-key">
@@ -296,7 +280,7 @@ const Product = () => {
               {data.masterbatch != "" ? data.masterbatch : "N/A"}
             </div>
           </div>
-          {data.isLabelRequired ? (
+          {data?.isLabelRequired ? (
             <>
               <div className="info-line">
                 <div className="info-key">
@@ -304,18 +288,10 @@ const Product = () => {
                   <div className="icon">{tag}</div> Label Name :{" "}
                 </div>
                 <div className="info-value">
-                  {data.labelName != "" ? data.labelName : "N/A"}
+                  {data.labelName != {} ? data.labelName?.LabelName : "N/A"}
                 </div>
               </div>
-              <div className="info-line">
-                <div className="info-key">
-                  {" "}
-                  <div className="icon">{tag}</div> Label Code :{" "}
-                </div>
-                <div className="info-value">
-                  {data.labelCode != "" ? data.labelCode : "N/A"}
-                </div>
-              </div>
+
             </>
           ) : null}
         </div>

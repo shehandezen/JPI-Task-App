@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   const checkIsLoggedIn = async () => {
     const token = await localStorage.getItem("token");
-    console.log(token);
+
 
     if (token == null) {
       navigate("/signin");
@@ -38,7 +38,7 @@ const Dashboard = () => {
   }, [localStorage.getItem("token")]);
 
   const pathDetect = (path) => {
-    console.log(path.includes("view"));
+   
     if (path.includes("view")) {
       setLinkList([
         {
@@ -144,7 +144,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     pathDetect(location.pathname);
-    console.log(linkList);
+   
   }, [location.pathname, setLinkList]);
 
   return (

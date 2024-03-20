@@ -4,7 +4,7 @@ const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
 const getMouldChanges = async (req, res) => {
   try {
-    const mouldChange = await getData(MouldChange, {}, {path: 'PreviousProduct'}, {path: 'NextProduct'}, );
+    const mouldChange = await getData(MouldChange, req.query.filter, {path: 'PreviousProduct'}, {path: 'NextProduct'}, );
     res.status(200).json({
       status: 'success',
       message: 'The data has sucessfully fetched',

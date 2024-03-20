@@ -20,9 +20,9 @@ const OffCanvasSideBar = ({ isMenuShow, setIsMenuShow, linkList }) => {
         </button>
         <div className="hover-back-text">{text}</div>
         <ul className="link-list">
-          {linkList?.map((element) => {
+          {linkList?.map((element, index) => {
             return (
-              <li>
+              <li key={index}>
                 <Link
                   to={element.link}
                   onMouseOver={(e) => {
