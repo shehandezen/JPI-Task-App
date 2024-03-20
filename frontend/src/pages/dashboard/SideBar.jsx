@@ -12,11 +12,11 @@ const SideBar = ({ linkList }) => {
           <svg
             viewBox="0 0 500 500"
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsBx="https://boxy-svg.com"
+            xmlnsbx="https://boxy-svg.com"
           >
             <defs>
               <style
-                bxFonts="ADLaM Display"
+                bxfonts="ADLaM Display"
                 dangerouslySetInnerHTML={{
                   __html:
                     "@import url(https://fonts.googleapis.com/css2?family=ADLaM+Display%3Aital%2Cwght%400%2C400&display=swap);",
@@ -58,10 +58,11 @@ const SideBar = ({ linkList }) => {
           {/* <div className="link active">
             <a href="#"> home</a>
           </div> */}
-          {linkList.map((element) => {
-            console.log(element);
+          {linkList.map((element, index) => {
+           
             return (
               <div
+              key={index}
                 className={
                   location.pathname == element.link ? "link active" : "link"
                 }

@@ -32,7 +32,7 @@ const Product = new mongoose.Schema({
     Code: String
   },
   cardboardCode: String,
-  isLabelRequired: String,
+  isLabelRequired: Boolean,
   labelName:  {
     LabelName: String,
     Code: String
@@ -42,6 +42,7 @@ const Product = new mongoose.Schema({
   masterbatch: String,
   totalhours: Number,
   status: String,
+  
 })
 
 module.exports = mongoose.model("Product", Product)
