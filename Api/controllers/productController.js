@@ -4,7 +4,8 @@ const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
 const getProducts = async (req, res) => {
   try {
-    const product = await getData(Product, req.query.filter);
+    const filterObj = JSON.parse(req.query.filter)
+    const product = await getData(Product,filterObj);
     res.status(200).json({
       status: 'success',
       message: 'The data has sucessfully fetched',
