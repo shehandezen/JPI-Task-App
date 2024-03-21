@@ -11,7 +11,8 @@ const MouldChange = new mongoose.Schema({
     actualTime: Number,
     startTime: String,
     endTime: String,
-    note: String
+    note: String,
+    status: String
 })
 
 module.exports = mongoose.model("MouldChange", MouldChange)

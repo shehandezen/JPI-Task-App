@@ -22,14 +22,14 @@ const CurrentMouldChange = () => {
   const searchHandle = (e) => {
     setSearchText(e.target.value);
     console.log(e.target.value);
-    console.log(data.filter((obj) => obj.MachineNo.includes(searchText)));
+    console.log(data.filter((obj) => obj.machineNo.includes(searchText)));
   };
 
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = async () => {
     setIsLoading(true);
-    const response = await getMouldChanges(`{"date":"${date.getFullYear()}-${date.getMonth()}-${date.getDate()}"}`)
+    const response = await getMouldChanges(`{"date":"${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}"}`)
     console.log(response.data)
     setData(response?.data?.data)
     setIsLoading(false);
@@ -64,25 +64,29 @@ const CurrentMouldChange = () => {
                 <th className="col-1">Machine No</th>
                 <th className="col-2">Previous Product</th>
                 <th className="col-3">Next Product</th>
-                <th className="col-4">Technicians</th>
-                <th className="col-5">Planned Time</th>
+                <th className="col-4">Planned Time</th>
+                <th className="col-5">Status</th>
+                <th className="col-5">Technicians</th>
+            
                 <th className="col-8">{angles}</th>
               </tr>
 
               {data
                 ?.filter((obj) =>
-                  obj?.MachineNo?.toLocaleLowerCase().includes(
+                  obj?.machineNo?.toLocaleLowerCase().includes(
                     searchText.toLocaleLowerCase()
                   )
                 )
                 ?.map((element, index) => {
                   return (
                     <tr>
-                      <td className="col-1">{element.MachineNo} </td>
-                      <td className="col-2">{element.PreviousProduct} </td>
-                      <td className="col-3">{element.NextProduct} </td>
-                      <td className="col-4">{element.PlannedTime} </td>
-                      <td className="col-5">{element.Technicians} </td>
+                      <td className="col-1">{element.machineNo} </td>
+                      <td className="col-2">{element.previousProduct?.productName} </td>
+                      <td className="col-3">{element.nextProduct?.productName} </td>
+                      <td className="col-4">{element.plannedTime} </td>
+                      <td className="col-4"> <span className="box"> {element.status} </span></td>
+
+                      <td className="col-5">{`${element.technician1}, ${element.technician2}` } </td>
 
                       <td className="col-8">
                         <Link

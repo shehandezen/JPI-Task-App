@@ -30,7 +30,7 @@ const getMouldChange = async (req, res) => {
         MouldChange,
         { _id: req.params.id },
         { path: "previousProduct" },
-        { path: "pextProduct" }
+        { path: "nextProduct" }
       );
       res.status(200).json({
         status: "success",
