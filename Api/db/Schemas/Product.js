@@ -42,7 +42,8 @@ const Product = new mongoose.Schema({
   masterbatch: String,
   totalhours: Number,
   status: String,
-  
+  startDate: String,
+  endDate: String
 })
 
 module.exports = mongoose.model("Product", Product)

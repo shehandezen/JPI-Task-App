@@ -8,7 +8,7 @@ const client = axios.create({
 const getProducts = async (filter) => {
   let response;
   await client
-    .get(`/product/?filter=${filter}}`)
+    .get(`/product/?filter=${filter}`)
     .then((data) => {
       response = data;
     })
@@ -58,7 +58,7 @@ const updateProductData = async (id, data) => {
 const getMouldChanges = async (filter) => {
   let response;
   await client
-    .get(`/mouldchange/?filter=${filter}}`)
+    .get(`/mouldchange/?filter=${filter}`)
     .then((data) => {
       response = data;
     })
@@ -81,6 +81,22 @@ const getMouldChangeData = async (id) => {
       response = err;
     });
   return response;
+};
+
+
+const addMouldChange = async (data) => {
+  let result;
+  await client
+    .post("/mouldchange", data, {
+      "Content-Type": "multipart/form-data",
+    })
+    .then((response) => {
+      result = response.data;
+    })
+    .catch((err) => {
+      result = err.response.data;
+    });
+  return result;
 };
 
 const updateMouldChangeData = async (id, data) => {
@@ -230,5 +246,6 @@ export {
   updateProductData,
   getMouldChanges,
   getMouldChangeData,
-  updateMouldChangeData
+  updateMouldChangeData,
+  addMouldChange
 };

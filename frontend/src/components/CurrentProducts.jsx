@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/detailview.css";
 import MiniLoader from "./MiniLoader";
+import { getProducts } from "../app.service";
 
 const CurrentProducts = () => {
   const search = <FontAwesomeIcon icon={faSearch} />;
@@ -30,43 +31,32 @@ const CurrentProducts = () => {
   //     panel.current.style.visibility = "hidden";
   //   }
   // };
+  
+  const [data, setData] = useState([]);
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = async () => {
-    setIsLoading(true)
-    await setInterval(() => {
-      console.log('data fetching...')
-      setIsLoading(false)
-    }, 5000)
+    setIsLoading(true);
+    const response = await getProducts('{"status":"ACTIVE"}');
+    await setData(response.data.data);
+    console.log(data);
 
-
-  }
+    setIsLoading(false);
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
-  const [data, setDate] = useState([{
-    _id: '4erg62hdf6h5h2dfh',
-    MachineNo: 'dummyData',
-    ProductName: 'dummyData',
-    StartDate: 'dummyData',
-    PlannedQty: 'dummyData',
-    CurrentQty: 'dummyData',
-    Progress: 'dummyData',
-    Efficiency: 'dummyData'
-  }])
 
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = useState("");
 
   const searchHandle = (e) => {
-    setSearchText(e.target.value)
-    console.log(e.target.value)
-    console.log(data.filter(obj => obj.ProductName.includes(searchText)))
-  }
-
-
+    setSearchText(e.target.value);
+    console.log(e.target.value);
+    console.log(data.filter((obj) => obj.productName.includes(searchText)));
+  };
 
   return (
     <React.Fragment>
@@ -75,12 +65,18 @@ const CurrentProducts = () => {
       <div className="details-container">
         <div className="top">
           <div className="search">
-            <input type="text" placeholder="Search products here" onChange={(e) => { searchHandle(e) }} />
+            <input
+              type="text"
+              placeholder="Search products here"
+              onChange={(e) => {
+                searchHandle(e);
+              }}
+            />
             <div className="search-icon"> {search} </div>
           </div>
         </div>
         <div className="wrapper">
-          <div className="table-container" >
+          <div className="table-container">
             <table>
               <tr>
                 <th className="col-1">Machine No</th>
@@ -93,24 +89,40 @@ const CurrentProducts = () => {
                 <th className="col-8">{angles}</th>
               </tr>
 
-              {
-                data?.filter(obj => obj?.ProductName?.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))?.map((element, index) => {
+              {data
+                ?.filter((obj) =>
+                  obj?.productName?.toLocaleLowerCase().includes(
+                    searchText.toLocaleLowerCase()
+                  )
+                )
+                ?.map((element, index) => {
                   return (
-                    <tr>
-                      <td className="col-1">{element.MachineNo} </td>
-                      <td className="col-2">{element.ProductName} </td>
-                      <td className="col-3">{element.StartDate} </td>
-                      <td className="col-4">{element.PlannedQty} </td>
-                      <td className="col-5">{element.CurrentQty} </td>
-                      <td className="col-6">{element.Progress} </td>
-                      <td className="col-7">{element.Efficiency} </td>
+                    <tr key={index}>
+                      <td className="col-1">{element.machineNo} </td>
+                      <td className="col-2">{element.productName} </td>
+                      <td className="col-3">{element.startDate} </td>
+                      <td className="col-4">{element.planningQty} </td>
+                      <td className="col-5">{element.proceedQty} </td>
+                      <td className="col-6">
+                        {(element.proceedQty / element.planningQty) * 100}
+                      </td>
+                      <td className="col-7">
+                        {(((element.proceedQty / element.hourlyTarget) *
+                          element.usingCavities) /
+                          element.totalhours) *
+                          100}
+                      </td>
                       <td className="col-8">
-                        <Link to={`/dashboard/view/${element._id}`} className="arrow">{angles}</Link>
+                        <Link
+                          to={`/dashboard/view/${element._id}`}
+                          className="arrow"
+                        >
+                          {angles}
+                        </Link>
                       </td>
                     </tr>
-                  )
-                })
-              }
+                  );
+                })}
               {/* <tr>
                 <td className="col-1">Sample </td>
                 <td className="col-2">Sample </td>
@@ -145,8 +157,6 @@ const CurrentProducts = () => {
               </tr> */}
             </table>
           </div>
-
-
         </div>
       </div>
     </React.Fragment>
