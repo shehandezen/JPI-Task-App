@@ -4,7 +4,12 @@ const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
 const getProducts = async (req, res) => {
   try {
-    const filterObj = JSON.parse(req.query.filter)
+    let filterObj;
+    if (req.query.filter == undefined) {
+      filterObj = await JSON.parse(req.query.filter);
+    } else {
+      filterObj = {};
+    }
     const product = await getData(Product,filterObj);
     res.status(200).json({
       status: 'success',

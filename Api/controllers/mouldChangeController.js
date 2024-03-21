@@ -4,34 +4,54 @@ const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
 const getMouldChanges = async (req, res) => {
   try {
-    const filterObj = JSON.parse(req.query.filter)
-    const mouldChange = await getData(MouldChange, filterObj, {path: 'PreviousProduct'}, {path: 'NextProduct'}, );
+    let filterObj;
+    if (req.query.filter == undefined) {
+      filterObj = await JSON.parse(req.query.filter);
+    } else {
+      filterObj = {};
+    }
+    
+    const mouldChange = await getData(
+      MouldChange,
+      filterObj,
+      { path: "PreviousProduct" },
+      { path: "NextProduct" }
+    );
     res.status(200).json({
-      status: 'success',
-      message: 'The data has sucessfully fetched',
-      data: mouldChange
+      status: "success",
+      message: "The data has sucessfully fetched",
+      data: mouldChange,
     });
   } catch (e) {
     console.log(e.message);
-    res.status(500).json({ status: 'erorr', message: e.message, cause: e.cause });
+    res
+      .status(500)
+      .json({ status: "erorr", message: e.message, cause: e.cause });
   }
 };
 
 const getMouldChange = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const mouldChange = await getData(MouldChange, { _id: req.params.id }, {path: 'PreviousProduct'}, {path: 'NextProduct'});
+      const mouldChange = await getData(
+        MouldChange,
+        { _id: req.params.id },
+        { path: "PreviousProduct" },
+        { path: "NextProduct" }
+      );
       res.status(200).json({
-        status: 'success',
-        message: 'The data has sucessfully fetched',
-        data: mouldChange[0]
+        status: "success",
+        message: "The data has sucessfully fetched",
+        data: mouldChange[0],
       });
     } else {
       res.status(400).json({ status: "error", message: "Provide a valid key" });
     }
   } catch (e) {
     console.log(e.message);
-    res.status(500).json({ status: 'erorr', message: e.message, cause: e.cause });
+    res
+      .status(500)
+      .json({ status: "erorr", message: e.message, cause: e.cause });
   }
 };
 
@@ -45,18 +65,26 @@ const createMouldChange = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ status: 'erorr', message: e.message, cause: e.cause });
+    res
+      .status(500)
+      .json({ status: "erorr", message: e.message, cause: e.cause });
   }
 };
 
 const updateMouldChange = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const updatedMouldChange = await updateData(MouldChange, req.params.id, req.body, {path: 'PreviousProduct'}, {path: 'NextProduct'});
+      const updatedMouldChange = await updateData(
+        MouldChange,
+        req.params.id,
+        req.body,
+        { path: "PreviousProduct" },
+        { path: "NextProduct" }
+      );
       if (updatedMouldChange) {
         res.status(200).json({
           status: "sucess",
-          message: 'The data is sucessfully updated',
+          message: "The data is sucessfully updated",
           data: updatedMouldChange,
         });
       } else {
@@ -70,7 +98,9 @@ const updateMouldChange = async (req, res) => {
     }
   } catch (e) {
     console.log(e.message);
-    res.status(500).json({ status: 'erorr', message: e.message, cause: e.cause });
+    res
+      .status(500)
+      .json({ status: "erorr", message: e.message, cause: e.cause });
   }
 };
 
@@ -81,7 +111,11 @@ const deleteMouldChange = async (req, res) => {
       if (deletedMouldChange.deletedCount !== 0) {
         res
           .status(204)
-          .json({ status: "sucess", message: 'The data record is successfully deleted', data: deletedMouldChange });
+          .json({
+            status: "sucess",
+            message: "The data record is successfully deleted",
+            data: deletedMouldChange,
+          });
       } else {
         res.status(400).json({
           status: "error",
@@ -93,7 +127,9 @@ const deleteMouldChange = async (req, res) => {
     }
   } catch (e) {
     console.log(e.message);
-    res.status(500).json({ status: 'erorr', message: e.message, cause: e.cause });
+    res
+      .status(500)
+      .json({ status: "erorr", message: e.message, cause: e.cause });
   }
 };
 

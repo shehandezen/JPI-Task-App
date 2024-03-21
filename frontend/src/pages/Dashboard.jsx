@@ -149,9 +149,9 @@ const Dashboard = () => {
 
   return (
     <Fragment>
-      {/* {isLoading ? (
+      {isLoading ? (
         <Loader />
-      ) : ( */}
+      ) : (
       <div className="container">
         <div className="TopBar">
           <TopBar
@@ -176,7 +176,7 @@ const Dashboard = () => {
           </Animate>
         </div>
       </div>
-      {/* )} */}
+       )} 
     </Fragment>
   );
 };
