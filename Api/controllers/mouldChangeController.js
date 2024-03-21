@@ -4,16 +4,9 @@ const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
 const getMouldChanges = async (req, res) => {
   try {
-    let filterObj;
-    if (req.query.filter == undefined) {
-      filterObj = await JSON.parse(req.query.filter);
-    } else {
-      filterObj = {};
-    }
-    
     const mouldChange = await getData(
       MouldChange,
-      filterObj,
+      req.query.filter == undefined ? {} : await JSON.parse(req.query.filter),
       { path: "PreviousProduct" },
       { path: "NextProduct" }
     );
@@ -109,13 +102,11 @@ const deleteMouldChange = async (req, res) => {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
       const deletedMouldChange = await deleteData(MouldChange, req.params.id);
       if (deletedMouldChange.deletedCount !== 0) {
-        res
-          .status(204)
-          .json({
-            status: "sucess",
-            message: "The data record is successfully deleted",
-            data: deletedMouldChange,
-          });
+        res.status(204).json({
+          status: "sucess",
+          message: "The data record is successfully deleted",
+          data: deletedMouldChange,
+        });
       } else {
         res.status(400).json({
           status: "error",
