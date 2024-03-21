@@ -7,8 +7,8 @@ const getMouldChanges = async (req, res) => {
     const mouldChange = await getData(
       MouldChange,
       req.query.filter == undefined ? {} : await JSON.parse(req.query.filter),
-      { path: "PreviousProduct" },
-      { path: "NextProduct" }
+      { path: "previousProduct" },
+      { path: "nextProduct" }
     );
     res.status(200).json({
       status: "success",
@@ -29,8 +29,8 @@ const getMouldChange = async (req, res) => {
       const mouldChange = await getData(
         MouldChange,
         { _id: req.params.id },
-        { path: "PreviousProduct" },
-        { path: "NextProduct" }
+        { path: "previousProduct" },
+        { path: "pextProduct" }
       );
       res.status(200).json({
         status: "success",
@@ -71,8 +71,8 @@ const updateMouldChange = async (req, res) => {
         MouldChange,
         req.params.id,
         req.body,
-        { path: "PreviousProduct" },
-        { path: "NextProduct" }
+        { path: "previousProduct" },
+        { path: "nextProduct" }
       );
       if (updatedMouldChange) {
         res.status(200).json({
