@@ -6,6 +6,7 @@ import "../css/componentStyles/development.css";
 import "../css/componentStyles/addproduct.css";
 import MiniLoader from "./MiniLoader";
 import { addMouldChange, addProduct, getProducts } from "../app.service";
+import MessageBox from "./MessageBox";
 
 const AddMouldChange = () => {
   const floppyDisk = <FontAwesomeIcon icon={faFloppyDisk} />;
@@ -14,16 +15,28 @@ const AddMouldChange = () => {
   const date = new Date();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const messageTimer = setTimeout(() => {
+      setMessages([]);
+    }, 3000);
+
+    return () => {
+      clearTimeout(messageTimer);
+    };
+  }, [messages]);
 
   const fetchData = async () => {
     setIsLoading(true);
-   
-    const response = await getProducts(encodeURI('{"status":"NOT ACTIVE"}'))
-    console.log(response.data.data)
-    await setNextProduct(response.data.data)
-    const result = await getProducts(encodeURI('{"status":"ACTIVE"}'))
-    console.log(result.data.data)
-    await setPreviousProduct(result.data.data)
+
+    const response = await getProducts(encodeURI('{"status":"NOT ACTIVE"}'));
+    console.log(response.data.data);
+    await setNextProduct(response.data.data);
+    const result = await getProducts(encodeURI('{"status":"ACTIVE"}'));
+    console.log(result.data.data);
+    await setPreviousProduct(result.data.data);
     setIsLoading(false);
   };
 
@@ -33,7 +46,7 @@ const AddMouldChange = () => {
 
   const [data, setData] = useState({
     machineNo: "",
-    date: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
+    date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
     previousProduct: "",
     nextProduct: "",
     plannedTime: "",
@@ -43,52 +56,103 @@ const AddMouldChange = () => {
     startTime: "",
     endTime: "",
     note: "",
+    status: "on going",
   });
 
-  const [previousProduct, setPreviousProduct] = useState([
-    ,
-  ]);
-  const [nextProduct, setNextProduct] = useState([
-   
-  ]);
+  const [previousProduct, setPreviousProduct] = useState([,]);
+  const [nextProduct, setNextProduct] = useState([]);
 
   const handleChange = (value, type) => {
+    console.log(value);
     if (type == "machineNo") {
-      setData({ ...data, MachineNo: value });
+      setData({ ...data, machineNo: value });
     } else if (type == "date") {
-      setData({ ...data, Date: value });
+      setData({ ...data, date: value });
     } else if (type == "previousproduct") {
-      setData({ ...data, PreviousProduct: value });
+      console.log("setted");
+      setData({ ...data, previousProduct: value });
     } else if (type == "nextproduct") {
-      setData({ ...data, NextProduct: value });
+      setData({ ...data, nextProduct: value });
     } else if (type == "plannedtime") {
-      setData({ ...data, PlannedTime: value });
+      setData({ ...data, plannedTime: value });
     } else if (type == "technician1") {
-      setData({ ...data, Technician1: value });
+      setData({ ...data, technician1: value });
     } else if (type == "technician2") {
-      setData({ ...data, Technician2: value });
+      setData({ ...data, technician2: value });
     } else if (type == "actualtime") {
-      setData({ ...data, ActualTime: value });
+      setData({ ...data, actualTime: value });
     } else if (type == "starttime") {
-      setData({ ...data, StartTime: value });
+      setData({ ...data, startTime: value });
     } else if (type == "endtime") {
-      setData({ ...data, EndTime: value });
+      setData({ ...data, endTime: value });
     } else if (type == "note") {
-      setData({ ...data, Note: value });
+      setData({ ...data, note: value });
     }
+  };
+
+  const checkEmptyFeilds = async () => {
+    let valid = 0;
+    for await (const [key, value] of Object.entries(data)) {
+      if (
+        key == "machineNo" ||
+        key == "previousProduct" ||
+        key == "nextProduct" ||
+        key == "plannedTime" ||
+        key == "technician1" ||
+        key == "startTime" ||
+        key == "endtime"
+      ) {
+        if (value == "" || value == undefined || value == null) {
+          await setMessages([
+            ...messages,
+            {
+              status: "error",
+              message: "Please fill out all required feilds.",
+            },
+          ]);
+          setIsLoading(false);
+          valid = 1;
+          console.log("inside");
+        }
+      }
+    }
+    console.log(valid);
+    return valid == 0;
   };
 
   const handleSubmit = async (e) => {
     // const date = new Date()
     // console.log(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`)
     // await setData({...data, Date: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`})
-    let create = await addMouldChange(data)
-    console.log(create);
+    console.log(data);
+
+    setSubmitted(true);
+    setIsLoading(true);
+    const validate = await checkEmptyFeilds();
+    if (validate) {
+      let create = await addMouldChange(data);
+      console.log(create);
+      setIsLoading(false);
+      if (create.status == "success") {
+        navigate(`/dashboard/mouldchange/view/${create.data._id}`);
+      } else {
+        setMessages([...messages, create]);
+      }
+    }
   };
 
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
+      {messages?.map((ele, index) => {
+        return (
+          <MessageBox
+            key={index}
+            message={ele.message}
+            className={ele.status}
+          />
+        );
+      })}
       <div className="add-product-container">
         <div className="head">
           Add New Mould Change
@@ -100,7 +164,10 @@ const AddMouldChange = () => {
             <div className="input-label"> Machine No </div>
             <select
               name="machine"
-              value={data.MachineNo}
+              value={data.machineNo}
+              className={
+                submitted ? (data.machineNo == "" ? "red-border" : "") : ""
+              }
               onChange={(e) => handleChange(e.target.value, "machineNo")}
             >
               <option value="">Machine No</option>
@@ -151,22 +218,34 @@ const AddMouldChange = () => {
             <div className="input-label"> Previous Product Name </div>
             <select
               name="previousproduct"
-              value={data.PreviousProduct}
+              value={data.previousProduct}
+              className={
+                submitted
+                  ? data.previousProduct == ""
+                    ? "red-border"
+                    : ""
+                  : ""
+              }
               onChange={(e) => handleChange(e.target.value, "previousproduct")}
             >
               <option value="">Previous Product Name</option>
-              {previousProduct.map((ele, index) => (
-                <option key={index} value={ele._id}>
-                  {ele.productName}
-                </option>
-              ))}
+              {previousProduct.map((ele, index) => {
+                return (
+                  <option key={index} value={ele._id}>
+                    {ele.productName}
+                  </option>
+                );
+              })}
             </select>
           </div>
           <div className="input-container">
             <div className="input-label"> Next Product Name </div>
             <select
               name="nextproduct"
-              value={data.NextProduct}
+              value={data.nextProduct}
+              className={
+                submitted ? (data.nextProduct == "" ? "red-border" : "") : ""
+              }
               onChange={(e) => handleChange(e.target.value, "nextproduct")}
             >
               <option value="">Next Product Name</option>
@@ -183,7 +262,10 @@ const AddMouldChange = () => {
             <input
               type="number"
               placeholder="Planning time "
-              value={data.PlannedTime}
+              value={data.plannedTime}
+              className={
+                submitted ? (data.plannedTime == "" ? "red-border" : "") : ""
+              }
               onChange={(e) => handleChange(e.target.value, "plannedtime")}
             />
           </div>
@@ -192,7 +274,7 @@ const AddMouldChange = () => {
             <input
               type="number"
               placeholder="Actual time "
-              value={data.ActualTime}
+              value={data.actualTime}
               onChange={(e) => handleChange(e.target.value, "actualtime")}
             />
           </div>
@@ -201,7 +283,10 @@ const AddMouldChange = () => {
             <input
               type="time"
               placeholder="Start time"
-              value={data.StartTime}
+              value={data.startTime}
+              className={
+                submitted ? (data.startTime == "" ? "red-border" : "") : ""
+              }
               onChange={(e) => handleChange(e.target.value, "starttime")}
             />
           </div>
@@ -210,7 +295,10 @@ const AddMouldChange = () => {
             <input
               type="time"
               placeholder="End Time"
-              value={data.EndTime}
+              value={data.endTime}
+              className={
+                submitted ? (data.endTime == "" ? "red-border" : "") : ""
+              }
               onChange={(e) => handleChange(e.target.value, "endtime")}
             />
           </div>
@@ -219,7 +307,10 @@ const AddMouldChange = () => {
             <input
               type="text"
               placeholder="Technician"
-              value={data.Technician1}
+              value={data.technician1}
+              className={
+                submitted ? (data.technician1 == "" ? "red-border" : "") : ""
+              }
               onChange={(e) => handleChange(e.target.value, "technician1")}
             />
           </div>
@@ -228,7 +319,10 @@ const AddMouldChange = () => {
             <input
               type="text"
               placeholder="Technician"
-              value={data.Technician2}
+              value={data.technician2}
+              className={
+                submitted ? (data.technician2 == "" ? "red-border" : "") : ""
+              }
               onChange={(e) => handleChange(e.target.value, "technician2")}
             />
           </div>
@@ -237,7 +331,7 @@ const AddMouldChange = () => {
             <input
               type="text"
               placeholder="Note"
-              value={data.Note}
+              value={data.note}
               onChange={(e) => handleChange(e.target.value, "note")}
             />
           </div>
