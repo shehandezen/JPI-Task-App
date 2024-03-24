@@ -4,7 +4,7 @@ const ProductionReport = new mongoose.Schema({
   Date: String,
   Shift: String,
   Supervisor: String,
-  Active: Boolean,
+  Status: String,
   Machines: [
     {
       machine: String,
