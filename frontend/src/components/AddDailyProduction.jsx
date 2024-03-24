@@ -145,7 +145,7 @@ const AddDailyProduction = () => {
         { Status: "Finished" } 
       );
       console.log(getAlreadyActive);
-      if (updateAlreadyActive.data.status == "sucess") {
+      if (updateAlreadyActive.status == "success") {
         const addNewReport = await addProductionReport(data);
         console.log(addNewReport)
         if (addNewReport.data.status == "sucess") {
@@ -155,7 +155,7 @@ const AddDailyProduction = () => {
     }else{
       const addNewReport = await addProductionReport(data);
       console.log(addNewReport)
-      if (addNewReport.data.status == "sucess") {
+      if (addNewReport.status == "success") {
         navigate('/dashboard/production/reports')
       }
     }
