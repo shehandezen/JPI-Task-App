@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom'
 import "../css/componentStyles/adddailyproduction.css";
 import MiniLoader from "./MiniLoader";
 import {
   addProductionReport,
-  getProductionReport,
+  getProductionReports,
   updateProductionReport,
 } from "../app.service";
 import MessageBox from "./MessageBox";
@@ -16,6 +16,7 @@ const AddDailyProduction = () => {
     Shift: "",
     Supervisor: "",
     Machines: [],
+    Status:"Active"
   });
 
   const [messages, setMessages] = useState([]);
@@ -136,20 +137,26 @@ const AddDailyProduction = () => {
     setIsLoading(true);
     console.log(data);
 
-    const getAlreadyActive = await getProductionReports({ Status: "Active" });
+    const getAlreadyActive = await getProductionReports('{"Status":"Active"}');
     console.log(getAlreadyActive);
-    if (getAlreadyActive.data.status == "sucess") {
+    if (getAlreadyActive.data.status == "success" && getAlreadyActive.data.data.length != 0 ) {
       const updateAlreadyActive = await updateProductionReport(
-        getAlreadyActive.data.data._id,
-        { Status: "Finished" }
+        getAlreadyActive.data.data[0]._id,
+        { Status: "Finished" } 
       );
       console.log(getAlreadyActive);
       if (updateAlreadyActive.data.status == "sucess") {
         const addNewReport = await addProductionReport(data);
         console.log(addNewReport)
-        if (updateAlreadyActive.data.status == "sucess") {
+        if (addNewReport.data.status == "sucess") {
           navigate('/dashboard/production/reports')
         }
+      }
+    }else{
+      const addNewReport = await addProductionReport(data);
+      console.log(addNewReport)
+      if (addNewReport.data.status == "sucess") {
+        navigate('/dashboard/production/reports')
       }
     }
 
