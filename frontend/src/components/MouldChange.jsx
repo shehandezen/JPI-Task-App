@@ -38,7 +38,7 @@ const MouldChange = () => {
     setIsLoading(true);
     const response = await getMouldChangeData(id);
     await setData(response.data.data);
-
+    console.log(response.data);
     setIsLoading(false);
   };
 
@@ -48,14 +48,16 @@ const MouldChange = () => {
 
   const markDone = async () => {
     setIsLoading(true);
-    const preProductResponse = await updateProductData(
-      data.previousProduct._id,
-      { status: "Done" }
-    );
-
-    if (preProductResponse.data.status == "error") {
-      await setMessages([...messages, preProductResponse.data]);
+    if (data.previousProduct != undefined) {
+      const preProductResponse = await updateProductData(
+        data.previousProduct?._id,
+        { status: "Done" }
+      );
+      if (preProductResponse.data.status == "error") {
+        await setMessages([...messages, preProductResponse.data]);
+      }
     }
+
     const nextProductResponse = await updateProductData(data.nextProduct._id, {
       status: "Active",
     });
@@ -115,9 +117,9 @@ const MouldChange = () => {
               <div className="icon">{tag}</div> Unload Mould :{" "}
             </div>
             <div className="info-value">
-              {data.previousProduct != ""
+              {data.previousProduct != undefined
                 ? data.previousProduct?.productName
-                : "N/A"}
+                : "No Mould"}
             </div>
           </div>
           <div className="info-line">
@@ -172,7 +174,9 @@ const MouldChange = () => {
             </div>
             <div className="info-value">
               {data.technician1 != ""
-                ? `${data.technician1}, ${data.technician2}`
+                ? data.technician2 != ""
+                  ? `${data.technician1}, ${data.technician2}`
+                  : data.technician1
                 : "N/A"}
             </div>
           </div>

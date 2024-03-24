@@ -114,7 +114,7 @@
 
 .production-container .check-box-container .check-boxs .check-box {
     position: relative;
-    width: 25%;
+    width: 50%;
     display: flex;
     align-items: center;
     /* justify-content: center; */
@@ -158,6 +158,7 @@
 
 .production-container .check-box-container .check-boxs .check-box .check-box-name {
     text-transform: uppercase;
+    width: 50px;
 }
 
 .section-line {
@@ -224,6 +225,30 @@
     transform: translateX(350%) skewX(-45deg);
 }
 
+.check-box-container .check-boxs .check-box select {
+    position: relative;
+    width: 60%;
+    height: auto;
+    padding: 3px 15px;
+    border-radius: 10px;
+    outline: none;
+    border: 2px solid var(--primary-dark-color);
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--primary-light-color);
+  }
+  
+  .check-box-container .check-boxs .check-box select option {
+    position: relative;
+    outline: none;
+    border-radius: 50px;
+    outline: none;
+    border: 2px solid var(--primary-dark-color);
+    background-color: rgba(0, 0, 0, 0.1);
+    color: var(--background-color);
+  }
+  
+
+
 
 @media screen and (max-width:650px) {
     .production-container .inputs-container .input-container {
@@ -238,7 +263,9 @@
 
 @media screen and (max-width:425px) {
     .production-container .check-box-container .check-boxs .check-box {
-        width: 33%;
+        width: 100%;
+    justify-content: center;
+        
     }
 }
 
@@ -250,6 +277,8 @@
     }
 
     .production-container .check-box-container .check-boxs .check-box {
-        width: 50%;
+        width: 100%;
+    justify-content: center;
+
     }
 }

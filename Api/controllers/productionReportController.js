@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-const Production = require("../db/Schemas/Production");
+const ProductionReport = require("../db/Schemas/ProductionReport");
 const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
-const getProductions = async (req, res) => {
+const getProductionReports = async (req, res) => {
   try {
-    const production = await getData(Production,  req.query.filter == undefined ? {} : await JSON.parse(req.query.filter), {path: 'Product'});
+    const productionReport = await getData(ProductionReport,  req.query.filter == undefined ? {} : await JSON.parse(req.query.filter));
     res.status(200).json({
       status: 'success',
       message: 'The data has sucessfully fetched',
-      data: production
+      data: productionReport
     });
   } catch (e) {
     console.log(e.message);
@@ -16,14 +16,14 @@ const getProductions = async (req, res) => {
   }
 };
 
-const getProduction = async (req, res) => {
+const getProductionReport = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const production = await getData(Production, { _id: req.params.id }, {path: 'Product'});
+      const productionReport = await getData(ProductionReport, { _id: req.params.id }, {path: 'Product'});
       res.status(200).json({
         status: 'success',
         message: 'The data has sucessfully fetched',
-        data: production[0]
+        data: productionReport[0]
       });
     } else {
       res.status(400).json({ status: "error", message: "Provide a valid key" });
@@ -34,13 +34,13 @@ const getProduction = async (req, res) => {
   }
 };
 
-const createProduction = async (req, res) => {
+const createProductionReport = async (req, res) => {
   try {
-    const production = await addData(Production, req.body);
+    const productionReport = await addData(ProductionReport, req.body);
     res.status(201).json({
       status: "success",
       message: "New product added sucessfully",
-      data: production,
+      data: productionReport,
     });
   } catch (e) {
     console.log(e);
@@ -48,15 +48,15 @@ const createProduction = async (req, res) => {
   }
 };
 
-const updateProduction = async (req, res) => {
+const updateProductionReport = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const updatedProduction = await updateData(Production, req.params.id, req.body, {path: 'Product'});
-      if (updatedProduction) {
+      const updatedProductionReport = await updateData(ProductionReport, req.params.id, req.body, {path: 'Product'});
+      if (updatedProductionReport) {
         res.status(200).json({
           status: "sucess",
           message: 'The data is sucessfully updated',
-          data: updatedProduction,
+          data: updatedProductionReport,
         });
       } else {
         res.status(400).json({
@@ -73,14 +73,14 @@ const updateProduction = async (req, res) => {
   }
 };
 
-const deleteProduction = async (req, res) => {
+const deleteProductionReport = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const deletedProduction = await deleteData(Production, req.params.id);
-      if (deletedProduction.deletedCount !== 0) {
+      const deletedProductionReport = await deleteData(ProductionReport, req.params.id);
+      if (deletedProductionReport.deletedCount !== 0) {
         res
           .status(204)
-          .json({ status: "sucess", message: 'The data record is successfully deleted', data: deletedProduction });
+          .json({ status: "sucess", message: 'The data record is successfully deleted', data: deletedProductionReport });
       } else {
         res.status(400).json({
           status: "error",
@@ -97,9 +97,9 @@ const deleteProduction = async (req, res) => {
 };
 
 module.exports = {
-  getProduction,
-  getProductions,
-  createProduction,
-  updateProduction,
-  deleteProduction,
+  getProductionReport,
+  getProductionReports,
+  createProductionReport,
+  updateProductionReport,
+  deleteProductionReport,
 };

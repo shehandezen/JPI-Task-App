@@ -85,7 +85,7 @@ const CurrentMouldChange = () => {
                       <tr key={index}>
                         <td className="col-1">{element.machineNo} </td>
                         <td className="col-2">
-                          {element.previousProduct?.productName}{" "}
+                          {element.previousProduct != undefined? element.previousProduct?.productName : "No Mould"}
                         </td>
                         <td className="col-3">
                           {element.nextProduct?.productName}{" "}
@@ -97,7 +97,9 @@ const CurrentMouldChange = () => {
                         </td>
 
                         <td className="col-5">
-                          {`${element.technician1}, ${element.technician2}`}{" "}
+                        {element.technician1}
+                        {element.technician2 != "" ? `, ${element.technician2}`
+                          : ""}
                         </td>
 
                         <td className="col-8">
