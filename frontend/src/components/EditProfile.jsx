@@ -211,6 +211,9 @@ const EditProfile = () => {
                   : URL.createObjectURL(data.Image)
             }
             alt="profle image"
+            onError={()=>{
+              setData({...data, Image: null})
+            }}
           />
           <div className="messages">
             <span className="span-text">

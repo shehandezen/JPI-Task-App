@@ -37,23 +37,15 @@ const updateProductData = async (id, data) => {
   let response;
   // console.log(id, token, data);
   await client
-    .put(`/product/${id}`, data, {
-      "Content-Type": "multipart/form-data",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
+    .put(`/product/${id}`, data)
     .then((data) => {
       response = data;
-      console.log(response.data.data);
     })
     .catch((err) => {
-      console.log(err.response.data);
       response = err.response.data;
     });
   return response;
 };
-
 
 const getMouldChanges = async (filter) => {
   let response;
@@ -83,7 +75,6 @@ const getMouldChangeData = async (id) => {
   return response;
 };
 
-
 const addMouldChange = async (data) => {
   let result;
   await client
@@ -94,32 +85,24 @@ const addMouldChange = async (data) => {
       result = response.data;
     })
     .catch((err) => {
-      result = err.response.data;
+      result = err.response;
     });
   return result;
 };
 
 const updateMouldChangeData = async (id, data) => {
-  let response;
+  let result;
   // console.log(id, token, data);
   await client
-    .put(`/mouldchange/${id}`, data, {
-      "Content-Type": "multipart/form-data",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    .then((data) => {
-      response = data;
-      console.log(response.data.data);
+    .put(`/mouldchange/${id}`, data)
+    .then((response) => {
+      result = response.data;
     })
     .catch((err) => {
-      console.log(err.response.data);
-      response = err.response.data;
+      result = err.response;
     });
-  return response;
+  return result;
 };
-
 
 const getMaterialData = async () => {
   let response;
@@ -247,5 +230,5 @@ export {
   getMouldChanges,
   getMouldChangeData,
   updateMouldChangeData,
-  addMouldChange
+  addMouldChange,
 };

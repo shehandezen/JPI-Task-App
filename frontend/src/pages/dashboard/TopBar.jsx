@@ -12,7 +12,7 @@ import {
 import "../../css/dashboard/topbar.css";
 import Animate from "../../Animate";
 
-const TopBar = ({ isMenuShow, setIsMenuShow, user }) => {
+const TopBar = ({ isMenuShow, setIsMenuShow, user, setUser }) => {
   const arrowLeft = <FontAwesomeIcon icon={faArrowLeft} />;
   const arrowRotateRight = <FontAwesomeIcon icon={faArrowRotateRight} />;
   const house = <FontAwesomeIcon icon={faHouse} />;
@@ -30,8 +30,13 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user }) => {
   };
 
   useEffect(() => {
-    
-    setUsername(user?.UserName);
+    if (user?.UserName == "" || user?.UserName == null) {
+      // localStorage.clear();
+      console.log(user)
+      // navigate("/signin");
+    } else {
+      setUsername(user?.UserName);
+    }
   }, [user]);
 
   return (
@@ -88,7 +93,6 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user }) => {
             className="menu-btn"
             onClick={() => {
               setIsMenuShow(!isMenuShow);
-             
             }}
           >
             {bars}
@@ -123,7 +127,7 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user }) => {
         </div>
         <div className="profile">
           <div className="notifications">
-            <Link to={'/dashboard/notifications'}>{bell}</Link>
+            <Link to={"/dashboard/notifications"}>{bell}</Link>
           </div>
           <div
             className="username"
@@ -144,6 +148,9 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user }) => {
                   : `${process.env.REACT_APP_API_URL}profile/${user?.Image}`
               }
               alt=""
+              onError={() => {
+                setUser({ ...user, Image: null });
+              }}
             />
           </div>
         </div>

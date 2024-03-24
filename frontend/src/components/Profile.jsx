@@ -56,6 +56,9 @@ const Profile = () => {
                 : `${process.env.REACT_APP_API_URL}profile/${data.Image}`
             }
             alt="profle image"
+            onError={()=>{
+              setData({...data, Image: null})
+            }}
           />
         </div>
         <div className="profile-section">

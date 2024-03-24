@@ -39,7 +39,7 @@ const Dashboard = () => {
 
   const pathDetect = (path) => {
    
-    if (path.includes("view")) {
+    if (path.includes("/dashboard/view")) {
       setLinkList([
         {
           text: "Current Production",
@@ -54,7 +54,7 @@ const Dashboard = () => {
           link: "/dashboard/view/add",
         },
       ]);
-    } else if (path.includes("mouldchange")) {
+    } else if (path.includes("/dashboard/mouldchange")) {
       setLinkList([
         {
           text: "Current Mould Changes",
@@ -69,7 +69,7 @@ const Dashboard = () => {
           link: "/dashboard/mouldchange/add",
         },
       ]);
-    } else if (path.includes("material")) {
+    } else if (path.includes("/dashboard/material")) {
       setLinkList([
         {
           text: "Current Stock",
@@ -84,7 +84,7 @@ const Dashboard = () => {
           link: "/dashboard/material/history",
         },
       ]);
-    } else if (path.includes("profile")) {
+    } else if (path.includes("/dashboard/profile")) {
       setLinkList([
         {
           text: "View Profile",
@@ -96,7 +96,7 @@ const Dashboard = () => {
         },
       ]);
     }
-    else if (path.includes("production")) {
+    else if (path.includes("/dashboard/production")) {
       setLinkList([
         {
           text: "New Report",
@@ -158,6 +158,7 @@ const Dashboard = () => {
             isMenuShow={isMenuShow}
             setIsMenuShow={setIsMenuShow}
             user={user}
+            setUser={setUser}
           />
         </div>
         <div className={isMenuShow ? "off-menu show" : "hide"}>
