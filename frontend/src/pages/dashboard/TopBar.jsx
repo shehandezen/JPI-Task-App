@@ -32,7 +32,7 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user, setUser }) => {
   useEffect(() => {
     if (user?.UserName == "" || user?.UserName == null) {
       // localStorage.clear();
-      console.log(user)
+      // console.log(user)
       // navigate("/signin");
     } else {
       setUsername(user?.UserName);

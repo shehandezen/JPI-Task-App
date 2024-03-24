@@ -5,6 +5,7 @@ const Product = require("./Routes/Product");
 const Summary = require("./Routes/Summary");
 const MouldChange = require("./Routes/MouldChange")
 const Production = require("./Routes/Production")
+const ProductionReport = require("./Routes/ProductionReport")
 const Material = require("./Routes/Material")
 const authRoute = require("./Routes/auth");
 const User = require("./Routes/User");
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 //routes
 app.use("/product", Product);
 app.use("/production", Production);
+app.use("/productionreport", ProductionReport);
 app.use("/material", Material);
 app.use("/mouldchange", MouldChange);
 app.use("/summary", Summary);

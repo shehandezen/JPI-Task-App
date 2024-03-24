@@ -84,6 +84,7 @@ const ProductionReport = ()=>{
         <div className="wrapper">
           <div className="table-container" >
             <table>
+              <thead>
               <tr>
                 <th className="col-1">No</th>
                 <th className="col-2">Date</th>
@@ -92,7 +93,8 @@ const ProductionReport = ()=>{
                 <th className="col-5" style={{display:'table-cell'}}>Status</th>
                 <th className="col-8">{angles}</th>
               </tr>
-
+              </thead>
+              <tbody>
               {
                 data?.filter(obj => obj?.Date?.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) )?.map((element, index) => {
                   return (
@@ -110,6 +112,7 @@ const ProductionReport = ()=>{
                   )
                 })
               }
+              </tbody>
               {/* <tr>
                 <td className="col-1">Sample </td>
                 <td className="col-2">Sample </td>
