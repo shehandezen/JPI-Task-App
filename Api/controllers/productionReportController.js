@@ -51,7 +51,7 @@ const createProductionReport = async (req, res) => {
 const updateProductionReport = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const updatedProductionReport = await updateData(ProductionReport, req.params.id, req.body, {path: 'Product'});
+      const updatedProductionReport = await updateData(ProductionReport, req.params.id, req.body);
       if (updatedProductionReport) {
         res.status(200).json({
           status: "sucess",
