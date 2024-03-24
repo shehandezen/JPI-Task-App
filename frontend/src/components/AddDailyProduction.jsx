@@ -1,14 +1,32 @@
 import React, { useState } from "react";
+import {useNavigate} from 'react-router-dom'
 import "../css/componentStyles/adddailyproduction.css";
 import MiniLoader from "./MiniLoader";
+import {
+  addProductionReport,
+  getProductionReport,
+  updateProductionReport,
+} from "../app.service";
+import MessageBox from "./MessageBox";
 
 const AddDailyProduction = () => {
+  const navigate = useNavigate()
   const [data, setData] = useState({
     Date: "",
     Shift: "",
     Supervisor: "",
     Machines: [],
   });
+
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setMessages([]);
+    }, 7500);
+
+    // clearInterval();
+  }, [messages]);
 
   const machines = [
     "IM 01",
@@ -83,17 +101,15 @@ const AddDailyProduction = () => {
   //   };
 
   const handleChange = async (value, type, index = -1) => {
-   
     if (type == "date") {
       setData({ ...data, Date: value });
     } else if (type == "shift") {
       setData({ ...data, Shift: value });
     } else if (type == "supervisor") {
-      setData({ ...data, Supervisor: value });  
+      setData({ ...data, Supervisor: value });
     } else if (type == "machine") {
       let setted = false;
       for await (const i of data.Machines) {
-       
         if (i?.machine == machines[index]) {
           let copyMachines = data.Machines;
           await copyMachines.splice(data.Machines.indexOf(i), 1);
@@ -112,20 +128,46 @@ const AddDailyProduction = () => {
           ],
         });
       }
-
-      
     }
   };
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     console.log(data);
-    
+
+    const getAlreadyActive = await getProductionReports({ Status: "Active" });
+    console.log(getAlreadyActive);
+    if (getAlreadyActive.data.status == "sucess") {
+      const updateAlreadyActive = await updateProductionReport(
+        getAlreadyActive.data.data._id,
+        { Status: "Finished" }
+      );
+      console.log(getAlreadyActive);
+      if (updateAlreadyActive.data.status == "sucess") {
+        const addNewReport = await addProductionReport(data);
+        console.log(addNewReport)
+        if (updateAlreadyActive.data.status == "sucess") {
+          navigate('/dashboard/production/reports')
+        }
+      }
+    }
+
+    setIsLoading(false);
   };
 
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
+      {messages?.map((ele, index) => {
+        return (
+          <MessageBox
+            key={index}
+            message={ele.message}
+            className={ele.status}
+          />
+        );
+      })}
       <div className="production-container">
         <div className="title">
           Daily Production

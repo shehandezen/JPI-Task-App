@@ -17,6 +17,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const checkIsLoggedIn = async () => {
+    setIsLoading(true)
     const token = await localStorage.getItem("token");
 
 
@@ -27,8 +28,10 @@ const Dashboard = () => {
       const response = await getUserData(userToken._id, token);
       if (response.status == "error") {
         navigate("/signin");
+        setIsLoading(false)
       } else {
         await setUser(response.data.data);
+        setIsLoading(false)
       }
     }
   };
@@ -135,12 +138,12 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, []);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
+  // }, []);
 
   useEffect(() => {
     pathDetect(location.pathname);
