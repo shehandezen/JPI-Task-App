@@ -176,3 +176,61 @@
     font-size: 14px;
   }
 }
+
+.mark-done{
+  position: relative;
+  left: 5px;
+  width: 200px;
+  height: auto;
+  margin: 10px 10px;
+  padding: 8px 15px;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  transition: 0.75s;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.mark-done:hover {
+  background: linear-gradient(
+    270deg,
+    var(--primary-dark-color),
+    var(--primary-light-color)
+  );
+  opacity: 5;
+}
+
+.mark-done::before {
+  content: "";
+  position: absolute;
+  top: -35px;
+  transition: 1s;
+  transform: translateX(-350%) skewX(-45deg);
+  right: 100px;
+  width: 80px;
+  height: 120px;
+  background-color: #fff;
+  opacity: 0.5;
+  overflow: hidden;
+}
+
+  .buttons button:hover::before {
+  transform: translateX(350%) skewX(-45deg);
+}
+
+.done-icon{
+  font-size: 25px;
+  color: var(--background-shadow-color);
+  margin-left: 5px;
+}

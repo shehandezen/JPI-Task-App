@@ -38,9 +38,9 @@ const CurrentProducts = () => {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const response = await getProducts('{"status":"ACTIVE"}');
+    const response = await getProducts('{"status":"Active"}');
     await setData(response.data.data);
-    console.log(data);
+    console.log(response);
 
     setIsLoading(false);
   };
@@ -78,6 +78,7 @@ const CurrentProducts = () => {
         <div className="wrapper">
           <div className="table-container">
             <table>
+              <thead>
               <tr>
                 <th className="col-1">Machine No</th>
                 <th className="col-2">Product Name</th>
@@ -88,7 +89,8 @@ const CurrentProducts = () => {
                 <th className="col-7">Efficiency</th>
                 <th className="col-8">{angles}</th>
               </tr>
-
+              </thead>
+              <tbody>
               {data
                 ?.filter((obj) =>
                   obj?.productName?.toLocaleLowerCase().includes(
@@ -155,6 +157,7 @@ const CurrentProducts = () => {
                   </Link>
                 </td>
               </tr> */}
+              </tbody>
             </table>
           </div>
         </div>

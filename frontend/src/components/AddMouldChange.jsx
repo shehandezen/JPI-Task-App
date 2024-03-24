@@ -32,10 +32,10 @@ const AddMouldChange = () => {
     setIsLoading(true);
 
     const response = await getProducts(encodeURI('{"status":"NOT ACTIVE"}'));
-    console.log(response.data.data);
+
     await setNextProduct(response.data.data);
-    const result = await getProducts(encodeURI('{"status":"ACTIVE"}'));
-    console.log(result.data.data);
+    const result = await getProducts(encodeURI('{"status":"Active"}'));
+
     await setPreviousProduct(result.data.data);
     setIsLoading(false);
   };
@@ -56,20 +56,18 @@ const AddMouldChange = () => {
     startTime: "",
     endTime: "",
     note: "",
-    status: "on going",
+    status: "On Going",
   });
 
   const [previousProduct, setPreviousProduct] = useState([,]);
   const [nextProduct, setNextProduct] = useState([]);
 
   const handleChange = (value, type) => {
-    console.log(value);
     if (type == "machineNo") {
       setData({ ...data, machineNo: value });
     } else if (type == "date") {
       setData({ ...data, date: value });
     } else if (type == "previousproduct") {
-      console.log("setted");
       setData({ ...data, previousProduct: value });
     } else if (type == "nextproduct") {
       setData({ ...data, nextProduct: value });
@@ -112,11 +110,10 @@ const AddMouldChange = () => {
           ]);
           setIsLoading(false);
           valid = 1;
-          console.log("inside");
         }
       }
     }
-    console.log(valid);
+
     return valid == 0;
   };
 
@@ -124,14 +121,13 @@ const AddMouldChange = () => {
     // const date = new Date()
     // console.log(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`)
     // await setData({...data, Date: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`})
-    console.log(data);
 
     setSubmitted(true);
     setIsLoading(true);
     const validate = await checkEmptyFeilds();
     if (validate) {
       let create = await addMouldChange(data);
-      console.log(create);
+
       setIsLoading(false);
       if (create.status == "success") {
         navigate(`/dashboard/mouldchange/view/${create.data._id}`);
@@ -229,6 +225,8 @@ const AddMouldChange = () => {
               onChange={(e) => handleChange(e.target.value, "previousproduct")}
             >
               <option value="">Previous Product Name</option>
+              <option value="No Mould">No Mould</option>
+
               {previousProduct.map((ele, index) => {
                 return (
                   <option key={index} value={ele._id}>

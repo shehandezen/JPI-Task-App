@@ -36,7 +36,7 @@ const ProductHistory = () => {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const response = await getProducts('{"status":"DONE"}');
+    const response = await getProducts('{"status":"Done"}');
     await setData(response.data.data);
     console.log(data);
 
@@ -76,6 +76,7 @@ const ProductHistory = () => {
         <div className="wrapper">
           <div className="table-container">
             <table>
+              <thead>
               <tr>
                 <th className="col-1">Machine No</th>
                 <th className="col-2">Product Name</th>
@@ -85,7 +86,8 @@ const ProductHistory = () => {
                 <th className="col-7">Efficiency</th>
                 <th className="col-8">{angles}</th>
               </tr>
-
+              </thead>
+              <tbody>
               {data
                 ?.filter((obj) =>
                   obj?.productName
@@ -151,6 +153,7 @@ const ProductHistory = () => {
                   </Link>
                 </td>
               </tr> */}
+              </tbody>
             </table>
           </div>
         </div>

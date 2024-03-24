@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const MouldChange = require("../db/Schemas/MouldChange");
+const Product = require("../db/Schemas/Product");
 const { getData, addData, updateData, deleteData } = require("../db/dbFuncs");
 
 const getMouldChanges = async (req, res) => {
@@ -50,6 +51,10 @@ const getMouldChange = async (req, res) => {
 
 const createMouldChange = async (req, res) => {
   try {
+    if(req.body.previousProduct == 'No Mould'){
+      const noMould = await getData(Product, {productName: 'No Mould' })
+      req.body.previousProduct = noMould._id
+    }
     const mouldChange = await addData(MouldChange, req.body);
     res.status(201).json({
       status: "success",
