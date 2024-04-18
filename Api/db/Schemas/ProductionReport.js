@@ -9,7 +9,7 @@ const ProductionReport = new mongoose.Schema({
     {
       machine: String,
       status: String,
-      id: mongoose.SchemaTypes.ObjectId
+      data: {type: mongoose.Schema.Types.ObjectId, ref: 'Production'}
     },
   ],
 });

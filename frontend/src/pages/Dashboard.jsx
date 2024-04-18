@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { TopBar, SideBar, Workspace, OffCanvasSideBar } from "./dashboard";
+import { TopBar, SideBar, Workspace, OffCanvasSideBar } from "./dashboard/index";
 import "../css/dashboard.css";
 import { Loader } from "../components";
 import { getUserData } from "../app.service";

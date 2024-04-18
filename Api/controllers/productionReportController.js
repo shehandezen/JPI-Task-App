@@ -19,7 +19,7 @@ const getProductionReports = async (req, res) => {
 const getProductionReport = async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const productionReport = await getData(ProductionReport, { _id: req.params.id }, {path: 'Product'});
+      const productionReport = await getData(ProductionReport, { _id: req.params.id }, {path: 'Machines'});
       res.status(200).json({
         status: 'success',
         message: 'The data has sucessfully fetched',

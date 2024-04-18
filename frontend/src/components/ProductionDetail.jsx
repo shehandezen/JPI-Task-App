@@ -1,10 +1,24 @@
 import React, { useRef, useState, useEffect } from "react";
 import '../css/componentStyles/machinereport.css'
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import MiniLoader from "./MiniLoader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faTrash
+} from "@fortawesome/free-solid-svg-icons";
+import DeleteModal from "./DeleteModal";
+import { addProduction, getProductionReport, getProducts, updateProductionReport } from "../app.service";
 
 
 const ProductionDetail = () => {
+
+  const deleteIcon = <FontAwesomeIcon icon={faTrash} />;
+  const [dMachine, setDMachine] = useState({})
+  const [viewModal, setViewModal] = useState(false)
+  const [index, setIndex] = useState(null)
+  const [data, setData] = useState({})
+  const { id } = useParams()
+
   const machines = [
     'IM 01',
     'IM 02',
@@ -54,26 +68,48 @@ const ProductionDetail = () => {
   const [isView, setIsView] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const [newMachine, setNewMachine] = useState({})
+  const [newMachine, setNewMachine] = useState('')
 
   const handleChange = (value) => {
-    setNewMachine({ MachineNo: '' })
-    for (let i in data.PlannedMachines) {
-      if (data.PlannedMachines[i].MachineNo != value) {
-        setNewMachine({ MachineNo: value })
-      }
-
-      
-    }
-
+    setNewMachine(value)
   }
- 
+
 
 
   const addNewMachine = async () => {
     if (isView) {
-      if (newMachine != {}) {
-        await updateData(newMachine)
+      if (newMachine == '') {
+        setIsView(!isView)
+      }
+      if (newMachine != '') {
+        let isExist = false
+        const arrCopy = data.Machines
+        for await (let machine of arrCopy) {
+          let i = arrCopy.indexOf(machine)
+          if (machine.machine == newMachine) {
+            isExist = true
+            arrCopy[i].status = "Running"
+          }
+        }
+        let getcurrentproduct = await getProducts(`{"machineNo":"${newMachine}"}`)
+        if (getcurrentproduct.status == 200) {
+          let addProductionData = await addProduction({
+            MachineNo: newMachine,
+            Date: data.Date,
+            Shift: data.Shift,
+            Supervisor: data.Supervisor,
+            Product: getcurrentproduct?.data?.data[0]?._id
+          })
+
+          if (addProductionData.status == 'success') {
+            if (!isExist) {
+              arrCopy.push({ machine: newMachine, status: 'Running', data: addProductionData.data?._id })
+            }
+            console.log(arrCopy)
+            await updateData(arrCopy)
+          }
+
+        }
       }
 
     } else {
@@ -83,14 +119,19 @@ const ProductionDetail = () => {
 
   }
 
-  const updateData = async (data) => {
-    setIsLoading(true)
-    console.log(data)
-    await setInterval(() => {
-      console.log('data fetching...')
-      setIsLoading(false)
-    }, 5000)
+  const deleteMachine = async (index, element) => {
+    setDMachine(element)
+    setViewModal(true)
+    setIndex(index)
+  }
 
+
+  const updateData = async (updateData) => {
+    setIsLoading(true)
+    console.log(updateData)
+    const updatedData = await updateProductionReport(id,{...data, Machines: updateData})
+    console.log(updatedData)
+    setIsLoading(false)
   }
 
   const select = useRef()
@@ -112,27 +153,16 @@ const ProductionDetail = () => {
     }
   }, [isView])
 
-  const [data, setData] = useState({
-    Date: 'dummydata',
-    Shift: 'dummyData',
-    Supervisor: 'dummyData',
-    Live: true,
-    PlannedMachines: [{
-      MachineNo: 'IM 01'
-    }]
 
-  })
 
 
 
   const fetchData = async () => {
     setIsLoading(true)
-    await setInterval(() => {
-      console.log('data fetching...')
-      setIsLoading(false)
-    }, 5000)
-
-
+    const fetchedData = await getProductionReport(id)
+    console.log(fetchedData.data.data)
+    setData(fetchedData.data.data)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -143,6 +173,7 @@ const ProductionDetail = () => {
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
+      {viewModal ? (<DeleteModal index={index} setIndex={setIndex} dMachine={dMachine} setViewModal={setViewModal} setIsloading={setIsLoading} productionreport={data} />) : ''}
       <div className="report-container">
         <div className="title">
           Production
@@ -152,16 +183,16 @@ const ProductionDetail = () => {
           <div className="tag">{data.Date}</div>
           <div className="tag">{data.Shift}</div>
           <div className="tag">{data.Supervisor}</div>
-          {data.Live ? (<div className="tag" style={{ background: 'var(--red)' }}>Live</div>) : ''}
+          {data.Status == "Active" ? (<div className="tag" style={{ background: 'var(--red)' }}>Live</div>) : ''}
         </div>
         <div className="machine-cards">
-          {/* <div className="machine-card">
-            IM 01
-          </div> */}
-          {data.PlannedMachines.map((element, index) => {
-            return (<Link to={`machine/${element.MachineNo}`} key={index} className="machine-card">
-              {element.MachineNo}
-            </Link>)
+
+          {data.Machines?.map((element, index) => {
+            return (element.status == "Running" ? (<div key={index}>
+              <span className="deleteIcon" onClick={() => deleteMachine(index, element)}>{deleteIcon}</span>
+              <Link to={`machine/${element.data}`} className="machine-card"> {element.machine}
+              </Link>
+            </div>) : "")
           })}
         </div>
         <div className="add-new" onClick={() => addNewMachine()}>
@@ -170,7 +201,7 @@ const ProductionDetail = () => {
 
         <div className="add-input-container" ref={select}>
           <select name="machine" ref={selectInput} onChange={(e) => handleChange(e.target.value)}><option value="">No</option>
-            {/* <option value="IM 01">IM 01</option> */}
+
             {
               machines.map((element, index) => {
                 return (<option key={index} value={element} >{element}</option>)

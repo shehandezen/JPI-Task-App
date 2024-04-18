@@ -55,5 +55,5 @@ export {
   ProductionDetail,
   ProductionView,
   Notifications,
-  UpdateMouldChange
+  UpdateMouldChange,
 };
