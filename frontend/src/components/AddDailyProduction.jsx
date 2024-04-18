@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import "../css/componentStyles/adddailyproduction.css";
 import MiniLoader from "./MiniLoader";
 import {
+  addProduction,
   addProductionReport,
   getProductionReports,
+  getProducts,
   updateProductionReport,
 } from "../app.service";
 import MessageBox from "./MessageBox";
 
 const AddDailyProduction = () => {
   const navigate = useNavigate()
+
   const [data, setData] = useState({
     Date: "",
     Shift: "",
     Supervisor: "",
     Machines: [],
-    Status:"Active"
+    Status: "Active"
   });
 
   const [messages, setMessages] = useState([]);
@@ -135,24 +138,253 @@ const AddDailyProduction = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    console.log(data);
+    // console.log(data);
+    for await (let machine of data.Machines) {
+      if (machine.status == 'Running') {
+        let getcurrentproduct = await getProducts(`{"machineNo":"${machine.machine}"}`)
+        if (getcurrentproduct.status == 200) {
+          // console.log(getcurrentproduct.data.data[0]._id)
+          let addProductionData = await addProduction({
+            MachineNo: machine.machine,
+            Date: data.Date,
+            Shift: data.Shift,
+            Supervisor: data.Supervisor,
+            Product: getcurrentproduct?.data?.data[0]?._id,
+            StartTime: '',
+            EndTime: '',
+            Counter: [{
+              Time: '07:30',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '08:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              },
+          },
+          {
+              Time: '09:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '10:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '11:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '12:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '01:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '02:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '03:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '04:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '05:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '06:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '07:00',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+          {
+              Time: '07:30',
+              Counter: '',
+              Damage: {
+                  Material: '',
+                  Machine: '',
+                  Clear: ''
+              }
+          },
+      
+          ],
+            NoOfPackets: '',
+            DownTimes: [{
+              From: '00:00',
+              To: '00:00',
+              Reason: ''
+          },],
+            EngineeringParameters: {
+                PreHeaterTemp: {
+                    Specified: '',
+                    Actual: ''
+                },
+                ZoneTemp:[
+                  {
+                      Zone: 'Zone 01',
+                      Specified: '',
+                      Actual: ''
+                  },
+                  {
+                      Zone: 'Zone 02',
+                      Specified: '',
+                      Actual: ''
+                  },
+                  {
+                      Zone: 'Zone 03',
+                      Specified: '',
+                      Actual: ''
+                  },
+                  {
+                      Zone: 'Zone 04',
+                      Specified: '',
+                      Actual: ''
+                  },
+              ],
+              Parameters:  [
+                {
+                    Parameter: 'Holding Pressure',
+                    Specified: '',
+                    Actual: ''
+                },
+                {
+                    Parameter: 'Back Pressure',
+                    Specified: '',
+                    Actual: ''
+                },
+                {
+                    Parameter: 'Injection Time',
+                    Specified: '',
+                    Actual: ''
+                },
+                {
+                    Parameter: 'Cooling Time',
+                    Specified: '',
+                    Actual: ''
+                },
+                {
+                    Parameter: 'Chilled Water Temp',
+                    Specified: '',
+                    Actual: ''
+                },
+                {
+                    Parameter: 'Oil Temp',
+                    Specified: '',
+                    Actual: ''
+                },]
+    
+            }
+          })
 
+          console.log(addProductionData.data?._id)
+          // setData({
+          //   ...data,
+          //   Machines:[
+          //     ...data.Machines, {
+          //       ...machine,
+          //       data: addProductionData.data?._id
+          //     }
+          //   ]
+          // })
+
+          data.Machines[data.Machines.indexOf(machine)].data = addProductionData.data?._id
+        }
+
+      }
+
+    }
+
+    console.log(data)
     const getAlreadyActive = await getProductionReports('{"Status":"Active"}');
-    console.log(getAlreadyActive);
-    if (getAlreadyActive.data.status == "success" && getAlreadyActive.data.data.length != 0 ) {
+
+
+    if (getAlreadyActive.data.status == "success" && getAlreadyActive.data.data.length != 0) {
       const updateAlreadyActive = await updateProductionReport(
         getAlreadyActive.data.data[0]._id,
-        { Status: "Finished" } 
+        { Status: "Finished" }
       );
-      console.log(getAlreadyActive);
-      if (updateAlreadyActive.status == "success") {
+
+      console.log(updateAlreadyActive)
+      if (updateAlreadyActive.status == 200) {
         const addNewReport = await addProductionReport(data);
         console.log(addNewReport)
-        if (addNewReport.data.status == "sucess") {
+        if (addNewReport.status == "success") {
           navigate('/dashboard/production/reports')
         }
       }
-    }else{
+    } else {
       const addNewReport = await addProductionReport(data);
       console.log(addNewReport)
       if (addNewReport.status == "success") {

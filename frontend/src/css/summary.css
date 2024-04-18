@@ -1,0 +1,419 @@
+.summary-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.chart-section,
+.analyze-section,
+.data-list-section {
+    position: relative;
+    width: 100%;
+    height: auto;
+    /* border: 1px solid #ffffff; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+}
+
+.chart-section .chart {
+    position: relative;
+    padding: 25px 75px;
+    width: 90%;
+    height: 450px;
+    background: var(--background-color);
+    margin: 15px 0px;
+    margin-top: 50px;
+    border-radius: 15px;
+}
+
+.analyze-section {
+    flex-direction: column;
+}
+
+.analyze-section .title-bar {
+    position: relative;
+    width: 90%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.analyze-section .title-bar .title {
+    position: relative;
+    font-size: 30px;
+    -webkit-text-stroke: 1.5px var(--primary-light-color);
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    color: transparent;
+    padding-left: 15px;
+    margin-right: 15px;
+}
+
+.analyze-section .title-bar .calender {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--primary-light-color);
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+.analyze-section .title-bar .calender:hover {
+    color: var(--primary-dark-color);
+}
+
+.analyze-section .percentage-section {
+    position: relative;
+    width: 90%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+}
+
+.analyze-section .percentage-section .percentage-circle {
+    position: relative;
+    width: 30%;
+    height: 275px;
+    margin: 0% 3%;
+    background: var(--background-color);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .analyze-section .percentage-section .percentage-circle svg {
+    
+} */
+
+.analyze-section .percentage-section .percentage, .machine-modal .modal-box .percentage-section .percentage {
+    position: absolute;
+    display: flex;
+    font-size: 35px;
+    height: auto;
+}
+
+.analyze-section .percentage-section .percentage .percent-icon, .machine-modal .modal-box .percentage-section .percentage .percent-icon {
+    font-size: 18px;
+    position: relative;
+    top: 15px;
+}
+
+.analyze-section .percentage-section .percentage-circle .percentage-title,  .machine-modal .modal-box .percentage-section .percentage-circle .percentage-title{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+
+.data-list-section table {
+    position: relative;
+    width: 85%;
+    margin-top: 25px;
+    table-layout: auto;
+    border: none;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.data-list-section table thead tr {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    background: linear-gradient(45deg, var(--primary-light-color), var(--primary-dark-color));
+    color: var(--background-color);
+}
+
+
+.data-list-section table thead tr td {
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.data-list-section table tbody tr td {
+    padding-left: 15px;
+    padding: 8px;
+    text-align: center;
+}
+
+.data-list-section table tbody tr:nth-child(2n) {
+    background: var(--background-color)
+}
+
+
+.selection-modal,
+.machine-modal {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+}
+
+
+.selection-modal .modal-box {
+    position: relative;
+    border-top: 5px solid var(--primary-light-color);
+    width: 300px;
+    height: 200px;
+    background: var(--background-color);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.selection-modal .modal-box input {
+    position: relative;
+    width: 80%;
+    padding: 5px 8px;
+    background: rgba(0, 0, 0, 0.19);
+    border: 0.5px solid var(--primary-light-color);
+    border-radius: 5px;
+    color: var(--primary-light-color);
+}
+
+.selection-modal .modal-box .icons {
+    position: relative;
+    display: flex;
+    margin: 10px;
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid var(--primary-light-color);
+    border-radius: 55px;
+    overflow: hidden;
+}
+
+.selection-modal .modal-box .icons .day {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fd7e14;
+    cursor: pointer;
+    padding: 5px;
+    border-right: 2px solid var(--primary-light-color);
+    /* border: 1px solid var(--primary-light-color); */
+}
+
+.select-icon {
+    background: var(--primary-light-color);
+    -webkit-text-stroke: 1px var(--primary-light-color);
+    color: var(--background-color);
+}
+
+.selection-modal .modal-box .icons .night {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0d6efd;
+    cursor: pointer;
+    padding: 5px;
+    border-left: 2px solid var(--primary-light-color);
+    /* border: 1px solid var(--primary-light-color); */
+
+}
+
+.selection-modal .modal-box .icons .night:hover,
+.selection-modal .modal-box .icons .day:hover {
+    opacity: 0.8;
+}
+
+.selection-modal .modal-box .btn-group {
+    position: relative;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selection-modal .modal-box .btn-group button {
+    position: relative;
+    width: auto;
+    height: auto;
+    border: none;
+    background: transparent;
+    margin: 2px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    overflow: hidden !important;
+}
+
+.selection-modal .modal-box .btn-group button:hover {
+    opacity: 0.8;
+}
+
+.selection-modal .modal-box .btn-group button::after,
+.selection-modal .modal-box .btn-group button::before {
+    content: '';
+    background: transparent;
+}
+
+.selection-modal .modal-box .btn-group button:first-child {
+    color: var(--primary-light-color);
+}
+
+.selection-modal .modal-box .btn-group button:last-child {
+    color: var(--red);
+}
+
+.machine-modal .modal-box {
+    position: relative;
+    width: 80%;
+    height: auto;
+    background: var(--background-color);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.machine-modal .modal-box .close {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 25px;
+    color: var(--red);
+    cursor: pointer;
+    z-index: 10000;
+}
+
+.machine-modal .modal-box .close:hover {
+    opacity: 0.8;
+}
+
+.machine-modal .modal-box .title {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    top: 25px;
+    left: 50px;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.machine-modal .modal-box .percentage-section {
+    position: relative;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+
+}
+
+.machine-modal .modal-box .percentage-section .percentage-circle {
+    position: relative;
+    width: 250px;
+    height: 225px;
+    border-radius: 15px;
+    background: var(--background-shadow-color);
+    margin: 0px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.machine-modal .modal-box .detail-box {
+    position: relative;
+    width: 90%;
+    height: auto;
+    margin: 10px 0px;
+}
+
+.machine-modal .modal-box .detail-box .detail-title {   
+    position: relative;
+    font-size: 20px;
+    color: var(--primary-dark-color);
+}
+
+.machine-modal .modal-box .detail-box .detail-group{
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+}
+
+.machine-modal .modal-box .detail-box .detail-group .detail-key{
+    font-size: 14px;
+    margin: 2px 5px;
+    color: #fff;
+}
+
+.machine-modal .modal-box .detail-box .detail-group .detail-value{
+    font-size: 14px;
+    margin: 2px 5px;
+    color: var(--primary-light-color);
+}
+
+.machine-modal .modal-box table {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.machine-modal .modal-box table thead tr td {
+    color: var(--background-color);
+    background: linear-gradient(45deg, var(--primary-light-color), var(--primary-dark-color));
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    min-width: 50px;
+    padding: 0px 5px;
+}
+
+.machine-modal .modal-box table thead tr td,
+.machine-modal .modal-box table tbody tr td {
+    border: 0.5px solid var(--primary-light-color);
+    text-align: center;
+    font-size: 14px;
+    min-width: 50px;
+    padding: 0px 5px;
+    border-radius: 5px;
+
+}
+
+.machine-modal .modal-box table tbody tr td {
+    color: #fff;
+}
+
+.machine-modal .modal-box .detail-box  thead tr td:last-child,
+.machine-modal .modal-box .detail-box  table tbody tr td:last-child{
+    width:50%
+}

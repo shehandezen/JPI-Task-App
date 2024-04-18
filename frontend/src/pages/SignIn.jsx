@@ -49,7 +49,7 @@ const SignIn = () => {
   };
 
   const checkEmptyFeilds = async()=>{
-    console.log('checking')
+
     for (const [key, value] of Object.entries(data)) {
       if(value == '' || value == undefined || value == null){
         await setMessages([...messages, {status: 'error', message: 'Please fill out all required feilds.'}])
@@ -86,11 +86,11 @@ const SignIn = () => {
     <React.Fragment>
       {messages?.map((ele, index) => {
         return (
-          <MessageBox
+         (ele?.message != undefined )? ( <MessageBox
             key={index}
             message={ele.message}
             className={ele.status}
-          />
+          />): ''
         );
       })}
       {isLoading ? <MiniLoader /> : ""}

@@ -60,6 +60,79 @@ const updateProductionReport = async (id, data) => {
   return response;
 };
 
+
+const addProduction = async (data) => {
+  let result;
+  await client
+    .post("/production", data)
+    .then((response) => {
+      result = response.data;
+    })
+    .catch((err) => {
+      result = err.response;
+    });
+  return result;
+};
+
+const getProduction = async (filter) => {
+  let response;
+  await client
+    .get(`/production/?filter=${filter}`)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      console.log(err);
+      response = err;
+    });
+  return response;
+};
+
+const getProductionById = async (id) => {
+  let response;
+  await client
+    .get(`/production/${id}`)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      console.log(err);
+      response = err;
+    });
+  return response;
+};
+
+const updateProduction = async (id, data) => {
+  let response;
+  // console.log(id, token, data);
+  await client
+    .put(`/production/${id}`, data)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      response = err.response.data;
+    });
+  return response;
+};
+
+
+const deleteProduction = async (id) => {
+  let result;
+  await client
+    .delete(`/production/${id}`)
+    .then((response) => {
+      result = response;
+    })
+    .catch((err) => {
+      result = err.response;
+    });
+  return result;
+};
+
+
+
+
 const getProducts = async (filter) => {
   let response;
   await client
@@ -234,7 +307,7 @@ const signUpFunc = async (data) => {
       status = response.data;
     })
     .catch((err) => {
-      status = err.response.data;
+      status = err.response;
     });
   return status;
 };
@@ -249,7 +322,7 @@ const signInFunc = async (data) => {
       status = response.data;
     })
     .catch((err) => {
-      status = err.response.data;
+      status = err.response;
     });
   return status;
 };
@@ -266,7 +339,7 @@ const uploadCsv = async (file) => {
       status = response.data;
     })
     .catch((err) => {
-      status = err.response.data;
+      status = err.response?.data;
     });
   return status;
 };
@@ -289,5 +362,10 @@ export {
   getProductionReports,
   getProductionReport,
   updateProductionReport,
-  addProductionReport
+  addProductionReport,
+  getProduction,
+  getProductionById,
+  updateProduction,
+  addProduction,
+  deleteProduction
 };

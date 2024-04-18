@@ -105,3 +105,8 @@ body {
   outline: 1px solid slategrey;
   border-radius: 20px;
 }
+
+
+button{
+  overflow: hidden;
+}
