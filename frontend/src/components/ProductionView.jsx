@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useAsyncError, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTag, faAngleDoubleRight, faPlus, faXmark, faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faTag, faAngleDoubleRight, faPlus, faXmark, faPencil, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import '../css/componentStyles/machinereport.css'
 import MiniLoader from "./MiniLoader";
-import { getProductionById, getProductionReport, updateProduction } from "../app.service";
+import { addReport, getProductionById, getProductionReport, getReports, updateProduction, updateProductionReport, updateReport } from "../app.service";
+import { getDiffTime } from "../time";
 
 const ProductionView = () => {
     const tag = <FontAwesomeIcon icon={faTag} />;
@@ -12,6 +13,8 @@ const ProductionView = () => {
     const plus = <FontAwesomeIcon icon={faPlus} />;
     const X = <FontAwesomeIcon icon={faXmark} />;
     const pencil = <FontAwesomeIcon icon={faPencil} />;
+    const check = <FontAwesomeIcon icon={faCircleCheck} />;
+
     const { id } = useParams()
     const location = useLocation()
     const navigate = useNavigate()
@@ -19,6 +22,7 @@ const ProductionView = () => {
 
     const [disabled, setDisabled] = useState(true)
     const [edit, setEdit] = useState(true)
+    const [viewModal, setViewModal] = useState(false)
 
     const toggleDisable = () => {
         setDisabled(!disabled)
@@ -55,7 +59,7 @@ const ProductionView = () => {
 
             const currentProductionreport = await getProductionReport(pathArray[4]) 
             console.log(currentProductionreport.data?.data?.Status)
-            if(currentProductionreport.data?.data?.Status != 'Active'){
+            if(currentProductionreport.data?.data?.Status != 'Active' || data.Status == 'Active'){
                 setEdit(false)
             }
 
@@ -81,7 +85,8 @@ const ProductionView = () => {
     const removeItem = (index) => {
         const downtimeCopy = [...downTimes]
         downtimeCopy.splice(index, 1)
-        setDownTimes(downtimeCopy)
+        console.log(downtimeCopy, index)
+        setDownTimes([...downtimeCopy])
     }
 
     const handleChangeCounter = (value, index, type) => {
@@ -193,11 +198,156 @@ const ProductionView = () => {
         setIsLoading(false)
     }
 
+    const finishReport = async()=>{
+        setIsLoading(true)
+        const date = new Date(data.Date)
+        const year = date.getFullYear()
+        const month = date.getMonth()
+        const day = date.getDay()
+
+        let newDowntime = []
+        for await(let downtime of downTimes){
+           let duration = getDiffTime(downtime.From, downtime.To)
+            newDowntime.push({
+                From: downtime.From,
+                To: downtime.To,
+                Duration: duration,
+                Reason: downtime.Reason
+            })
+            
+        }
+
+        let firstCounter = data.Counter[0]?.Counter
+        let lastCounter = 0
+        let preCounter
+        for await(let counter of data.Counter){ 
+            if(counter.Counter != null ){
+                preCounter = counter.Counter
+            }else{
+                lastCounter = preCounter
+               
+            }
+        }
+        const productionHours = getDiffTime(data.StartTime, data.EndTime)
+        const proccedQty = (lastCounter - firstCounter) * data.Product?.usingCavities
+        const plannedQty = productionHours * data.Product?.usingCavities * data.Product?.hourlyTarget
+        const utilizedHours = proccedQty/( data.Product?.usingCavities * data.Product?.hourlyTarget)
+
+        let materialDamages = 0
+        let machineDamages = 0
+        let clearDamages = 0
+
+        for await(let counter of data.Counter){
+            if(typeof(counter.Damage.Material) == 'number'){
+                materialDamages = materialDamages + counter.Damage.Material
+            }else if(typeof(counter.Damage.Machine) == 'number'){
+                machineDamages = machineDamages + counter.Damage.Machine
+            }else if(typeof(counter.Damage.Clear) == 'number'){
+                clearDamages = clearDamages + counter.Damage.Clear
+            }
+        }
+
+        const efficiency = (proccedQty/plannedQty) * 100
+        const productionHoursUtilization = (utilizedHours/productionHours) * 100
+
+        const machineObject = {
+            Machine: data.MachineNo,
+            Report: data._id,
+            Summary: {
+                Product:  data.Product?._id,
+                PlannedQty: plannedQty,
+                ProccedQty: proccedQty,
+                Damages:{
+                    Material: materialDamages,
+                    Machine: machineDamages,
+                    Clear: clearDamages
+                },
+               ProductionHours: productionHours,
+               UtilizedHours: utilizedHours,
+               NoOfPackets: data.NoOfPackets,
+               Downtimes: newDowntime,
+               Efficiency: efficiency,
+               ProductionHoursUtilization: productionHoursUtilization
+            }
+        }
+
+        const reportObject = {
+            Date:{
+                Year: year,
+                Month: month,
+                Day: day,
+                Shift: data.Shift
+            },
+            Supervisor: data.Supervisor,
+            Summary: {
+                IMEfficiency: 0,
+                BMEfficiency: 0,
+                IMLEfficiency: 0,
+                IBMEfficiency: 0
+            },
+            Reports: [machineObject]
+        }
+        // check if exist 
+
+        const existReport = await getReports(`{"Date":{"Year":"${year}","Month":"${month}","Day":"${day}","Shift":"${data.Shift}"}}`)
+        console.log(existReport.data?.data, `{"Date":{"Year":${year},"Month":${month},"Day":${day},"Shift":"${data.Shift}"}}`)
+       
+        if(existReport.data?.data.length == 0 ){
+           
+
+            const createReport = await addReport(reportObject)
+
+            console.log(createReport)
+            if(createReport.status == 200){
+                const closeReport = await updateProductionReport(data._id, {Status: 'Closed'})
+                if(closeReport.status == 200){
+                    navigate('/dashboard')
+                }
+               
+            }
+
+           
+
+        }else{
+            console.log(existReport.data?.data.length == 0)
+            const updateData = await updateReport(existReport.data?.data[0]._id,  {Reports:[...existReport.data?.data[0].Reports, machineObject]})
+            console.log(updateData)
+            if(updateData.status == 200){
+                const closeReport = await updateProductionReport(data._id, {Status: 'Closed'})
+                if(closeReport.status == 200){
+                    navigate('/dashboard')
+                }
+            }
+            
+        }   
+
+        // create object 
+        // create if does not exist
+
+       
+        setIsLoading(false)
+    }
+
 
 
     return (
         <React.Fragment>
-            {isLoading ? <MiniLoader /> : ""}
+            {isLoading ? <MiniLoader /> : null}
+            {viewModal? (
+                <React.Fragment>
+                    <div className="modal-warpper">
+                        <div className="modal-box">
+                            <div className="modal-icon">{check}</div>
+                            <div className="modal-message">Are you sure? Do you want to finish this report?</div>
+                            <div className="buttons">
+                                <button style={{backgroundColor:'#fd7e14'}} onClick={()=> finishReport()}>Confirm</button>
+                                <button style={{backgroundColor:'var(--red)'}} onClick={()=> setViewModal(false)}>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </React.Fragment>
+            ):null}
             <div className="report-container">
                 <div className="title">
                     {data?.MachineNo}
@@ -207,6 +357,7 @@ const ProductionView = () => {
                     <div className="tag">{data?.Date}</div>
                     <div className="tag">{data?.Shift}</div>
                     <div className="tag">{data?.Supervisor}</div>
+                    <div className="tag" style={data.Status == 'Active'? {background: 'var(--red)'}:{background: '#fd7e14'}}>{data?.Status}</div>
                 </div>
                 <div className="detail-line">
                     <div className="detail">
@@ -287,19 +438,19 @@ const ProductionView = () => {
                                 {downTimes?.map((ele, index) => (<tr key={index}>
                                     <td>
                                         <div className="input-container">
-                                            <input disabled={disabled} type="time" value={ele.from} onChange={(e) => handleChangeDownTimes(e.target.value, index, 'from')} />
+                                            <input disabled={disabled} type="time" value={downTimes[index].From} onChange={(e) => handleChangeDownTimes(e.target.value, index, 'from')} />
                                             <div className="tiny-label">From</div>
                                         </div>
                                     </td>
                                     <td>
                                         <div className="input-container">
-                                            <input disabled={disabled} type="time" value={ele.to} onChange={(e) => handleChangeDownTimes(e.target.value, index, 'to')} />
+                                            <input disabled={disabled} type="time" value={downTimes[index].To} onChange={(e) => handleChangeDownTimes(e.target.value, index, 'to')} />
                                             <div className="tiny-label">To</div>
                                         </div>
                                     </td>
                                     <td>
                                         <div className="input-container">
-                                            <input disabled={disabled} type="text" value={ele.reason} onChange={(e) => handleChangeDownTimes(e.target.value, index, 'reason')} />
+                                            <input disabled={disabled} type="text" value={downTimes[index].Reason} onChange={(e) => handleChangeDownTimes(e.target.value, index, 'reason')} />
                                             <div className="tiny-label">Reason</div>{index == 0 ? '' : (<button className="delete" onClick={() => removeItem(index)}>{X}</button>)}
                                         </div>
 
@@ -420,7 +571,11 @@ const ProductionView = () => {
                     </div>
                 </div>
                 {disabled && edit ? (<div className="edit-data" onClick={() => toggleDisable()}>{pencil}</div>) : null}
-
+               {disabled && data.Status == 'Active' ?( <div className="input-container">
+                <div className="buttons">
+                    <button className="finish-btn" onClick={()=> setViewModal(true)}>Finish Report</button>
+                </div>
+                </div>): null}
                 {!disabled ? (<div className="input-container">
                     <div className="buttons">
                         <button onClick={() => handleSubmit()}>Save</button>

@@ -168,3 +168,15 @@
     right: 10px;
   }
 }
+
+
+.empty-message{
+  text-align: center  ;
+  position: absolute;
+  width: 89%;
+  font-size: 14px;
+  margin-top: 5px;
+  padding: 15px 25px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+}

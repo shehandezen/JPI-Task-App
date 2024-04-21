@@ -170,6 +170,8 @@
     align-items: center;
     justify-content: center;
     z-index: 100000;
+    backdrop-filter: blur(5px);
+
 }
 
 
@@ -227,9 +229,10 @@
 }
 
 .select-icon {
+    transition: 0.2s;
     background: var(--primary-light-color);
     -webkit-text-stroke: 1px var(--primary-light-color);
-    color: var(--background-color);
+    color: var(--background-color) !important;
 }
 
 .selection-modal .modal-box .icons .night {
@@ -302,6 +305,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
 }
 
 .machine-modal .modal-box .close {
@@ -386,6 +390,8 @@
 .machine-modal .modal-box table {
     margin-top: 15px;
     width: 100%;
+    overflow-x: scroll;
+
 }
 
 .machine-modal .modal-box table thead tr td {

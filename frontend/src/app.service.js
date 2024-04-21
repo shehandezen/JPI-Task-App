@@ -5,6 +5,62 @@ const client = axios.create({
   headers: {},
 });
 
+const addReport = async (data) => {
+  let result;
+  await client
+    .post("/report", data)
+    .then((response) => {
+      result = response.data;
+    })
+    .catch((err) => {
+      result = err.response;
+    });
+  return result;
+};
+
+const getReports = async (filter) => {
+  let response;
+  await client
+    .get(`/report/?filter=${filter}`)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      console.log(err);
+      response = err;
+    });
+  return response;
+};
+
+const getReport = async (id) => {
+  let response;
+  await client
+    .get(`/report/${id}`)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      console.log(err);
+      response = err;
+    });
+  return response;
+};
+
+const updateReport = async (id, data) => {
+  let response;
+  // console.log(id, token, data);
+  await client
+    .put(`/report/${id}`, data)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      response = err.response.data;
+    });
+  return response;
+};
+
+
 const addProductionReport = async (data) => {
   let result;
   await client
@@ -367,5 +423,9 @@ export {
   getProductionById,
   updateProduction,
   addProduction,
-  deleteProduction
+  deleteProduction,
+  addReport,
+  getReport,
+  getReports,
+  updateReport
 };

@@ -145,7 +145,7 @@ const TopBar = ({ isMenuShow, setIsMenuShow, user, setUser }) => {
               src={
                 user?.Image === undefined || user?.Image === null
                   ? "https://www.w3schools.com/howto/img_avatar.png"
-                  : `${process.env.REACT_APP_API_URL}profile/${user?.Image}`
+                  : `${process.env.REACT_APP_API_URL}/profile/${user?.Image}`
               }
               alt=""
               onError={() => {

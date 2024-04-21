@@ -7,8 +7,8 @@ const getReports = async (req, res) => {
         const report = await getData(
             Report,
             req.query.filter == undefined ? {} : await JSON.parse(req.query.filter),
-            { path: 'Report' },
-            { path: 'Product' }
+            { path: 'Reports.Report' },
+            { path: 'Reports.Summary.Product' }
         );
         res.status(200).json({
             status: "success",
@@ -26,7 +26,7 @@ const getReports = async (req, res) => {
 const getReport = async (req, res) => {
     try {
         if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            const report = await getData(Report, { _id: req.params.id }, { path: 'Report' },{ path: 'Product' });
+            const report = await getData(Report, { _id: req.params.id }, { path: 'Reports' },{ path: 'Reports.Summary.Product' });
             res.status(200).json({
                 status: "success",
                 message: "The data has sucessfully fetched",
@@ -62,7 +62,7 @@ const createReport = async (req, res) => {
 const updateReport = async (req, res) => {
     try {
         if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            const updatedReport = await updateData(Report, req.params.id, req.body, {path: 'Report'},{path: 'Product'});
+            const updatedReport = await updateData(Report, req.params.id, req.body, { path: 'Reports' },{ path: 'Reports.Summary.Product' });
             if (updatedReport) {
                 res.status(200).json({
                     status: "sucess",
