@@ -9,32 +9,34 @@ const Report = new mongoose.Schema({
     },
     Supervisor: String,
     Summary: {
-        IMEfficiency: Number,
-        BMEfficiency: Number,
-        IMLEfficiency: Number,
-        IBMEfficiency: Number
+        IMEfficiency: String,
+        BMEfficiency: String,
+        IMLEfficiency: String,
+        IBMEfficiency: String
     },
     Reports: [{
         Machine: String,
         Report: {type: mongoose.Schema.Types.ObjectId, ref: 'Production'},
         Summary: {
             Product:  {type: mongoose.Schema.Types.ObjectId, ref: 'Product'},
-            PlannedQty: Number,
-            ProccedQty: Number,
+            PlannedQty: String,
+            ProccedQty: String,
             Damages:{
-                Material: Number,
-                Machine: Number,
-                Clear: Number
+                Material: String,
+                Machine: String,
+                Clear: String
             },
-           PlannedHours: Number,
-           UtilizedHours: Number,
-           NoOfPackets: Number,
+           ProductionHours: String,
+           UtilizedHours: String,
+           NoOfPackets: String,
            Downtimes:[{
             From: String,
             To: String,
-            Duration: Number,
+            Duration: String,
             Reason: String
-           }] 
+           }] ,
+           Efficiency: String,
+           ProductionHoursUtilization: String
         }
     }]
 })

@@ -11,8 +11,11 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDays, faPercent, faSun, faMoon, faXmark, faHandPointRight} from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDays, faPercent, faSun, faMoon, faXmark, faHandPointRight } from "@fortawesome/free-solid-svg-icons";
 import "../css/summary.css";
+import {getReports} from '../app.service'
+import MiniLoader from "./MiniLoader";
+
 
 ChartJS.register(
   CategoryScale,
@@ -24,6 +27,7 @@ ChartJS.register(
   Legend
 );
 
+
 const Summary = () => {
   const calender = <FontAwesomeIcon icon={faCalendarDays} />;
   const percent = <FontAwesomeIcon icon={faPercent} />;
@@ -33,6 +37,45 @@ const Summary = () => {
   const pointer = <FontAwesomeIcon icon={faHandPointRight} />;
   const [selectModal, setSelectModal] = useState(false)
   const [machineModal, setMachineModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [shift, setShift] = useState('Day')
+  const [selectionData, setSelectionData] = useState({
+    Date: {
+      Year: '',
+      Month: '',
+      Day: '',
+      Shift: ''
+    }
+  })
+
+  const handleChange = (e) => {
+    console.log(e.target.value)
+    const date = new Date(e.target.value)
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const day = date.getDay()
+    console.log(year)
+    setSelectionData({
+      Date: {
+        Year: `${year}`,
+        Month: `${month}`,
+        Day: `${day}`,
+        Shift: shift
+      }
+    })
+  }
+
+  const selectReport = async()=>{
+    setIsLoading(true)
+    console.log(selectionData)
+    const getReportData = await getReports(`{"Date":{"Year":"${selectionData.Date.Year}","Month":"${selectionData.Date.Month}","Day":"${selectionData.Date.Day}","Shift":"${selectionData.Date.Shift}"}}`)
+    console.log(getReportData)
+    if(getReportData.status == 200){
+      setSelectModal(false)
+    }
+
+    setIsLoading(false)
+  }
 
 
   const toggleSelectModal = () => {
@@ -106,19 +149,20 @@ const Summary = () => {
 
   return (
     <React.Fragment>
+       {isLoading ? <MiniLoader /> : null}
       {selectModal ? (<div className="selection-modal">
         <div className="modal-box">
-          <input type="date" />
+          <input type="date" onChange={(e) => handleChange(e)} />
           <div className="icons">
-            <div className="day select-icon">
+            <div className={`day ${shift == 'Day' ? 'select-icon' : ''}`} onClick={() => setShift('Day')}>
               {day}
             </div>
-            <div className="night">
+            <div className={`night ${shift == 'Night' ? 'select-icon' : ''}`} onClick={() => setShift('Night')} >
               {night}
             </div>
           </div>
           <div className="btn-group">
-            <button> OK</button>
+            <button onClick={()=> selectReport()}> OK</button>
             <button onClick={() => toggleSelectModal()}> CANCEL</button>
           </div>
         </div>
@@ -127,64 +171,64 @@ const Summary = () => {
       {machineModal ? (
         <div className="machine-modal">
           <div className="modal-box">
-            <div className="close" onClick={()=> setMachineModal(!machineModal)}>{x}</div>
+            <div className="close" onClick={() => setMachineModal(!machineModal)}>{x}</div>
             <div className="title"> IM 01</div>
             <div className="percentage-section">
               <div className="percentage-circle">
-              <div className="percentage">
-                95 <div className="percent-icon"> {percent}</div>
-              </div>
-              <svg width="150" height="150" viewBox="0 0 250 250">
-                <circle
-                  className="bg"
-                  cx="125"
-                  cy="125"
-                  r="115"
-                  fill="none"
-                  stroke="#10202b"
-                  strokeWidth="20"
-                ></circle>
-                <circle
-                  className="fg"
-                  cx="125"
-                  cy="125"
-                  r="115"
-                  strokeDasharray={' 400 400'}
-                  fill="none"
-                  stroke="#12d39e"
-                  strokeWidth="20"
-                  strokeLinecap="round"
-                ></circle>
-              </svg>
-              <div className="percentage-title"> Efficieny</div>
+                <div className="percentage">
+                  95 <div className="percent-icon"> {percent}</div>
+                </div>
+                <svg width="150" height="150" viewBox="0 0 250 250">
+                  <circle
+                    className="bg"
+                    cx="125"
+                    cy="125"
+                    r="115"
+                    fill="none"
+                    stroke="#10202b"
+                    strokeWidth="20"
+                  ></circle>
+                  <circle
+                    className="fg"
+                    cx="125"
+                    cy="125"
+                    r="115"
+                    strokeDasharray={' 400 400'}
+                    fill="none"
+                    stroke="#12d39e"
+                    strokeWidth="20"
+                    strokeLinecap="round"
+                  ></circle>
+                </svg>
+                <div className="percentage-title"> Efficieny</div>
               </div>
               <div className="percentage-circle">
-              <div className="percentage">
-                95 <div className="percent-icon"> {percent}</div>
-              </div>
-              <svg width="150" height="150" viewBox="0 0 250 250">
-                <circle
-                  className="bg"
-                  cx="125"
-                  cy="125"
-                  r="115"
-                  fill="none"
-                  stroke="#10202b"
-                  strokeWidth="20"
-                ></circle>
-                <circle
-                  className="fg"
-                  cx="125"
-                  cy="125"
-                  r="115"
-                  strokeDasharray={' 400 400'}
-                  fill="none"
-                  stroke="#12d39e"
-                  strokeWidth="20"
-                  strokeLinecap="round"
-                ></circle>
-              </svg>
-              <div className="percentage-title"> Efficieny</div>
+                <div className="percentage">
+                  95 <div className="percent-icon"> {percent}</div>
+                </div>
+                <svg width="150" height="150" viewBox="0 0 250 250">
+                  <circle
+                    className="bg"
+                    cx="125"
+                    cy="125"
+                    r="115"
+                    fill="none"
+                    stroke="#10202b"
+                    strokeWidth="20"
+                  ></circle>
+                  <circle
+                    className="fg"
+                    cx="125"
+                    cy="125"
+                    r="115"
+                    strokeDasharray={' 400 400'}
+                    fill="none"
+                    stroke="#12d39e"
+                    strokeWidth="20"
+                    strokeLinecap="round"
+                  ></circle>
+                </svg>
+                <div className="percentage-title"> Efficieny</div>
               </div>
             </div>
             <div className="detail-box">
@@ -195,7 +239,7 @@ const Summary = () => {
               </div>
             </div>
             <div className="detail-box">
-            <div className="detail-title">Engineering Parameters</div>
+              <div className="detail-title">Engineering Parameters</div>
               <table >
                 <thead>
                   <tr>

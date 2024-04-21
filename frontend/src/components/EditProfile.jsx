@@ -207,7 +207,7 @@ const EditProfile = () => {
               data.Image == "undefined"
                 ? "https://www.w3schools.com/howto/img_avatar.png"
                 : imgFile.current.files.length == 0
-                  ? `${process.env.REACT_APP_API_URL}profile/${data.Image}`
+                  ? `${process.env.REACT_APP_API_URL}/profile/${data.Image}`
                   : URL.createObjectURL(data.Image)
             }
             alt="profle image"

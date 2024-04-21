@@ -113,6 +113,14 @@ const CurrentMouldChange = () => {
                       </tr>
                     );
                   })}
+                  {
+                  data
+                  ?.filter((obj) =>
+                    obj?.machineNo?.toLocaleLowerCase().includes(
+                      searchText.toLocaleLowerCase()
+                    )
+                  ).length == 0 ? <tr> <div className="empty-message">There are no data to show.</div></tr> : null
+                }
               </tbody>
             </table>
           </div>

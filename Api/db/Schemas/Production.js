@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 
 const Production = new mongoose.Schema({
     MachineNo: String,
+    Status: String,
         Date: String,
         Shift: String,
         Supervisor: String,

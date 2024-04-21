@@ -531,10 +531,11 @@ button.delete {
     transform: skew(45deg) translateX(50%);
 }
 
-.add-new, .edit-data {
+.add-new,
+.edit-data {
     position: fixed;
-    right: 50px;
-    bottom: 50px;
+    right: 60px;
+    bottom: 60px;
     padding: 5px;
     font-size: 30px;
     font-weight: 500;
@@ -550,29 +551,31 @@ button.delete {
     z-index: 10000;
 }
 
-.edit-data{
+.edit-data {
     font-size: 20px !important;
     position: fixed;
 }
 
-.add-new::before, .edit-data::before {
+.add-new::before,
+.edit-data::before {
     content: '';
     position: absolute;
     background: rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    
+
     width: 50px;
     height: 50px;
     z-index: 100;
     animation: scalar 2s linear infinite;
 }
 
-.add-new::after, .edit-data::after {
+.add-new::after,
+.edit-data::after {
     content: '';
     position: absolute;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    
+
     width: 50px;
     height: 50px;
     z-index: 100;
@@ -581,21 +584,22 @@ button.delete {
 }
 
 @keyframes scalar {
-    0%{
+    0% {
         transform: scale(0.8);
         opacity: 1;
     }
-    100%{
+
+    100% {
         transform: scale(3);
         opacity: 0;
     }
-    
+
 }
 
-.add-input-container{
-    position: absolute;
-    bottom: 50px;
-    right: 50px;
+.add-input-container {
+    position: fixed;
+    bottom: 60px;
+    right: 60px;
     border: 2px solid var(--primary-light-color);
 
     background: rgba(0, 0, 0, 0.3);
@@ -606,7 +610,7 @@ button.delete {
 
 }
 
-.add-input-container select{
+.add-input-container select {
     position: relative;
     width: calc(100% - 50px);
     height: 100%;
@@ -619,16 +623,16 @@ button.delete {
     justify-content: center;
     outline: none;
     padding-left: 25px;
-z-index: 1000000000;
+    z-index: 1000000000;
 }
 
-.add-input-container select option{
+.add-input-container select option {
     color: #222;
     font-size: 14px;
 }
 
 
-.deleteIcon{
+.deleteIcon {
     position: absolute;
     top: 15px;
     right: 0px;
@@ -644,13 +648,93 @@ z-index: 1000000000;
     cursor: pointer;
 }
 
-.deleteIcon:hover{
+.deleteIcon:hover {
     opacity: 0.8;
 }
 
-.machine-cards div{
+.machine-cards div {
     position: relative;
     width: 150px;
     margin: 5px;
     overflow: hidden;
+}
+
+.finish-btn {
+    background: #fd7e14 !important;
+    width: auto !important;
+    padding: 15px 25px !important;
+}
+
+.report-container .finish-btn{
+    position: relative;
+    color: var(--background-color) !important;
+    padding: 15px 25px !important;
+    border: none !important;
+    font-size: 16px !important;
+    height: auto !important;
+    margin: 30px 0px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.finish-btn:hover{
+    opacity: 0.8;
+}
+
+.modal-warpper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 100000;
+}
+
+
+.modal-warpper .modal-box {
+    position: relative;
+    width: 300px;
+    height: 225px;
+    border-radius: 15px;
+    background: var(--background-color);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-shadow:
+        0 4px 8px 0 rgba(0, 0, 0, 0.2),
+        0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        border: 0.5px solid rgba(255, 255, 255, 0.2);
+
+        z-index: 1000000000;
+}
+
+.modal-warpper .modal-box .modal-icon {
+    font-size: 50px;
+    margin: 15px 0px 5px 0px;
+}
+
+.modal-warpper .modal-box .modal-message {
+    font-size: 14px;
+    padding: 5px 15px;
+}
+
+.modal-warpper .modal-box .buttons {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-warpper .modal-box .buttons button{
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+    height:auto ;
+    padding: 8px 5px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+cursor: pointer;
 }

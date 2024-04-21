@@ -121,6 +121,14 @@ const ProductHistory = () => {
                     </tr>
                   );
                 })}
+                {
+                  data
+                  ?.filter((obj) =>
+                    obj?.productName?.toLocaleLowerCase().includes(
+                      searchText.toLocaleLowerCase()
+                    )
+                  ).length == 0 ? <tr> <div className="empty-message">There are no data to show.</div></tr> : null
+                }
               {/* <tr>
                 <td className="col-1">Sample </td>
                 <td className="col-2">Sample </td>
