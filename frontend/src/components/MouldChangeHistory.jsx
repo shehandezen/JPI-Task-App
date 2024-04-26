@@ -9,6 +9,9 @@ import {
 import "../css/componentStyles/detailview.css";
 import MiniLoader from "./MiniLoader";
 import { getMouldChanges } from "../app.service";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const MouldChangeHistory = () => {
   const search = <FontAwesomeIcon icon={faSearch} />;
@@ -38,14 +41,21 @@ const MouldChangeHistory = () => {
     const response = await getMouldChanges(
       `{"status":"Done"}`
     );
-console.log(response?.data?.data)
-    setData(response?.data?.data);
+    if(response.status == 200){
+      setData(response?.data?.data);
+      toast.success('The data is fetched!', toastConfig)
+    }else if(response.status == 500){
+      toast.error('Backend error!', toastConfig)
+    }else{
+      toast.error('Something went wrong!', toastConfig)
+    }
     setIsLoading(false);
   };
 
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
+      <ToastContainer />
       <div className="details-container">
         <div className="top">
           <div className="search">
@@ -109,6 +119,14 @@ console.log(response?.data?.data)
                     </tr>
                   );
                 })}
+                 {
+                  data
+                  ?.filter((obj) =>
+                    obj?.machineNo?.toLocaleLowerCase().includes(
+                      searchText.toLocaleLowerCase()
+                    )
+                  ).length == 0 ? <tr> <div className="empty-message">There are no data to show.</div></tr> : null
+                }
                 </tbody>
             </table>
           </div>

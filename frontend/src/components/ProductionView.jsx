@@ -6,6 +6,9 @@ import '../css/componentStyles/machinereport.css'
 import MiniLoader from "./MiniLoader";
 import { addReport, getProductionById, getProductionReport, getReports, updateProduction, updateProductionReport, updateReport } from "../app.service";
 import { getDiffTime } from "../time";
+import { toast } from "react-toastify";
+import { toastConfig } from "../toastConfig";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductionView = () => {
     const tag = <FontAwesomeIcon icon={faTag} />;
@@ -48,22 +51,28 @@ const ProductionView = () => {
 
         if (fetchedData?.status == 200) {
             setData(fetchedData?.data?.data)
-            setCounter([ ...fetchedData?.data?.data?.Counter])
-            setDownTimes([ ...fetchedData?.data?.data?.DownTimes])
+            setCounter([...fetchedData?.data?.data?.Counter])
+            setDownTimes([...fetchedData?.data?.data?.DownTimes])
             if (fetchedData?.data?.data?.EngineeringParameters.ZoneTemp != undefined) {
-                setZoneTemp([ ...fetchedData?.data?.data?.EngineeringParameters.ZoneTemp])
+                setZoneTemp([...fetchedData?.data?.data?.EngineeringParameters.ZoneTemp])
+            } else {
+                toast.error('Something went wrong!', toastConfig)
             }
             if (fetchedData?.data?.data?.EngineeringParameters.Parameters != undefined) {
-                setParameters([ ...fetchedData?.data?.data?.EngineeringParameters.Parameters])
+                setParameters([...fetchedData?.data?.data?.EngineeringParameters.Parameters])
+            } else {
+                toast.error('Something went wrong!', toastConfig)
             }
 
-            const currentProductionreport = await getProductionReport(pathArray[4]) 
+            const currentProductionreport = await getProductionReport(pathArray[4])
             console.log(currentProductionreport.data?.data?.Status)
-            if(currentProductionreport.data?.data?.Status != 'Active' || data.Status == 'Active'){
+            if (currentProductionreport.data?.data?.Status != 'Active' || data.Status == 'Active') {
                 setEdit(false)
             }
 
 
+        } else {
+            toast.error('Something went wrong!', toastConfig)
         }
         setIsLoading(false)
     }
@@ -182,97 +191,91 @@ const ProductionView = () => {
 
     const handleSubmit = async () => {
         setIsLoading(true)
-        console.log(downTimes)
-        console.log(await { ...data, Counter: counter, DownTimes: downTimes, EngineeringParameters: { ...data.EngineeringParameters, ZoneTemp: zoneTemp, Parameters: parameters }})
         const updatedData = await updateProduction(id, await { ...data, Counter: counter, DownTimes: downTimes, EngineeringParameters: { ...data.EngineeringParameters, ZoneTemp: zoneTemp, Parameters: parameters } })
-        console.log(updatedData)
-        if(updatedData.status ==200 ){
-            // navigate('/dashboard/production/view')
-            console.log(location)
-           
-            pathArray.splice(-2,2)
-            console.log(pathArray.toString().replaceAll(',','/'))
-            navigate(pathArray.toString().replaceAll(',','/'))
-
+        if (updatedData.status == 200) {
+            pathArray.splice(-2, 2)
+            navigate(pathArray.toString().replaceAll(',', '/'))
+        } else {
+            toast.error('Something went wrong!', toastConfig)
         }
         setIsLoading(false)
     }
 
-    const finishReport = async()=>{
+    const finishReport = async () => {
         setIsLoading(true)
         const date = new Date(data.Date)
         const year = date.getFullYear()
-        const month = date.getMonth()
-        const day = date.getDay()
+        const month = date.getMonth() + 1
+        const day = date.getDate()
 
         let newDowntime = []
-        for await(let downtime of downTimes){
-           let duration = getDiffTime(downtime.From, downtime.To)
+        for await (let downtime of downTimes) {
+            let duration = getDiffTime(downtime.From, downtime.To)
             newDowntime.push({
                 From: downtime.From,
                 To: downtime.To,
                 Duration: duration,
                 Reason: downtime.Reason
             })
-            
+
         }
 
         let firstCounter = data.Counter[0]?.Counter
         let lastCounter = 0
         let preCounter
-        for await(let counter of data.Counter){ 
-            if(counter.Counter != null ){
+        for await (let counter of data.Counter) {
+            if (counter.Counter != null) {
                 preCounter = counter.Counter
-            }else{
+            } else {
                 lastCounter = preCounter
-               
+
             }
         }
         const productionHours = getDiffTime(data.StartTime, data.EndTime)
         const proccedQty = (lastCounter - firstCounter) * data.Product?.usingCavities
         const plannedQty = productionHours * data.Product?.usingCavities * data.Product?.hourlyTarget
-        const utilizedHours = proccedQty/( data.Product?.usingCavities * data.Product?.hourlyTarget)
+        const utilizedHours = proccedQty / (data.Product?.usingCavities * data.Product?.hourlyTarget)
 
         let materialDamages = 0
         let machineDamages = 0
         let clearDamages = 0
 
-        for await(let counter of data.Counter){
-            if(typeof(counter.Damage.Material) == 'number'){
+        for await (let counter of data.Counter) {
+            if (typeof (counter.Damage.Material) == 'number') {
                 materialDamages = materialDamages + counter.Damage.Material
-            }else if(typeof(counter.Damage.Machine) == 'number'){
+            } else if (typeof (counter.Damage.Machine) == 'number') {
                 machineDamages = machineDamages + counter.Damage.Machine
-            }else if(typeof(counter.Damage.Clear) == 'number'){
+            } else if (typeof (counter.Damage.Clear) == 'number') {
                 clearDamages = clearDamages + counter.Damage.Clear
             }
         }
 
-        const efficiency = (proccedQty/plannedQty) * 100
-        const productionHoursUtilization = (utilizedHours/productionHours) * 100
+        const efficiency = (proccedQty / plannedQty) * 100
+        const productionHoursUtilization = (utilizedHours / productionHours) * 100
 
         const machineObject = {
             Machine: data.MachineNo,
             Report: data._id,
             Summary: {
-                Product:  data.Product?._id,
+                Product: data.Product?._id,
                 PlannedQty: plannedQty,
                 ProccedQty: proccedQty,
-                Damages:{
+                Damages: {
                     Material: materialDamages,
                     Machine: machineDamages,
                     Clear: clearDamages
                 },
-               ProductionHours: productionHours,
-               UtilizedHours: utilizedHours,
-               NoOfPackets: data.NoOfPackets,
-               Downtimes: newDowntime,
-               Efficiency: efficiency,
-               ProductionHoursUtilization: productionHoursUtilization
+                ProductionHours: productionHours,
+                UtilizedHours: utilizedHours,
+                NoOfPackets: data.NoOfPackets,
+                Downtimes: newDowntime,
+                Efficiency: efficiency,
+                ProductionHoursUtilization: productionHoursUtilization
             }
         }
 
         const reportObject = {
-            Date:{
+            Date: {
                 Year: year,
                 Month: month,
                 Day: day,
@@ -290,41 +293,38 @@ const ProductionView = () => {
         // check if exist 
 
         const existReport = await getReports(`{"Date":{"Year":"${year}","Month":"${month}","Day":"${day}","Shift":"${data.Shift}"}}`)
-        console.log(existReport.data?.data, `{"Date":{"Year":${year},"Month":${month},"Day":${day},"Shift":"${data.Shift}"}}`)
-       
-        if(existReport.data?.data.length == 0 ){
-           
+        if (existReport.status == 200) {
+            if (existReport.data?.data.length == 0) {
+                const createReport = await addReport(reportObject)
+                if (createReport.status == 200) {
+                    const closeReport = await updateProduction(data._id, { Status: 'Closed' })
+                    if (closeReport.status == 200) {
+                        navigate(-1)
+                    }else{
+                        toast.error('Something went wrong!', toastConfig)
+                    }
 
-            const createReport = await addReport(reportObject)
-
-            console.log(createReport)
-            if(createReport.status == 200){
-                const closeReport = await updateProductionReport(data._id, {Status: 'Closed'})
-                if(closeReport.status == 200){
-                    navigate('/dashboard')
+                }else{
+                    toast.error('Something went wrong!', toastConfig)
                 }
-               
-            }
-
-           
-
-        }else{
-            console.log(existReport.data?.data.length == 0)
-            const updateData = await updateReport(existReport.data?.data[0]._id,  {Reports:[...existReport.data?.data[0].Reports, machineObject]})
-            console.log(updateData)
-            if(updateData.status == 200){
-                const closeReport = await updateProductionReport(data._id, {Status: 'Closed'})
-                if(closeReport.status == 200){
-                    navigate('/dashboard')
+            } else {
+                console.log(existReport.data?.data.length == 0)
+                const updateData = await updateReport(existReport.data?.data[0]._id, { Reports: [...existReport.data?.data[0].Reports, machineObject] })
+                if (updateData.status == 200) {
+                    const closeReport = await updateProduction(data._id, { Status: 'Closed' })
+                    if (closeReport.status == 200) {
+                        navigate(-1)
+                    }else{
+                        toast.error('Something went wrong!', toastConfig)
+                    }
+                }else{
+                    toast.error('Something went wrong!', toastConfig)
                 }
+
             }
-            
-        }   
-
-        // create object 
-        // create if does not exist
-
-       
+        } else {
+            toast.error('Something went wrong!', toastConfig)
+        }
         setIsLoading(false)
     }
 
@@ -333,21 +333,21 @@ const ProductionView = () => {
     return (
         <React.Fragment>
             {isLoading ? <MiniLoader /> : null}
-            {viewModal? (
+            {viewModal ? (
                 <React.Fragment>
                     <div className="modal-warpper">
                         <div className="modal-box">
                             <div className="modal-icon">{check}</div>
                             <div className="modal-message">Are you sure? Do you want to finish this report?</div>
                             <div className="buttons">
-                                <button style={{backgroundColor:'#fd7e14'}} onClick={()=> finishReport()}>Confirm</button>
-                                <button style={{backgroundColor:'var(--red)'}} onClick={()=> setViewModal(false)}>Cancel</button>
+                                <button style={{ backgroundColor: '#fd7e14' }} onClick={() => finishReport()}>Confirm</button>
+                                <button style={{ backgroundColor: 'var(--red)' }} onClick={() => setViewModal(false)}>Cancel</button>
                             </div>
                         </div>
                     </div>
 
                 </React.Fragment>
-            ):null}
+            ) : null}
             <div className="report-container">
                 <div className="title">
                     {data?.MachineNo}
@@ -357,7 +357,7 @@ const ProductionView = () => {
                     <div className="tag">{data?.Date}</div>
                     <div className="tag">{data?.Shift}</div>
                     <div className="tag">{data?.Supervisor}</div>
-                    <div className="tag" style={data.Status == 'Active'? {background: 'var(--red)'}:{background: '#fd7e14'}}>{data?.Status}</div>
+                    <div className="tag" style={data.Status == 'Active' ? { background: 'var(--red)' } : { background: '#fd7e14' }}>{data?.Status}</div>
                 </div>
                 <div className="detail-line">
                     <div className="detail">
@@ -570,12 +570,12 @@ const ProductionView = () => {
                         </div>
                     </div>
                 </div>
-                {disabled && edit ? (<div className="edit-data" onClick={() => toggleDisable()}>{pencil}</div>) : null}
-               {disabled && data.Status == 'Active' ?( <div className="input-container">
-                <div className="buttons">
-                    <button className="finish-btn" onClick={()=> setViewModal(true)}>Finish Report</button>
-                </div>
-                </div>): null}
+                {disabled && edit && data.Status == 'Active' ? (<div className="edit-data" onClick={() => toggleDisable()}>{pencil}</div>) : null}
+                {disabled && data.Status == 'Active' ? (<div className="input-container">
+                    <div className="buttons">
+                        <button className="finish-btn" onClick={() => setViewModal(true)}>Finish Report</button>
+                    </div>
+                </div>) : null}
                 {!disabled ? (<div className="input-container">
                     <div className="buttons">
                         <button onClick={() => handleSubmit()}>Save</button>

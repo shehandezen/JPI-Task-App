@@ -9,41 +9,27 @@ import {
 import '../css/componentStyles/productionreport.css'
 import MiniLoader from "./MiniLoader";
 import { getProductionReports } from "../app.service";
+import { ToastContainer, toast } from "react-toastify";
+import { toastConfig } from "../toastConfig";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const ProductionReport = ()=>{
-    const search = <FontAwesomeIcon icon={faSearch} />;
-  // const angle = <FontAwesomeIcon icon={faAngleRight} />;
+  const search = <FontAwesomeIcon icon={faSearch} />;
   const angles = <FontAwesomeIcon icon={faAnglesRight} />;
-
-  // const [showPanel, setShowPanel] = useState(false);
-
-  // const table = useRef();
-  // const panel = useRef();
-  // const togglePanel = () => {
-  //   setShowPanel(!showPanel);
-  //   if (showPanel) {
-  //     table.current.style.width = "60%";
-  //     panel.current.style.width = "40%";
-  //     panel.current.style.visibility = "visible";
-  //   } else {
-  //     table.current.style.width = "99%";
-  //     panel.current.style.width = "0%";
-  //     panel.current.style.visibility = "hidden";
-  //   }
-  // };
-
   const [data, setData] = useState([])
-
-
-  
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchData = async () => {
     setIsLoading(true);
     const response = await getProductionReports('{}');
-    await setData(response.data.data);
-    console.log(response);
+    console.log(response)
+    if(response.status == 'success' || response.status == 200){
+      await setData(response.data.data);
+      toast.success('The data is fetched!', toastConfig)
+    }else{
+      toast.error('Something went wrong!', toastConfig)
+    }
 
     setIsLoading(false);
   };
@@ -65,6 +51,7 @@ const ProductionReport = ()=>{
   return (
     <React.Fragment>
        {isLoading ? <MiniLoader /> : ""}
+       <ToastContainer />
       <div className="details-container">
         <div className="top">
           <div className="search">

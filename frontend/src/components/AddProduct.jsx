@@ -7,6 +7,9 @@ import "../css/componentStyles/addproduct.css";
 import MiniLoader from "./MiniLoader";
 import { addProduct, getMaterialData } from "../app.service";
 import MessageBox from "./MessageBox";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const AddProduct = () => {
   const floppyDisk = <FontAwesomeIcon icon={faFloppyDisk} />;
@@ -35,7 +38,7 @@ const AddProduct = () => {
     cycleTime: 0,
     itemWeight: "",
     availableCavities: 0,
-    usingCavities:0,
+    usingCavities: 0,
     planningQty: 1,
     isDoubleBag: false,
     isCardboardRequired: false,
@@ -119,13 +122,18 @@ const AddProduct = () => {
   const fetchPackingMaterial = async () => {
     setIsLoading(true);
     const response = await getMaterialData();
-
-    await setPolySize(response.data.data[0].Polythene);
-    await setCardboardSize(response.data.data[0].Cardboard);
-    await setLabel(response.data.data[0].Label);
-    await setMaterial(response.data.data[0].RawMaterial);
-    await setMasterbatch(response.data.data[0].MasterBatch);
-
+    if (response.status == 200) {
+      toast.success('Material data is fetched!', toastConfig)
+      await setPolySize(response.data?.data[0]?.Polythene);
+      await setCardboardSize(response.data?.data[0]?.Cardboard);
+      await setLabel(response.data?.data[0]?.Label);
+      await setMaterial(response.data?.data[0]?.RawMaterial);
+      await setMasterbatch(response.data?.data[0]?.MasterBatch);
+    } else if (response.status == 500) {
+      toast.error('Backend error!', toastConfig)
+    } else {
+      toast.error('Something went wrong!', toastConfig)
+    }
     setIsLoading(false);
   };
 
@@ -144,13 +152,7 @@ const AddProduct = () => {
         key == "usingCavities"
       ) {
         if (value == "" || value == undefined || value == null || value == 0) {
-          await setMessages([
-            ...messages,
-            {
-              status: "error",
-              message: "Please fill out all required feilds.",
-            },
-          ]);
+          toast.error('Please, fill out all required feilds!', toastConfig)
           setIsLoading(false);
           return false;
         } else {
@@ -166,15 +168,21 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     setSubmitted(true);
     setIsLoading(true);
-   const validate = await checkEmptyFeilds()
+    const validate = await checkEmptyFeilds()
     if (validate) {
       const response = await addProduct(data);
       setIsLoading(false);
       if (response.status == "success") {
         navigate(`/dashboard/view/${response.data._id}`);
+      } else if (response.status == "error") {
+        toast.error(response.message, toastConfig)
+      } else if (response.status == 500) {
+        toast.error('Backend error!', toastConfig)
       } else {
-        setMessages([...messages, response]);
+        toast.error('Something went wrong!', toastConfig)
       }
+    } else {
+      toast.error('The form is not valid to submit!', toastConfig)
     }
   };
 
@@ -209,7 +217,8 @@ const AddProduct = () => {
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
-      {messages?.map((ele, index) => {
+      <ToastContainer />
+      {/* {messages?.map((ele, index) => {
         return (
           <MessageBox
             key={index}
@@ -217,7 +226,7 @@ const AddProduct = () => {
             className={ele.status}
           />
         );
-      })}
+      })} */}
       <div className="add-product-container">
         <div className="head">
           Add New Production

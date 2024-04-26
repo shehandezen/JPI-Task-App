@@ -567,6 +567,7 @@ button.delete {
     height: 50px;
     z-index: 100;
     animation: scalar 2s linear infinite;
+    z-index: 1000;
 }
 
 .add-new::after,
@@ -581,6 +582,7 @@ button.delete {
     z-index: 100;
     animation: scalar 2s linear infinite;
     animation-delay: .5s;
+    z-index: 1000;
 }
 
 @keyframes scalar {
@@ -737,4 +739,16 @@ button.delete {
     border: none;
     font-size: 14px;
 cursor: pointer;
+}
+
+.closed{
+    position: absolute;
+    font-size: 12px;
+    top: 25px;
+    left: 20px;
+    padding: 1px 3px;
+    border-radius: 5px;
+    color: var(--background-color);
+    background: #fd7e14;
+    z-index: 1000;
 }

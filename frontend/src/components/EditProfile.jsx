@@ -8,6 +8,9 @@ import { jwtDecode } from "jwt-decode";
 import PasswordModal from "./PasswordModal";
 import MessageBox from "./MessageBox";
 import MiniLoader from "./MiniLoader";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const EditProfile = () => {
   const floppyDisk = <FontAwesomeIcon icon={faFloppyDisk} />;
@@ -35,15 +38,23 @@ const EditProfile = () => {
     const token = localStorage.getItem("token");
     const user = await jwtDecode(token);
     const response = await getUserData(user._id, token);
-    await setData({
-      UserName: response.data.data.UserName,
-      FirstName: response.data.data.FirstName,
-      LastName: response.data.data.LastName,
-      Role: response.data.data.Role,
-      Email: response.data.data.Email,
-      PhoneNumber: response.data.data.PhoneNumber,
-      Image: response.data.data.Image,
-    });
+    if (response.status == 200) {
+      toast.success('The data is fetched!', toastConfig)
+      await setData({
+        UserName: response.data.data.UserName,
+        FirstName: response.data.data.FirstName,
+        LastName: response.data.data.LastName,
+        Role: response.data.data.Role,
+        Email: response.data.data.Email,
+        PhoneNumber: response.data.data.PhoneNumber,
+        Image: response.data.data.Image,
+      });
+    } else if (response.status == 500) {
+      toast('Backend error!', toastConfig)
+    } else {
+      toast('Something went wrong!', toastConfig)
+    }
+
     setIsLoading(false);
   };
 
@@ -102,19 +113,17 @@ const EditProfile = () => {
         continue;
       }
       if (key == "Password" && value == "") {
-        setMessage([
-          ...message,
-          "Password is required to continue this process.",
-        ]);
+        toast.error( "Password is required to continue this process!", toastConfig)
         return false;
       }
       if (value == "" || value == null) {
-        setMessage([...message, "Please, give all required feilds."]);
+        toast.error( "Please, give all required feilds!", toastConfig)
+       
         return false;
       }
       if (key == "Email") {
         if (!validateEmail(value)) {
-          setMessage([...message, "Invaild Email Address."]);
+        toast.error("Invaild Email Address.", toastConfig)
           return false;
         }
       }
@@ -129,20 +138,24 @@ const EditProfile = () => {
       const user = await jwtDecode(token);
       const response = await updateUserData(user._id, token, data);
       if (response.status == "error") {
-        setMessage([...message, "Incorrect password!"]);
+        // setMessage([...message, "Incorrect password!"]);
+        toast.error('Incorrect password!', toastConfig)
       }
       if (response.status == 200) {
         if (!(response.data.token === undefined)) {
           await localStorage.setItem("token", response.data.token);
-          setSuccessMessage([
-            ...successMessage,
-            "Profile updated successfully!",
-          ]);
+          toast.success("Profile updated successfully!", toastConfig)
           setTimeout(() => {
             navigate("/dashboard/profile/detail");
           }, 500);
         }
+      }else if(response.status == 500){
+        toast.error('Backend error!', toastConfig)
+      }else{
+        toast.error('Something went wrong!', toastConfig)
       }
+    }else{
+      toast.error('The form is not valid to submit!', toastConfig)
     }
     setIsLoading(false);
   };
@@ -162,7 +175,9 @@ const EditProfile = () => {
       ) : (
         ""
       )}
-      {message?.map((message, index) => {
+      <ToastContainer />
+
+      {/* {message?.map((message, index) => {
         return (
           <MessageBox
             style={{ transform: "translate(50%)" }}
@@ -171,7 +186,7 @@ const EditProfile = () => {
             className="error"
           />
         );
-      })}
+      })} */}
       {successMessage?.map((message, index) => {
         return (
           <MessageBox
@@ -203,16 +218,16 @@ const EditProfile = () => {
             className="profile-img"
             src={
               data.Image == null ||
-              data.Image == undefined ||
-              data.Image == "undefined"
+                data.Image == undefined ||
+                data.Image == "undefined"
                 ? "https://www.w3schools.com/howto/img_avatar.png"
                 : imgFile.current.files.length == 0
                   ? `${process.env.REACT_APP_API_URL}/profile/${data.Image}`
                   : URL.createObjectURL(data.Image)
             }
             alt="profle image"
-            onError={()=>{
-              setData({...data, Image: null})
+            onError={() => {
+              setData({ ...data, Image: null })
             }}
           />
           <div className="messages">

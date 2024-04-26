@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFloppyDisk, faXmark } from "@fortawesome/free-solid-svg-icons";
 import "../css/componentStyles/development.css";
 import "../css/componentStyles/addproduct.css";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 import MiniLoader from "./MiniLoader";
+import { getProducts, updateMouldChangeData } from "../app.service";
 
 
 const UpdateMouldChange = () => {
@@ -14,18 +18,35 @@ const UpdateMouldChange = () => {
   const circleX = <FontAwesomeIcon icon={faXmark} />;
   const navigate = useNavigate();
   const date = new Date()
+  const {id} = useParams()
 
   const [isLoading, setIsLoading] = useState(false)
 
   const fetchData = async () => {
-    setIsLoading(true)
-    await setInterval(() => {
-      console.log('data fetching...')
-      setIsLoading(false)
-    }, 5000)
+    setIsLoading(true);
 
+    const response = await getProducts(encodeURI('{"status":"NOT ACTIVE"}'));
+    
+    if (response.status == 200) {
+      await setNextProduct(response.data.data);
+      const result = await getProducts(encodeURI('{"status":"Active"}'));
+      if (result.status == 200) {
+        setPreviousProduct(result.data.data);
+      } else if (result.status == 500) {
+        toast.error('Backend error!', toastConfig)
+      } else {
+        toast.error('Something went wrong!', toastConfig)
 
-  }
+      }
+    } else if (response.status == 500) {
+      toast.error('Backend error!', toastConfig)
+    } else {
+      toast.error('Something went wrong!', toastConfig)
+
+    }
+    setIsLoading(false);
+  };
+
 
   useEffect(() => {
     fetchData()
@@ -47,8 +68,8 @@ const UpdateMouldChange = () => {
 
   })
 
-  const [previousProduct, setPreviousProduct] = useState([{_id: '', Name: 'dummyData'}])
-  const [nextProduct, setNextProduct] = useState([{_id: '', Name: 'dummyData'}])
+  const [previousProduct, setPreviousProduct] = useState([])
+  const [nextProduct, setNextProduct] = useState([])
 
   const handleChange = (value, type) => {
     if (type == "machineNo") {
@@ -89,11 +110,23 @@ const UpdateMouldChange = () => {
     // console.log(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`)
     // await setData({...data, Date: `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`})
     console.log(data);
+    setIsLoading(true)
+    const response = await updateMouldChangeData(id, data)
+    if(response.status == 'success'){
+      toast.success(response.message, toastConfig)
+      navigate(-1)
+    }else if(response.status == 500){
+      toast.error('Backend error!', toastConfig)
+    }else{
+      toast.error('Something went wrong!', toastConfig)
+    }
+    setIsLoading(false)
   };
 
   return (
     <React.Fragment>
        {isLoading ? <MiniLoader /> : ""}
+       <ToastContainer />
     <div className="add-product-container">
       <div className="head">
        Update Mould Change

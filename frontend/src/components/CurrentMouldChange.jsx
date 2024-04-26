@@ -9,6 +9,9 @@ import {
 import "../css/componentStyles/detailview.css";
 import MiniLoader from "./MiniLoader";
 import { getMouldChangeData, getMouldChanges } from "../app.service";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const CurrentMouldChange = () => {
   const search = <FontAwesomeIcon icon={faSearch} />;
@@ -32,7 +35,15 @@ const CurrentMouldChange = () => {
       }-${date.getDate()}","status":"On Going"}`
     );
 
-    setData(response?.data?.data);
+    if(response.status == 200){
+      setData(response?.data?.data);
+      toast.success('The data is fetched!' , toastConfig)
+    }else if(response.status == 500){
+      toast.error('Backend error!', toastConfig)
+    }else{
+      toast.error('Something went wrong!', toastConfig)
+    }
+   
     setIsLoading(false);
   };
 
@@ -44,6 +55,7 @@ const CurrentMouldChange = () => {
 
   return (
     <React.Fragment>
+    <ToastContainer />
       {isLoading ? <MiniLoader /> : ""}
       <div className="details-container">
         <div className="top">

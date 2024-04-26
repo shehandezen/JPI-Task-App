@@ -3,6 +3,9 @@ import { getUserData } from "../app.service";
 import "../css/componentStyles/profile.css";
 import { jwtDecode } from "jwt-decode";
 import MiniLoader from "./MiniLoader";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,15 +25,23 @@ const Profile = () => {
     const token = localStorage.getItem("token");
     const user = await jwtDecode(token);
     const response = await getUserData(user._id, token);
-    await setData({
-      UserName: response.data.data.UserName,
-      FirstName: response.data.data.FirstName,
-      LastName: response.data.data.LastName,
-      Role: response.data.data.Role,
-      Email: response.data.data.Email,
-      PhoneNumber: response.data.data.PhoneNumber,
-      Image: response.data.data.Image,
-    });
+    if(response.status == 200){
+      await setData({
+        UserName: response.data.data.UserName,
+        FirstName: response.data.data.FirstName,
+        LastName: response.data.data.LastName,
+        Role: response.data.data.Role,
+        Email: response.data.data.Email,
+        PhoneNumber: response.data.data.PhoneNumber,
+        Image: response.data.data.Image,
+      });
+      toast.success('The data is fetched!', toastConfig)
+    }else if(response.status == 500){
+      toast.error('Backend error!', toastConfig)
+    }else{
+      toast.error('Something went wrong!', toastConfig)
+    }
+    
     setIsLoading(false);
   };
 
@@ -41,8 +52,8 @@ const Profile = () => {
 
   return (
     <React.Fragment>
-      {isLoading ? <MiniLoader /> : ""}
-
+      {isLoading ? <MiniLoader /> : null}
+      <ToastContainer />
       <div className="profile-container">
         <div className="side-glass"></div>
         <div className="banner">
