@@ -15,6 +15,9 @@ import {
 } from "../app.service";
 import MiniLoader from "./MiniLoader";
 import MessageBox from "./MessageBox";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const MouldChange = () => {
   const tag = <FontAwesomeIcon icon={faTag} />;
@@ -37,8 +40,14 @@ const MouldChange = () => {
   const fetchData = async () => {
     setIsLoading(true);
     const response = await getMouldChangeData(id);
-    await setData(response.data.data);
-    console.log(response.data);
+    if (response.status == 200) {
+      await setData(response.data.data);
+      toast.success('The data is fetched!', toastConfig)
+    } else if (response.status == 500) {
+      toast.error('Backend error!', toastConfig)
+    } else {
+      toast.error('Something went wrong!', toastConfig)
+    }
     setIsLoading(false);
   };
 
@@ -53,41 +62,55 @@ const MouldChange = () => {
         data.previousProduct?._id,
         { status: "Done" }
       );
-      if (preProductResponse.data.status == "error") {
-        await setMessages([...messages, preProductResponse.data]);
+      if (preProductResponse.data.status == "success") {
+        const nextProductResponse = await updateProductData(data.nextProduct._id, {
+          status: "Active",
+        });
+
+        if (nextProductResponse.status == "success") {
+          const MouldChangeResponse = await updateMouldChangeData(id, {
+            status: "Done",
+          });
+
+          if(MouldChangeResponse.status == "sucess"){
+            toast.success("The mould change succesfully done!", toastConfig)
+            navigate("/dashboard/mouldchange/current");
+          }else if (MouldChangeResponse.status == "error") {
+            toast.error(MouldChangeResponse.message, toastConfig)
+          }else if(MouldChangeResponse.status == 500){
+            toast.error("Backend error!", toastConfig)
+          }else{
+            toast.error("Something went wrong!", toastConfig)
+          }
+
+        } else if (nextProductResponse.status == "error") {
+          toast.error(nextProductResponse.nextProductResponse.message, toastConfig)
+        }else if(preProductResponse.status == 500){
+          toast.error('Backend error!', toastConfig)
+        }else {
+          toast.error('Something went wrong!', toastConfig)
+        }
+
+
+      } else if (preProductResponse.data.status == "error") {
+        // await setMessages([...messages, preProductResponse.data]);
+        toast.error(preProductResponse.message, toastConfig)
+      } else if (preProductResponse.status == 500) {
+        toast.error('Backend error!', toastConfig)
+      } else {
+        toast.error('Something went wrong!', toastConfig)
       }
     }
 
-    const nextProductResponse = await updateProductData(data.nextProduct._id, {
-      status: "Active",
-    });
 
-    if (nextProductResponse.status == "error") {
-      await setMessages([...messages, nextProductResponse.data]);
-    }
-
-    const MouldChangeResponse = await updateMouldChangeData(id, {
-      status: "Done",
-    });
-
-    if (MouldChangeResponse.status == "error") {
-      await setMessages([...messages, MouldChangeResponse.data]);
-    }
-
-    if (MouldChangeResponse.status == "sucess") {
-      await setMessages([
-        ...messages,
-        { status: "success", message: "The mould change succesfully done!" },
-      ]);
-      navigate("/dashboard/mouldchange/current");
-    }
     setIsLoading(false);
   };
 
   return (
     <React.Fragment>
+      <ToastContainer />
       {isLoading ? <MiniLoader /> : ""}
-      {messages?.map((ele, index) => {
+      {/* {messages?.map((ele, index) => {
         return (
           <MessageBox
             key={index}
@@ -95,7 +118,7 @@ const MouldChange = () => {
             className={ele.status}
           />
         );
-      })}
+      })} */}
       <div className="product-container">
         <div className="title">
           {data.machineNo}

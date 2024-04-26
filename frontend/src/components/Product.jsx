@@ -5,6 +5,9 @@ import "../css/componentStyles/product.css";
 import MiniLoader from "./MiniLoader";
 import { getProductData } from "../app.service";
 import { useLocation, useParams } from "react-router-dom";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const Product = () => {
   const tag = <FontAwesomeIcon icon={faTag} />;
@@ -48,8 +51,14 @@ const Product = () => {
   const fetchData = async () => {
     setIsLoading(true)
     const response = await getProductData(id)
-    await setData(response.data.data)
-    // console.log(response.data.data)
+    if(response.status == 200){
+      await setData(response.data.data)
+      toast.success('The data is fetched!', toastConfig)
+    }if(response.status == 500){
+      toast.error('Backend error!', toastConfig)
+    }else{
+      toast.error('Something went wrong!', toastConfig)
+    }
     setIsLoading(false)
   }
 
@@ -105,6 +114,7 @@ const Product = () => {
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
+      <ToastContainer />
       <div className="product-container">
         <div className="title">
           {data.machineNo}

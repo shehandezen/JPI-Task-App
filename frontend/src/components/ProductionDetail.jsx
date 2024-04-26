@@ -7,7 +7,10 @@ import {
   faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import DeleteModal from "./DeleteModal";
-import { addProduction, getProductionReport, getProducts, getReports, updateProductionReport, updateReport } from "../app.service";
+import { addChartData, addProduction, addReport, getChartData, getProductionReport, getProducts, getReports, updateChartData, updateProductionReport, updateReport } from "../app.service";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 
 const ProductionDetail = () => {
@@ -17,6 +20,9 @@ const ProductionDetail = () => {
   const [viewModal, setViewModal] = useState(false)
   const [index, setIndex] = useState(null)
   const [data, setData] = useState({})
+  const [allClosed, setAllClosed] = useState(false)
+  const [reports, setReports] = useState()
+  const [report, setReport] = useState()
   const { id } = useParams()
   const navigate = useNavigate()
 
@@ -82,9 +88,9 @@ const ProductionDetail = () => {
     if (isView) {
       if (newMachine == '') {
         setIsView(!isView)
-      }
-      if (newMachine != '') {
+      } else {
         let isUpdate = false
+
         const arrCopy = data.Machines
         for await (let machine of arrCopy) {
           let i = arrCopy.indexOf(machine)
@@ -92,10 +98,12 @@ const ProductionDetail = () => {
             if (!(machine.status == "Running")) {
               isUpdate = true
               arrCopy[i].status = "Running"
+              setIndex(i)
             }
           }
         }
         let getcurrentproduct = await getProducts(`{"machineNo":"${newMachine}"}`)
+        
         if (getcurrentproduct.status == 200) {
           let addProductionData = await addProduction({
             MachineNo: newMachine,
@@ -104,6 +112,7 @@ const ProductionDetail = () => {
             Supervisor: data.Supervisor,
             Product: getcurrentproduct?.data?.data[0]?._id,
             StartTime: '',
+            Status: 'Active',
             EndTime: '',
             Counter: [{
               Time: '07:30',
@@ -302,14 +311,26 @@ const ProductionDetail = () => {
           })
 
           if (addProductionData.status == 'success') {
+            if (!index == undefined) {
+              arrCopy[index].data = addProductionData.data?._id
+            }
+
             if (isUpdate) {
               await updateData(arrCopy)
             } else {
               arrCopy.push({ machine: newMachine, status: 'Running', data: addProductionData.data?._id })
               await updateData(arrCopy)
             }
+          } else if (addProductionData.status == 500) {
+            toast.error('Backend error!', toastConfig)
+          } else {
+            toast.error('Something went wrong!', toastConfig)
           }
 
+        } else if (getcurrentproduct.status == 500) {
+          toast.error('Backend error!', toastConfig)
+        } else {
+          toast.error('Something went wrong!', toastConfig)
         }
       }
 
@@ -329,9 +350,16 @@ const ProductionDetail = () => {
 
   const updateData = async (updateData) => {
     setIsLoading(true)
-    console.log(updateData)
     const updatedData = await updateProductionReport(id, { ...data, Machines: updateData })
-    console.log(updatedData)
+    if (updatedData.status == 200) {
+      console.log('added')
+      toast.success('New machine added!', toastConfig)
+      setIsView(false)
+    } else if (updatedData.status == 'error') {
+      toast.error(updatedData.message, toastConfig)
+    } else {
+      toast.error('Something went wrong!', toastConfig)
+    }
     setIsLoading(false)
   }
 
@@ -363,19 +391,24 @@ const ProductionDetail = () => {
 
     const fetchedData = await getProductionReport(id)
     console.log(fetchedData.data.data)
-    setData(fetchedData.data.data)
+
+    if (fetchedData.status == 200) {
+      setData(fetchedData.data.data)
+      console.log(data)
+      toast.success('The data is fetched!', toastConfig)
+    } else {
+      toast.error('Something went wrong!', toastConfig)
+    }
     setIsLoading(false)
   }
 
   useEffect(() => {
     fetchData()
-
   }, [])
 
 
   const finishFullReport = async () => {
     setIsLoading(true)
-    let isvalid = false
     const IM = {
       efficiency: [],
       hoursUtilization: []
@@ -398,48 +431,156 @@ const ProductionDetail = () => {
 
     const date = new Date(data.Date)
     const year = date.getFullYear()
-    const month = date.getMonth()
-    const day = date.getDay()
-    const getexistSummary = await await getReports(`{"Date":{"Year":"${year}","Month":"${month}","Day":"${day}","Shift":"${data.Shift}"}}`)
-    console.log(getexistSummary)
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    const getexistSummary = await getReports(`{"Date":{"Year":"${year}","Month":"${month}","Day":"${day}","Shift":"${data.Shift}"}}`)
     if (getexistSummary.status == 200) {
-      for await (let report of getexistSummary.data?.data[0]?.Reports) {
-        if (report?.data?.Status == 'Closed') {
-          isvalid = true
+      if (getexistSummary.data?.data.length != 0) {
+        setReports(getexistSummary.data.data[0].Reports)
+        setReport(getexistSummary.data.data[0])
+      } else {
+        const reportObject = {
+          Date: {
+            Year: year,
+            Month: month,
+            Day: day,
+            Shift: data.Shift
+          },
+          Supervisor: data.Supervisor,
+          Summary: {
+            IMEfficiency: 0,
+            BMEfficiency: 0,
+            IMLEfficiency: 0,
+            IBMEfficiency: 0
+          },
+          Reports: []
         }
-        if (report?.data?.Status == 'Active') {
-          isvalid = false
+
+
+        const createReport = await addReport(reportObject)
+        if(createReport.status == 200){
+          setReports(createReport.data.data.Reports)
+          setReport(createReport.data.data)
+          toast('New report created!', toastConfig)
+        }else{
+          toast.error('Something went wrong!', toastConfig)
         }
+        }
+
+    } else {
+      toast.error('Something went wrong!', toastConfig)
+    }
+
+    for await (let report of data.Machines) {
+      if (report.status == 'Running') {
+        if (report.data?.Status == 'Closed') {
+          setAllClosed(true)
+        } else {
+          setAllClosed(false)
+          break
+        }
+      } else {
+        continue
       }
 
-      for await (let report of getexistSummary.data.data[0].Reports) {
-        if (report.Machine.includes('IML')) {
-          IML.efficiency.push(report.Machine.Summary.efficiency)
-          IML.efficiency.push(report.Machine.Summary.ProductionHoursUtilization)
-        } else if (report.Machine.includes('IM')) {
-          IM.efficiency.push(report.Machine.Summary.efficiency)
-          IM.efficiency.push(report.Machine.Summary.ProductionHoursUtilization)
-        } else if (report.Machine.includes('IBM')) {
-          IBM.efficiency.push(report.Machine.Summary.efficiency)
-          IBM.efficiency.push(report.Machine.Summary.ProductionHoursUtilization)
-        } else if (report.Machine.includes('BM')) {
-          BM.efficiency.push(report.Machine.Summary.efficiency)
-          BM.efficiency.push(report.Machine.Summary.ProductionHoursUtilization)
-        }
-      }
     }
 
 
-    const efficiencyObject = {
-      IMEfficiency: (IM.efficiency.reduce((a, c) => a + c,0,))/(IM.efficiency.length),
-      BMEfficiency: (BM.efficiency.reduce((a, c) => a + c,0,))/(BM.efficiency.length),
-      IMLEfficiency: (IML.efficiency.reduce((a, c) => a + c,0,))/(IML.efficiency.length),
-      IBMEfficiency: (IBM.efficiency.reduce((a, c) => a + c,0,))/(IBM.efficiency.length)
-    }
+    if (allClosed) {
+      if (reports != undefined) {
 
-    const updatefullReport = await updateReport(getexistSummary.data?.data[0]?._id, {Summary:efficiencyObject }) 
-    if(updatefullReport.status == 200){
-      navigate('/dashboard')
+        for await (let report of reports) {
+          if (report.Machine.includes('IML')) {
+            IML.efficiency.push(report.Summary.Efficiency)
+            IML.efficiency.push(report.Summary.ProductionHoursUtilization)
+          } else if (report.Machine.includes('IM')) {
+            IM.efficiency.push(report.Summary.Efficiency)
+            IM.efficiency.push(report.Summary.ProductionHoursUtilization)
+          } else if (report.Machine.includes('IBM')) {
+            IBM.efficiency.push(report.Summary.Efficiency)
+            IBM.efficiency.push(report.Summary.ProductionHoursUtilization)
+          } else if (report.Machine.includes('BM')) {
+            BM.efficiency.push(report.Summary.Efficiency)
+            BM.efficiency.push(report.Summary.ProductionHoursUtilization)
+          }
+        }
+        const efficiencyObject = {
+          IMEfficiency: (IM.efficiency.reduce((a, c) => a + c, 0,)) / (IM.efficiency.length),
+          BMEfficiency: (BM.efficiency.reduce((a, c) => a + c, 0,)) / (BM.efficiency.length),
+          IMLEfficiency: (IML.efficiency.reduce((a, c) => a + c, 0,)) / (IML.efficiency.length),
+          IBMEfficiency: (IBM.efficiency.reduce((a, c) => a + c, 0,)) / (IBM.efficiency.length)
+        }
+
+     
+          const updatefullReport = await updateReport(report._id, { Summary: efficiencyObject })
+          if (updatefullReport.status == 200) {
+            const productionReportFinish = await updateProductionReport(data._id, { Status: 'Finished' })
+            if (productionReportFinish.status == 200) {
+              const chart = await getChartData(`{"Date":{"Year":"${year}","Month":"${month}"}}`)
+         
+              if (chart.data?.data.length == 0) {
+                const createChart = await addChartData({
+                  Date: {
+                    Year: year,
+                    Month: month,
+                  },
+                  ProductionEfficiency: [{
+                    Day: day,
+                    Shift: data.Shift,
+                    Efficiency: (IM.efficiency + BM.efficiency + IML.efficiency) / 3
+                  }],
+                  ProductionHoursUtilization: [{
+                    Day: day,
+                    Shift: data.Shift,
+                    Utilization: ((IM.hoursUtilization + BM.hoursUtilization + IML.hoursUtilization) / 3)
+                  }]
+                })
+
+                if (createChart.status == 200) {
+                  toast.sucess('Chart data added!', toastConfig)
+                  navigate('/dashboard')
+                }else{
+                  toast.error('Something went wrong!', toastConfig)
+                }
+              } else {
+                const updateChart = await updateChartData(chart.data?.data[0]?._id, {
+                  ProductionEfficiency: [...chart.data?.data[0]?.ProductionEfficiency, {
+                    Day: day,
+                    Shift: data.Shift,
+                    Efficiency: (IM.efficiency + BM.efficiency + IML.efficiency) / 3
+                  }],
+                  ProductionHoursUtilization: [...chart.data?.data[0]?.ProductionHoursUtilization, {
+                    Day: day,
+                    Shift: data.Shift,
+                    Utilization: ((IM.hoursUtilization + BM.hoursUtilization + IML.hoursUtilization) / 3)
+                  }]
+                })
+
+                if (updateChart.status == 200) {
+                  navigate('/dashboard')
+
+                }else{
+                  toast.error('Something went wrong!', toastConfig)
+                }
+              }
+
+            }else{
+              toast.error('Something went wrong!', toastConfig)
+            }
+
+            // navigate('/dashboard')
+          }else{
+            toast.error('Something went wrong!', toastConfig)
+          }
+       
+
+
+
+      }else{
+        toast.error('Please, try again!', toastConfig)
+      }
+    } else {
+      toast.error('Please, close all exist reports!', toastConfig)
     }
     setIsLoading(false)
   }
@@ -448,6 +589,7 @@ const ProductionDetail = () => {
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
+      <ToastContainer />
       {viewModal ? (<DeleteModal index={index} setIndex={setIndex} dMachine={dMachine} setViewModal={setViewModal} setIsloading={setIsLoading} productionreport={data} />) : ''}
       <div className="report-container">
         <div className="title">
@@ -464,21 +606,25 @@ const ProductionDetail = () => {
 
           {data.Machines?.map((element, index) => {
             return (element.status == "Running" ? (<div key={index}>
-              <span className="deleteIcon" onClick={() => deleteMachine(index, element)}>{deleteIcon}</span>
-              <Link to={`machine/${element.data}`} className="machine-card"> {element.machine}
+
+              {element.data?.Status == 'Closed' ? (<span className="closed">Closed</span>) : (<span className="deleteIcon" onClick={() => deleteMachine(index, element)}>{deleteIcon}</span>)}
+              <Link to={`machine/${element.data?._id}`} className="machine-card"> {element.machine}
               </Link>
             </div>) : "")
           })}
         </div>
-        <div>
-          <button className="finish-btn" onClick={() => finishFullReport()}>
-            Finish Report
-          </button>
-        </div>
+        {data.Status == 'Active' ? (<>
+          <div>
+            <button className="finish-btn" onClick={() => finishFullReport()}>
+              Finish Report
+            </button>
+          </div>
+          <div className="add-new" onClick={() => addNewMachine()}>
+            +
+          </div>
+        </>) : null}
 
-        <div className="add-new" onClick={() => addNewMachine()}>
-          +
-        </div>
+
 
         <div className="add-input-container" ref={select}>
           <select name="machine" ref={selectInput} onChange={(e) => handleChange(e.target.value)}><option value="">No</option>

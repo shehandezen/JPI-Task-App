@@ -8,6 +8,9 @@ import {
   faArrowRightToBracket,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 import "../css/form.css";
 import { signInFunc } from "../app.service";
 import { MessageBox, MiniLoader } from "../components";
@@ -15,7 +18,8 @@ import Animate from "../Animate";
 
 const SignIn = () => {
   const [isActive, setIsActive] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+
 
   const navigate = useNavigate();
 
@@ -52,7 +56,9 @@ const SignIn = () => {
 
     for (const [key, value] of Object.entries(data)) {
       if(value == '' || value == undefined || value == null){
-        await setMessages([...messages, {status: 'error', message: 'Please fill out all required feilds.'}])
+        // await setMessages([...messages, {status: 'error', message: 'Please fill out all required feilds.'}])
+        toast.error("Please, fill out all required feilds!", toastConfig);
+
         return false
       }else{
        continue
@@ -70,13 +76,26 @@ const SignIn = () => {
 
       let response = await signInFunc(data);
       console.log(response);
-      setMessages([...messages, response]);
+      // setMessages([...messages, response]);
       setIsLoading(false);
       if (response?.status == "success") {
+        toast.success("You have successfully signed in!", toastConfig);
         await localStorage.setItem("token", response.tokens.accessToken);
         setTimeout(() => {
           navigate("/dashboard");
         }, 1000);
+      }else if (response.status == 409) {
+        toast.error("It seems you haven't an account!", toastConfig);
+
+      } else if (response.status == 500) {
+        toast.error('Backend Error!', toastConfig);
+
+      }else if (response.status == 400) {
+        toast.error('Incorrect password!', toastConfig);
+
+      } else {
+        toast.error('Something went wrong', toastConfig);
+
       }
     }
     setIsLoading(false);
@@ -84,7 +103,7 @@ const SignIn = () => {
 
   return (
     <React.Fragment>
-      {messages?.map((ele, index) => {
+      {/* {messages?.map((ele, index) => {
         return (
          (ele?.message != undefined )? ( <MessageBox
             key={index}
@@ -92,7 +111,9 @@ const SignIn = () => {
             className={ele.status}
           />): ''
         );
-      })}
+      })} */}
+      <ToastContainer />
+
       {isLoading ? <MiniLoader /> : ""}
 
       <Animate>

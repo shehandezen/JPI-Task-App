@@ -13,7 +13,17 @@
   --background-color: #10202b;
   --background-shadow-color: #182d3c;
   --red: #d9534f;
+  --toastify-color-dark: #1f1f1f;
+  --toastify-color-success: #12d39e !important;
+  --toastify-color-warning: #f1c40f;
+  --toastify-color-error: #d9534f !important;
 }
+
+.Toastify__toast-container--top-right {
+  font-size: 14px !important;
+}
+
+
 html {
   overflow: hidden;
 }

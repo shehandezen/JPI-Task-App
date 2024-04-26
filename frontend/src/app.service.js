@@ -61,6 +61,62 @@ const updateReport = async (id, data) => {
 };
 
 
+const addChartData = async (data) => {
+  let result;
+  await client
+    .post("/chart", data)
+    .then((response) => {
+      result = response.data;
+    })
+    .catch((err) => {
+      result = err.response;
+    });
+  return result;
+};
+
+const getChartData = async (filter) => {
+  let response;
+  await client
+    .get(`/chart/?filter=${filter}`)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      console.log(err);
+      response = err;
+    });
+  return response;
+};
+
+const getChartDataById = async (id) => {
+  let response;
+  await client
+    .get(`/chart/${id}`)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      console.log(err);
+      response = err;
+    });
+  return response;
+};
+
+const updateChartData = async (id, data) => {
+  let response;
+  // console.log(id, token, data);
+  await client
+    .put(`/chart/${id}`, data)
+    .then((data) => {
+      response = data;
+    })
+    .catch((err) => {
+      response = err.response.data;
+    });
+  return response;
+};
+
+
 const addProductionReport = async (data) => {
   let result;
   await client
@@ -427,5 +483,9 @@ export {
   addReport,
   getReport,
   getReports,
-  updateReport
+  updateReport,
+  addChartData,
+  getChartData,
+  getChartDataById,
+  updateChartData
 };

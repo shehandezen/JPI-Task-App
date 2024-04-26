@@ -9,6 +9,9 @@ import {
   faArrowRightToBracket,
   faAddressCard,
 } from "@fortawesome/free-solid-svg-icons";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 import { MessageBox, MiniLoader } from "../components";
 import "../css/form.css";
 import { signUpFunc } from "../app.service";
@@ -66,41 +69,55 @@ const SignUp = () => {
       );
   };
 
-  const checkEmptyFeilds = async()=>{
+  const checkEmptyFeilds = async () => {
     console.log('checking')
     for (const [key, value] of Object.entries(data)) {
       if (key == "Email") {
         if (!validateEmail(value)) {
-          setMessages([...messages, {status: 'error', message: 'Please give a valid Email.'}]);
+          toast.error("Please, Enter valid Email!", toastConfig);
+          // setMessages([...messages, {status: 'error', message: 'Please give a valid Email.'}]);
           return false;
         }
       }
-      if(value == '' || value == undefined || value == null){
-        await setMessages([...messages, {status: 'error', message: 'Please fill out all required feilds.'}])
+      if (value == '' || value == undefined || value == null) {
+        // await setMessages([...messages, {status: 'error', message: 'Please fill out all required feilds.'}])
+        toast.error("Please, fill out all required feilds!", toastConfig);
         return false
-      }else{
-       continue
+      } else {
+        continue
       }
-      
+
     }
     return true
-    
+
   }
 
   const handleSubmit = async (e) => {
     setIsLoading(true);
-    if(await checkEmptyFeilds()){
-    let response = await signUpFunc(data);
-    console.log(response);
-    setMessages([...messages, response]);
-    setIsLoading(false);
-    if (response?.status == "success") {
-      setTimeout(() => {
-        navigate("/signin");
-      }, 500);
+    if (await checkEmptyFeilds()) {
+      let response = await signUpFunc(data);
+      console.log(response);
+      if (response?.status == 'success') {
+        toast.success("You are successfully signed up!", toastConfig);
+      } else if (response.status == 409) {
+          toast.error('The email is already exist!', toastConfig);
+
+        } else if (response.status == 500) {
+          toast.error('Backend Error!', toastConfig);
+
+        } else {
+          toast.error('Something went wrong', toastConfig);
+
+        }
+      // setMessages([...messages, response]);
+      setIsLoading(false);
+      if (response?.status == "success") {
+        setTimeout(() => {
+          navigate("/signin");
+        }, 500);
+      }
     }
-  }
-  setIsLoading(false);
+    setIsLoading(false);
   };
 
   return (
@@ -111,7 +128,8 @@ const SignUp = () => {
       ) : (
         ""
       )} */}
-      {messages?.map((ele, index) => {
+      <ToastContainer />
+      {/* {messages?.map((ele, index) => {
         return (
           <MessageBox
             key={index}
@@ -119,7 +137,7 @@ const SignUp = () => {
             className={ele.status}
           />
         );
-      })}
+      })} */}
       {isLoading ? <MiniLoader /> : ""}{" "}
       <Animate>
         <div className="form-container">

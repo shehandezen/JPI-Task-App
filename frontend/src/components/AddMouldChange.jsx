@@ -7,6 +7,9 @@ import "../css/componentStyles/addproduct.css";
 import MiniLoader from "./MiniLoader";
 import { addMouldChange, addProduct, getProducts } from "../app.service";
 import MessageBox from "./MessageBox";
+import { toast, ToastContainer, Bounce } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { toastConfig } from "../toastConfig";
 
 const AddMouldChange = () => {
   const floppyDisk = <FontAwesomeIcon icon={faFloppyDisk} />;
@@ -32,11 +35,24 @@ const AddMouldChange = () => {
     setIsLoading(true);
 
     const response = await getProducts(encodeURI('{"status":"NOT ACTIVE"}'));
+    
+    if (response.status == 200) {
+      await setNextProduct(response.data.data);
+      const result = await getProducts(encodeURI('{"status":"Active"}'));
+      if (result.status == 200) {
+        setPreviousProduct(result.data.data);
+      } else if (result.status == 500) {
+        toast.error('Backend error!', toastConfig)
+      } else {
+        toast.error('Something went wrong!', toastConfig)
 
-    await setNextProduct(response.data.data);
-    const result = await getProducts(encodeURI('{"status":"Active"}'));
+      }
+    } else if (response.status == 500) {
+      toast.error('Backend error!', toastConfig)
+    } else {
+      toast.error('Something went wrong!', toastConfig)
 
-    await setPreviousProduct(result.data.data);
+    }
     setIsLoading(false);
   };
 
@@ -59,7 +75,7 @@ const AddMouldChange = () => {
     status: "On Going",
   });
 
-  const [previousProduct, setPreviousProduct] = useState([,]);
+  const [previousProduct, setPreviousProduct] = useState([]);
   const [nextProduct, setNextProduct] = useState([]);
 
   const handleChange = (value, type) => {
@@ -101,13 +117,7 @@ const AddMouldChange = () => {
         key == "endtime"
       ) {
         if (value == "" || value == undefined || value == null) {
-          await setMessages([
-            ...messages,
-            {
-              status: "error",
-              message: "Please fill out all required feilds.",
-            },
-          ]);
+         toast.error('Please, fill out all required feilds!', toastConfig)
           setIsLoading(false);
           valid = 1;
         }
@@ -131,16 +141,23 @@ const AddMouldChange = () => {
       setIsLoading(false);
       if (create.status == "success") {
         navigate(`/dashboard/mouldchange/view/${create.data._id}`);
-      } else {
-        setMessages([...messages, create]);
+      } else if(create.status == 'error'){
+        toast.error(create.message, toastConfig)
+      }else if(create.status ==  500){
+        toast.error('Backend error!', toastConfig)
+      }else{
+        toast.error('Something went wrong!', toastConfig)
       }
+    }else{
+      toast.error('The form is not valid to submit!', toastConfig)
     }
   };
 
   return (
     <React.Fragment>
       {isLoading ? <MiniLoader /> : ""}
-      {messages?.map((ele, index) => {
+      <ToastContainer />
+      {/* {messages?.map((ele, index) => {
         return (
           <MessageBox
             key={index}
@@ -148,7 +165,7 @@ const AddMouldChange = () => {
             className={ele.status}
           />
         );
-      })}
+      })} */}
       <div className="add-product-container">
         <div className="head">
           Add New Mould Change
