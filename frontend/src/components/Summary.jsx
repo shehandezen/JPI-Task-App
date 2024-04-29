@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import Chart from "react-apexcharts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast, ToastContainer, Bounce } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
@@ -20,18 +10,8 @@ import { getChartData, getReport, getReports } from '../app.service'
 import MiniLoader from "./MiniLoader";
 
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
-
-const Summary = () => {
+export const Summary = () => {
   const calender = <FontAwesomeIcon icon={faCalendarDays} />;
   const percent = <FontAwesomeIcon icon={faPercent} />;
   const day = <FontAwesomeIcon icon={faSun} />;
@@ -43,36 +23,53 @@ const Summary = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [shift, setShift] = useState('Day')
   const [machine, setMachine] = useState(0)
-  const [chartData, setChartData] = useState({})
-  const [dataPoints,setDataPoints] = useState([])
-
-  const datasetKeyProvider=()=>{ 
-    return btoa(Math.random()).substring(0,12)
-} 
-
-
-  const [days, setDays] = useState([])
+  const [dataPoints, setDataPoints] = useState([])
+const [days, setDays] = useState([])
   const [productionEfficiency, setProductionEfficiency] = useState([])
   const [productionHoursUtilization, setProductionHoursUtilization] = useState([])
-  const [chartConfig, setChartConfig] = useState({
-    labels: [],
-    datasets: [
-      {
-        label: "Production Efficiency",
-        id:datasetKeyProvider(),
-        backgroundColor: "#12d39e",
-        borderColor: "#12d39e",
-        data: []
+  const [configData, setConfigData] = useState({
+          
+    series: [{
+      name: 'Production Efficiency',
+      data: [...productionEfficiency]
+    }, {
+      name: 'Production Hours Utilization',
+      data: [...productionHoursUtilization]
+    }],
+    options: {
+      chart: {
+        height: 'auto',
+        width:'100%',
+        type: 'area',
+        stacked: true
       },
-      // {
-      //   label: "Production Hour Utilization",
-      //   id:datasetKeyProvider(),
-      //   backgroundColor: "#fff",
-      //   borderColor: "#fff",
-      //   data: []
-      // },
-    ],
-  })
+      dataLabels: {
+        enabled: true
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      xaxis: {
+        type: 'string',
+        categories: [...days]
+      },
+      tooltip: {
+       
+        style: {
+          fontSize: '12px',
+          fontColor: '#10202b'
+        },
+      },
+      
+  legend: {
+    horizontalAlign: 'right',
+    onItemClick: {
+      toggleDataSeries: true
+    },
+  }
+  
+    }})
+  const [chartData, setChartData] = useState({})
 
   const [selectionData, setSelectionData] = useState({
     Date: {
@@ -104,8 +101,8 @@ const Summary = () => {
     setIsLoading(true)
     const chartdata = await getChartData(`{"Date":{"Year":"${year}","Month":"${month}"}}`)
     if (chartdata.status == 200) {
-      setChartData({...chartdata.data?.data[0]})
-      toast.success("Chat is updated!", toastConfig);
+      setChartData({ ...chartdata.data?.data[0] })
+      toast.success("Chart is updated!", toastConfig);
     } else if ((chartdata.status == 500)) {
       toast.error("Backend error!", toastConfig);
     } else {
@@ -115,20 +112,22 @@ const Summary = () => {
   }
 
   const updateChart = async () => {
+    console.log(chartData)
     if (Object.keys(chartData).length != 0) {
       let arrOne = [...chartData.ProductionEfficiency]
       let arrTwo = [...chartData.ProductionHoursUtilization]
       for await (let i of arrOne) {
         setProductionEfficiency(pre => [...pre, i?.Efficiency])
-      setDays(pre=>[ ...pre, `${i?.Day} ${months[month - 1]} ${i?.Shift}`])
-      setDataPoints(pre=> [...pre,{ day:`${i?.Day} ${months[month - 1]} ${i?.Shift}`, data:{efficiency:i?.Efficiency,utilization:arrTwo[arrOne.indexOf(i)].Utilization}}])
+        setDays(pre => [...pre, `${i?.Day} ${months[month - 1]} ${i?.Shift}`])
+        // setDataPoints(pre=> [...pre,{ day:`${i?.Day} ${months[month - 1]} ${i?.Shift}`, data:{efficiency:i?.Efficiency,utilization:arrTwo[arrOne.indexOf(i)].Utilization}}])
+        setProductionEfficiency(pre => [...pre, i?.Efficiency])
       }
       for await (let i of arrTwo) {
         setProductionHoursUtilization(pre => [...pre, i?.Utilization])
       }
-     
 
-    } 
+
+    }
     // for await(let i of chartData?.ProductionEfficiency){
     //   setProductionEfficiency([...productionEfficiency, i?.Efficiency])
     // }
@@ -153,21 +152,32 @@ const Summary = () => {
   useEffect(() => {
     fetchChartData()
     fetchData()
-
   }, [])
 
   useEffect(() => {
     updateChart()
-    console.log(dataPoints)
+    setConfigData(pre=> ({series:[{
+      ...pre.series[0],
+      data: [...productionEfficiency]
+    },
+    {
+      ...pre.series[1],
+      data: [...productionHoursUtilization]
+    },
+  ],
+  options:{
+    ...pre.options,
+    xaxis: {
+      type: 'string',
+      categories: [...days]
+    },
+  }
 
+}))
+
+console.log(productionEfficiency, productionHoursUtilization, days)
   }, [chartData])
 
-  useEffect(() => {
-    setChartConfig(pre=> (
-    {  ...pre, labels: days, datasets: [{...pre.datasets[0], data: productionEfficiency}]}
-    ))
-    console.log(productionEfficiency)
-  }, [productionEfficiency])
 
   const handleChange = (e) => {
     console.log(e.target.value)
@@ -221,53 +231,6 @@ const Summary = () => {
     setSelectModal(!selectModal)
   }
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Production',
-        color: '#12d39e',
-        font: {
-          size: 25
-        }
-      },
-    },
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: 'Percentage',
-          font: {
-            size: 18
-          }
-        },
-        grid: {
-          color: 'rgba(255,255,255,0.2)'
-        },
-        ticks: {
-          beginAtZero: true
-        }
-
-      },
-      x: {
-        title: {
-          display: true,
-          text: 'Days',
-          font: {
-            size: 18
-          }
-        },
-        grid: {
-          color: 'rgba(255,255,255,0.2)'
-        }
-      }
-    }
-  };
 
 
 
@@ -481,12 +444,17 @@ const Summary = () => {
       <div className="summary-container">
         <div className="chart-section">
           <div className="chart">
-            <Line data={chartConfig} options={options} datasetKeyProvider={datasetKeyProvider} redraw={false} />
+          <Chart
+              options={configData.options}
+              series={configData.series}
+              type="area"
+             className='chart-area'
+            />
           </div>
         </div>
         <div className="analyze-section">
           <div className="title-bar">
-            <div className="title"> <span className={dataObject?.Date.Shift == 'Day' ? 'day' : 'night'}> {dataObject?.Date.Shift == 'Day' ? day : night} </span> {` ${dataObject?.Date.Day}, ${months[dataObject?.Date.Month]}`} </div>
+            <div className="title"> <span className={dataObject?.Date.Shift.toUpperCase() == 'DAY' ? 'day' : 'night'}> {dataObject?.Date.Shift.toUpperCase() == 'DAY' ? day : night} </span> {` ${dataObject?.Date.Day}, ${months[dataObject?.Date.Month - 1]}`} </div>
             <div className="calender" onClick={() => toggleSelectModal()}>
               {calender}
             </div>
@@ -494,12 +462,13 @@ const Summary = () => {
           <div className="percentage-section">
             <div className="percentage-circle">
               {/* <div className="percentage">
-                {dataObject?.Summary?.IMEfficiency} <div className="percent-icon"> {percent}</div>
+                {dataObject?.Summary?.IMEfficiency} <div classame="percent-icon"> {percent}</div>
               </div>
               <svg width="200" height="200" viewBox="0 0 250 250">
                 <circle
                   className="bg"
-                  cx="125"
+                  cx="125"jk
+
                   cy="125"
                   r="115"
                   fill="none"
@@ -522,10 +491,10 @@ const Summary = () => {
               {circularBar(dataObject?.Summary?.IMEfficiency, 'IM Efficieny')}
             </div>
             <div className="percentage-circle">
-              {circularBar(dataObject?.Summary?.BMEfficiency, 'IM Efficieny')}
+              {circularBar(dataObject?.Summary?.BMEfficiency, 'BM Efficieny')}
             </div>
             <div className="percentage-circle">
-              {circularBar(dataObject?.Summary?.IMLEfficiency, 'IM Efficieny')}
+              {circularBar(dataObject?.Summary?.IMLEfficiency, 'IML Efficieny')}
 
             </div>
           </div>

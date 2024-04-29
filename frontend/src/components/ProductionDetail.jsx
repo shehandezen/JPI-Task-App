@@ -103,7 +103,8 @@ const ProductionDetail = () => {
           }
         }
         let getcurrentproduct = await getProducts(`{"machineNo":"${newMachine}"}`)
-        
+        console.log(getcurrentproduct)
+
         if (getcurrentproduct.status == 200) {
           let addProductionData = await addProduction({
             MachineNo: newMachine,
@@ -309,18 +310,12 @@ const ProductionDetail = () => {
 
             }
           })
+          console.log(addProductionData)
 
           if (addProductionData.status == 'success') {
-            if (!index == undefined) {
-              arrCopy[index].data = addProductionData.data?._id
-            }
+            arrCopy.push({ machine: newMachine, status: 'Running', data: addProductionData.data?._id })
+            await updateData(arrCopy)
 
-            if (isUpdate) {
-              await updateData(arrCopy)
-            } else {
-              arrCopy.push({ machine: newMachine, status: 'Running', data: addProductionData.data?._id })
-              await updateData(arrCopy)
-            }
           } else if (addProductionData.status == 500) {
             toast.error('Backend error!', toastConfig)
           } else {
@@ -353,6 +348,8 @@ const ProductionDetail = () => {
     const updatedData = await updateProductionReport(id, { ...data, Machines: updateData })
     if (updatedData.status == 200) {
       console.log('added')
+      console.log(updateData)
+      setData(pre=> ({...pre, Machines:updateData}))
       toast.success('New machine added!', toastConfig)
       setIsView(false)
     } else if (updatedData.status == 'error') {
@@ -458,24 +455,30 @@ const ProductionDetail = () => {
 
 
         const createReport = await addReport(reportObject)
-        if(createReport.status == 200){
-          setReports(createReport.data.data.Reports)
+        if (createReport.status == 200 || createReport.status == 'success') {
+          setReports(createReport.data.data?.Reports)
           setReport(createReport.data.data)
           toast('New report created!', toastConfig)
-        }else{
-          toast.error('Something went wrong!', toastConfig)
+        } else {
+          toast.error('Something went wrong! ', toastConfig)
         }
-        }
+      }
 
     } else {
       toast.error('Something went wrong!', toastConfig)
     }
 
+    let arr = []
+
     for await (let report of data.Machines) {
       if (report.status == 'Running') {
+        arr.push(report.data?.Status)
+        console.log(arr)
         if (report.data?.Status == 'Closed') {
-          setAllClosed(true)
+          await setAllClosed(true)
+          console.log( await allClosed)
         } else {
+          console.log(report.data?.Status)
           setAllClosed(false)
           break
         }
@@ -485,8 +488,11 @@ const ProductionDetail = () => {
 
     }
 
+    const filterArr = await arr.filter(value => value != 'Closed')
+    console.log(filterArr)
 
-    if (allClosed) {
+
+    if (filterArr.length == 0) {
       if (reports != undefined) {
 
         for await (let report of reports) {
@@ -511,73 +517,73 @@ const ProductionDetail = () => {
           IBMEfficiency: (IBM.efficiency.reduce((a, c) => a + c, 0,)) / (IBM.efficiency.length)
         }
 
-     
-          const updatefullReport = await updateReport(report._id, { Summary: efficiencyObject })
-          if (updatefullReport.status == 200) {
-            const productionReportFinish = await updateProductionReport(data._id, { Status: 'Finished' })
-            if (productionReportFinish.status == 200) {
-              const chart = await getChartData(`{"Date":{"Year":"${year}","Month":"${month}"}}`)
-         
-              if (chart.data?.data.length == 0) {
-                const createChart = await addChartData({
-                  Date: {
-                    Year: year,
-                    Month: month,
-                  },
-                  ProductionEfficiency: [{
-                    Day: day,
-                    Shift: data.Shift,
-                    Efficiency: (IM.efficiency + BM.efficiency + IML.efficiency) / 3
-                  }],
-                  ProductionHoursUtilization: [{
-                    Day: day,
-                    Shift: data.Shift,
-                    Utilization: ((IM.hoursUtilization + BM.hoursUtilization + IML.hoursUtilization) / 3)
-                  }]
-                })
 
-                if (createChart.status == 200) {
-                  toast.sucess('Chart data added!', toastConfig)
-                  navigate('/dashboard')
-                }else{
-                  toast.error('Something went wrong!', toastConfig)
-                }
+        const updatefullReport = await updateReport(report._id, { Summary: efficiencyObject })
+        if (updatefullReport.status == 200) {
+          const productionReportFinish = await updateProductionReport(data._id, { Status: 'Finished' })
+          if (productionReportFinish.status == 200) {
+            const chart = await getChartData(`{"Date":{"Year":"${year}","Month":"${month}"}}`)
+
+            if (chart.data?.data.length == 0) {
+              const createChart = await addChartData({
+                Date: {
+                  Year: year,
+                  Month: month,
+                },
+                ProductionEfficiency: [{
+                  Day: day,
+                  Shift: data.Shift,
+                  Efficiency: (IM.efficiency + BM.efficiency + IML.efficiency) / 3
+                }],
+                ProductionHoursUtilization: [{
+                  Day: day,
+                  Shift: data.Shift,
+                  Utilization: ((IM.hoursUtilization + BM.hoursUtilization + IML.hoursUtilization) / 3)
+                }]
+              })
+
+              if (createChart.status == 200) {
+                toast.sucess('Chart data added!', toastConfig)
+                navigate('/dashboard')
               } else {
-                const updateChart = await updateChartData(chart.data?.data[0]?._id, {
-                  ProductionEfficiency: [...chart.data?.data[0]?.ProductionEfficiency, {
-                    Day: day,
-                    Shift: data.Shift,
-                    Efficiency: (IM.efficiency + BM.efficiency + IML.efficiency) / 3
-                  }],
-                  ProductionHoursUtilization: [...chart.data?.data[0]?.ProductionHoursUtilization, {
-                    Day: day,
-                    Shift: data.Shift,
-                    Utilization: ((IM.hoursUtilization + BM.hoursUtilization + IML.hoursUtilization) / 3)
-                  }]
-                })
-
-                if (updateChart.status == 200) {
-                  navigate('/dashboard')
-
-                }else{
-                  toast.error('Something went wrong!', toastConfig)
-                }
+                toast.error('Something went wrong !', toastConfig)
               }
+            } else {
+              const updateChart = await updateChartData(chart.data?.data[0]?._id, {
+                ProductionEfficiency: [...chart.data?.data[0]?.ProductionEfficiency, {
+                  Day: day,
+                  Shift: data.Shift,
+                  Efficiency: (IM.efficiency + BM.efficiency + IML.efficiency) / 3
+                }],
+                ProductionHoursUtilization: [...chart.data?.data[0]?.ProductionHoursUtilization, {
+                  Day: day,
+                  Shift: data.Shift,
+                  Utilization: ((IM.hoursUtilization + BM.hoursUtilization + IML.hoursUtilization) / 3)
+                }]
+              })
 
-            }else{
-              toast.error('Something went wrong!', toastConfig)
+              if (updateChart.status == 200) {
+                navigate('/dashboard')
+
+              } else {
+                toast.error('Something went wrong !', toastConfig)
+              }
             }
 
-            // navigate('/dashboard')
-          }else{
-            toast.error('Something went wrong!', toastConfig)
+          } else {
+            toast.error('Something went wrong !', toastConfig)
           }
-       
+
+          // navigate('/dashboard')
+        } else {
+          toast.error('Something went wrong !', toastConfig)
+        }
 
 
 
-      }else{
-        toast.error('Please, try again!', toastConfig)
+
+      } else {
+        toast.warning('Please, try again clicking on \n` Finish report ` button', toastConfig)
       }
     } else {
       toast.error('Please, close all exist reports!', toastConfig)
@@ -608,7 +614,7 @@ const ProductionDetail = () => {
             return (element.status == "Running" ? (<div key={index}>
 
               {element.data?.Status == 'Closed' ? (<span className="closed">Closed</span>) : (<span className="deleteIcon" onClick={() => deleteMachine(index, element)}>{deleteIcon}</span>)}
-              <Link to={`machine/${element.data?._id}`} className="machine-card"> {element.machine}
+              <Link to={element.data?._id != undefined? `machine/${element.data?._id}` :`machine/${element.data}` } className="machine-card"> {element.machine}
               </Link>
             </div>) : "")
           })}
