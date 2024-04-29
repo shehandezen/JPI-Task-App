@@ -26,11 +26,17 @@
     position: relative;
     padding: 10px 15px;
     width: 90%;
-    height: 450px;
+    height: auto;
     background: var(--background-color);
     margin: 15px 0px;
     margin-top: 50px;
     border-radius: 15px;
+    overflow: hidden;
+    
+}
+
+.chart-section .chart .chart-area{
+    margin-top: 25px;
 }
 
 .analyze-section {

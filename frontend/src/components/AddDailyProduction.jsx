@@ -353,7 +353,7 @@ const AddDailyProduction = () => {
           })
 
           if (addProductionData.status == 'success') {
-            continue
+            data.Machines[data.Machines.indexOf(machine)].data = addProductionData.data?._id
           } else if (addProductionData.status == 'error') {
             toast.error(addProduction.message, toastConfig)
           } else if (addProductionData.status == 500) {
@@ -371,7 +371,7 @@ const AddDailyProduction = () => {
           //   ]
           // })
 
-          data.Machines[data.Machines.indexOf(machine)].data = addProductionData.data?._id
+          
         }
 
       }

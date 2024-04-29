@@ -293,12 +293,15 @@ const ProductionView = () => {
         // check if exist 
 
         const existReport = await getReports(`{"Date":{"Year":"${year}","Month":"${month}","Day":"${day}","Shift":"${data.Shift}"}}`)
-        if (existReport.status == 200) {
+        // console.log(existReport, '0')
+        if (existReport.status == 200 || existReport.status == 'success') {
             if (existReport.data?.data.length == 0) {
                 const createReport = await addReport(reportObject)
-                if (createReport.status == 200) {
+                // console.log(createReport, 1)
+                if (createReport.status == 200 || createReport.status == 'success') {
                     const closeReport = await updateProduction(data._id, { Status: 'Closed' })
-                    if (closeReport.status == 200) {
+                    // console.log(closeReport, 2)
+                    if (closeReport.status == 200 || closeReport.status == 'success') {
                         navigate(-1)
                     }else{
                         toast.error('Something went wrong!', toastConfig)
